@@ -83,14 +83,14 @@ jobs:
             sleep "$((attempt * 10))"
           done
           rustup target list --installed | grep -Fx "$rust_target"
-          if ! llvm_prefix="$(brew --prefix llvm@20 2>/dev/null)"; then
+          if ! brew list --versions llvm@20 >/dev/null 2>&1; then
             brew install llvm@20
-            llvm_prefix="$(brew --prefix llvm@20)"
           fi
-          if ! lld_prefix="$(brew --prefix lld@20 2>/dev/null)"; then
+          llvm_prefix="$(brew --prefix llvm@20)"
+          if ! brew list --versions lld@20 >/dev/null 2>&1; then
             brew install lld@20
-            lld_prefix="$(brew --prefix lld@20)"
           fi
+          lld_prefix="$(brew --prefix lld@20)"
           wasm_cc="$llvm_prefix/bin/clang"
           wasm_cxx="$llvm_prefix/bin/clang++"
           wasm_ld="$lld_prefix/bin/wasm-ld"
