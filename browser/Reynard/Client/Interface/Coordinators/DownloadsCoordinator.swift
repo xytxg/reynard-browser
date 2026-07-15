@@ -93,10 +93,23 @@ final class DownloadsCoordinator {
         }
         
         isShowingConfirmationAlert = true
+
+        let sizeText: String
+        if let expectedBytes = request.download.expectedBytes, expectedBytes > 0 {
+            sizeText = ByteCountFormatter.string(fromByteCount: expectedBytes, countStyle: .file)
+        } else {
+            sizeText = NSLocalizedString("Unknown size", comment: "")
+        }
+        let typeText = request.download.mimeType ?? NSLocalizedString("Unknown type", comment: "Download MIME type")
+        let details = [
+            String(format: NSLocalizedString("Source: %@", comment: "Download source host"), request.download.sourceHost),
+            String(format: NSLocalizedString("Size: %@", comment: "Download file size"), sizeText),
+            String(format: NSLocalizedString("Type: %@", comment: "Download MIME type"), typeText),
+        ].joined(separator: "\n")
         
         AlertPresenter.show(
             title: String(format: NSLocalizedString("Do you want to download \"%@\"?", comment: "File name"), request.download.fileName),
-            message: nil,
+            message: details,
             buttons: [
                 AlertPresenter.Button(title: NSLocalizedString("Cancel", comment: ""), style: .cancel) { [weak self] in
                     self?.resolveConfirmation(shouldStartDownload: false)

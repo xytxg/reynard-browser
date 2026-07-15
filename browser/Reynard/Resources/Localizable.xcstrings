@@ -3728,6 +3728,198 @@
           }
         }
       }
+    },
+    "A network error interrupted the download." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A network error interrupted the download."
+          }
+        }
+      }
+    },
+    "Cancelled" : {
+      "comment" : "Download state",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelled"
+          }
+        }
+      }
+    },
+    "Couldn’t save the downloaded file." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn’t save the downloaded file."
+          }
+        }
+      }
+    },
+    "Download failed in the browser engine." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Download failed in the browser engine."
+          }
+        }
+      }
+    },
+    "Not enough storage space." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not enough storage space."
+          }
+        }
+      }
+    },
+    "Retry" : {
+      "comment" : "Download action",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retry"
+          }
+        }
+      }
+    },
+    "Reynard doesn’t have permission to save this file." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reynard doesn’t have permission to save this file."
+          }
+        }
+      }
+    },
+    "Size: %@" : {
+      "comment" : "Download file size",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Size: %@"
+          }
+        }
+      }
+    },
+    "Source: %@" : {
+      "comment" : "Download source host",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Source: %@"
+          }
+        }
+      }
+    },
+    "The download could not be completed." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The download could not be completed."
+          }
+        }
+      }
+    },
+    "Type: %@" : {
+      "comment" : "Download MIME type",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type: %@"
+          }
+        }
+      }
+    },
+    "Unknown type" : {
+      "comment" : "Download MIME type",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown type"
+          }
+        }
+      }
+    },
+    "Private tabs are never saved. Turning this off removes saved regular tabs and navigation state." : {
+      "comment" : "Session restore explanation",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private tabs are never saved. Turning this off removes saved regular tabs and navigation state."
+          }
+        }
+      }
+    },
+    "Restore Previous Session" : {
+      "comment" : "Session restore setting",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore Previous Session"
+          }
+        }
+      }
+    },
+    "Session" : {
+      "comment" : "Browser session settings",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Session"
+          }
+        }
+      }
+    },
+    "Continue" : {
+      "comment" : "Add-on source confirmation",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue"
+          }
+        }
+      }
+    },
+    "File: %@" : {
+      "comment" : "Add-on package name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File: %@"
+          }
+        }
+      }
+    },
+    "Install Add-on?" : {
+      "comment" : "Add-on source confirmation",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Install Add-on?"
+          }
+        }
+      }
     }
   },
   "version" : "1.2"

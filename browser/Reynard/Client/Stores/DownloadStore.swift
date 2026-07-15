@@ -30,6 +30,8 @@ struct DownloadItemSnapshot {
     enum State: Equatable {
         case downloading
         case completed
+        case failed
+        case cancelled
     }
     
     let id: UUID
@@ -44,6 +46,8 @@ struct DownloadItemSnapshot {
     let downloadedBytes: Int64
     let bytesPerSecond: Int64
     let addedAt: Date
+    let failureDescription: String?
+    let canRetry: Bool
 }
 
 final class DownloadStore: NSObject {
@@ -51,6 +55,9 @@ final class DownloadStore: NSObject {
     
     struct PendingDownload {
         let fileName: String
+        let sourceHost: String
+        let expectedBytes: Int64?
+        let mimeType: String?
         fileprivate let startHandler: () -> Void
     }
     
@@ -58,6 +65,7 @@ final class DownloadStore: NSObject {
         let downloadsDirectoryURL: URL
         let appDataDirectoryURL: URL
         let manifestFileURL: URL
+        let manifestBackupFileURL: URL
     }
     
     private struct PersistedDownloadEntry: Codable {
@@ -149,9 +157,24 @@ final class DownloadStore: NSObject {
             self.bytesPerSecond = 0
         }
     }
+
+    private struct TerminalDownload {
+        let id: UUID
+        let sourceURL: URL
+        let originalURL: URL?
+        let fileName: String
+        let mimeType: String?
+        let addedAt: Date
+        let expectedBytes: Int64?
+        let downloadedBytes: Int64
+        let state: DownloadItemSnapshot.State
+        let failureDescription: String?
+        let canRetry: Bool
+    }
     
     private let fileManager: FileManager
     private let storage: StorageURLs
+    private let storageIsAvailable: Bool
     private let stateQueue = DispatchQueue(label: "com.minh-ton.Reynard.DownloadStore.Queue", qos: .userInitiated)
     private lazy var session: URLSession = {
         let configuration = URLSessionConfiguration.default
@@ -163,8 +186,12 @@ final class DownloadStore: NSObject {
     
     private var activeDownloads: [Int: ActiveDownload] = [:]
     private var capturedDownloads: [String: CapturedDownload] = [:]
+    private var terminalDownloads: [UUID: TerminalDownload] = [:]
     private var persistedDownloads: [PersistedDownloadEntry] = []
-    private var lastSessionProgressNotificationTime: TimeInterval = 0
+    private let progressNotificationInterval: TimeInterval = 0.35
+    private var lastProgressNotificationTime: TimeInterval = 0
+    private var pendingProgressNotification: DispatchWorkItem?
+    private var progressNotificationGeneration = 0
     private var hasUnviewedCompletedDownloads = false
     
     // MARK: - Lifecycle
@@ -172,21 +199,19 @@ final class DownloadStore: NSObject {
     override init() {
         self.fileManager = .default
         
-        guard let documentsDirectoryURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            fatalError("Documents directory is unavailable")
-        }
+        let documentsDirectoryURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
+        let applicationSupportDirectoryURL = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+        self.storageIsAvailable = documentsDirectoryURL != nil && applicationSupportDirectoryURL != nil
+        let fallbackDirectoryURL = fileManager.temporaryDirectory.appendingPathComponent("ReynardUnavailableStorage", isDirectory: true)
         
-        guard let applicationSupportDirectoryURL = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
-            fatalError("Application Support directory is unavailable")
-        }
-        
-        let downloadsDirectoryURL = documentsDirectoryURL.appendingPathComponent("Downloads", isDirectory: true)
-        let appDataDirectoryURL = applicationSupportDirectoryURL.appendingPathComponent("AppData", isDirectory: true)
+        let downloadsDirectoryURL = (documentsDirectoryURL ?? fallbackDirectoryURL).appendingPathComponent("Downloads", isDirectory: true)
+        let appDataDirectoryURL = (applicationSupportDirectoryURL ?? fallbackDirectoryURL).appendingPathComponent("AppData", isDirectory: true)
         let manifestFileURL = appDataDirectoryURL.appendingPathComponent("DownloadStore", isDirectory: false)
         self.storage = StorageURLs(
             downloadsDirectoryURL: downloadsDirectoryURL,
             appDataDirectoryURL: appDataDirectoryURL,
-            manifestFileURL: manifestFileURL
+            manifestFileURL: manifestFileURL,
+            manifestBackupFileURL: appDataDirectoryURL.appendingPathComponent("DownloadStore.backup", isDirectory: false)
         )
         
         super.init()
@@ -208,7 +233,7 @@ final class DownloadStore: NSObject {
     // MARK: - Pending Downloads
     
     func pendingDownload(from response: ExternalResponseInfo) -> PendingDownload? {
-        guard let sourceURL = URL(string: response.url) else {
+        guard storageIsAvailable, let sourceURL = URL(string: response.url) else {
             return nil
         }
         
@@ -218,6 +243,9 @@ final class DownloadStore: NSObject {
                 sourceURL: sourceURL,
                 mimeType: response.mimeType
             ),
+            sourceHost: sourceURL.host ?? sourceURL.absoluteString,
+            expectedBytes: response.contentLength.flatMap { $0 > 0 ? $0 : nil },
+            mimeType: response.mimeType,
             startHandler: { [weak self] in
                 self?.beginCapturedDownload(
                     localFilePath: response.localFilePath,
@@ -231,6 +259,9 @@ final class DownloadStore: NSObject {
     }
     
     func pendingDownload(from request: SavePdfInfo) -> PendingDownload? {
+        guard storageIsAvailable else {
+            return nil
+        }
         let candidateURLs = [request.url, request.originalUrl].compactMap { $0 }.compactMap(URL.init(string:))
         guard let sourceURL = candidateURLs.first(where: { URLUtils.isWebURL($0) }) else {
             return nil
@@ -242,6 +273,9 @@ final class DownloadStore: NSObject {
                 sourceURL: sourceURL,
                 mimeType: "application/pdf"
             ),
+            sourceHost: sourceURL.host ?? sourceURL.absoluteString,
+            expectedBytes: nil,
+            mimeType: "application/pdf",
             startHandler: { [weak self] in
                 self?.enqueueDownload(
                     sourceURL: sourceURL,
@@ -283,6 +317,12 @@ final class DownloadStore: NSObject {
         stateQueue.async {
             if let active = self.activeDownloads.values.first(where: { $0.id == id }) {
                 self.activeDownloads.removeValue(forKey: active.task.taskIdentifier)
+                self.terminalDownloads[id] = self.terminalDownload(
+                    from: active,
+                    state: .cancelled,
+                    failureDescription: NSLocalizedString("Cancelled", comment: "Download state"),
+                    canRetry: true
+                )
                 active.task.cancel()
                 self.postDidChange()
                 return
@@ -293,20 +333,52 @@ final class DownloadStore: NSObject {
             }
             
             self.capturedDownloads.removeValue(forKey: captured.localFilePath)
+            if let temporaryURL = DownloadFileSafety.capturedTemporaryFileURL(forPath: captured.localFilePath) {
+                try? self.fileManager.removeItem(at: temporaryURL)
+            }
+            self.terminalDownloads[id] = self.terminalDownload(
+                from: captured,
+                state: .cancelled,
+                failureDescription: NSLocalizedString("Cancelled", comment: "Download state"),
+                canRetry: false
+            )
             self.postDidChange()
+        }
+    }
+
+    func retry(id: UUID) {
+        stateQueue.async {
+            guard let failed = self.terminalDownloads[id],
+                  failed.canRetry,
+                  failed.state == .failed || failed.state == .cancelled else {
+                return
+            }
+            self.terminalDownloads.removeValue(forKey: id)
+            self.enqueueDownloadLocked(
+                sourceURL: failed.sourceURL,
+                originalURL: failed.originalURL,
+                suggestedFileName: failed.fileName,
+                mimeType: failed.mimeType
+            )
         }
     }
     
     func removeDownload(id: UUID) {
         stateQueue.async {
+            if self.terminalDownloads.removeValue(forKey: id) != nil {
+                self.postDidChange()
+                return
+            }
+
             guard let index = self.persistedDownloads.firstIndex(where: { $0.id == id }) else {
                 return
             }
             
             let entry = self.persistedDownloads.remove(at: index)
-            let fileURL = self.storage.downloadsDirectoryURL.appendingPathComponent(entry.relativePath, isDirectory: false)
-            
-            if self.fileManager.fileExists(atPath: fileURL.path) {
+            if let fileURL = DownloadFileSafety.containedFileURL(
+                forRelativePath: entry.relativePath,
+                in: self.storage.downloadsDirectoryURL
+            ), self.fileManager.fileExists(atPath: fileURL.path) {
                 try? self.fileManager.removeItem(at: fileURL)
             }
             
@@ -317,25 +389,17 @@ final class DownloadStore: NSObject {
     
     func clearCompletedDownloadFiles(since startDate: Date? = nil) {
         stateQueue.async {
-            let removedDownloads: [PersistedDownloadEntry]
-            if let startDate {
-                removedDownloads = self.persistedDownloads.filter { $0.addedAt >= startDate }
-                self.persistedDownloads.removeAll { $0.addedAt >= startDate }
-            } else {
-                removedDownloads = self.persistedDownloads
-                self.persistedDownloads.removeAll()
-            }
-            
-            let fileURLs: [URL]
-            if startDate == nil {
-                fileURLs = (try? self.fileManager.contentsOfDirectory(
-                    at: self.storage.downloadsDirectoryURL,
-                    includingPropertiesForKeys: nil
-                )) ?? []
-            } else {
-                fileURLs = removedDownloads.map {
-                    self.storage.downloadsDirectoryURL.appendingPathComponent($0.relativePath, isDirectory: false)
-                }
+            let partition = DownloadCleanupPolicy.partition(
+                self.persistedDownloads,
+                since: startDate,
+                addedAt: { $0.addedAt }
+            )
+            self.persistedDownloads = partition.retained
+            let fileURLs = partition.removed.compactMap {
+                DownloadFileSafety.containedFileURL(
+                    forRelativePath: $0.relativePath,
+                    in: self.storage.downloadsDirectoryURL
+                )
             }
             
             for fileURL in Set(fileURLs) {
@@ -349,17 +413,6 @@ final class DownloadStore: NSObject {
                 )
             }
             
-            for active in self.activeDownloads.values {
-                if let startDate, active.addedAt < startDate {
-                    continue
-                }
-                
-                if self.fileManager.fileExists(atPath: active.destinationURL.path) {
-                    try? self.fileManager.removeItem(at: active.destinationURL)
-                }
-            }
-            
-            self.persistedDownloads.removeAll()
             self.savePersistedDownloadsLocked()
             self.postDidChange()
         }
@@ -386,6 +439,12 @@ final class DownloadStore: NSObject {
         expectedBytes: Int64?
     ) {
         stateQueue.sync {
+            guard self.storageIsAvailable,
+                  !localFilePath.isEmpty,
+                  DownloadFileSafety.capturedTemporaryFileURL(forPath: localFilePath) != nil,
+                  self.capturedDownloads[localFilePath] == nil else {
+                return
+            }
             self.prepareStorageLocked()
             
             let fileName = self.resolvedFileName(
@@ -416,32 +475,49 @@ final class DownloadStore: NSObject {
         mimeType: String?
     ) {
         stateQueue.async {
-            self.prepareStorageLocked()
-            
-            let fileName = self.resolvedFileName(
-                suggestedFileName: suggestedFileName,
-                sourceURL: sourceURL,
-                mimeType: mimeType
-            )
-            let destinationURL = self.makeUniqueDestinationURLLocked(for: fileName)
-            
-            let task = self.session.downloadTask(with: sourceURL)
-            let active = ActiveDownload(
-                id: UUID(),
+            self.enqueueDownloadLocked(
                 sourceURL: sourceURL,
                 originalURL: originalURL,
-                fileName: destinationURL.lastPathComponent,
-                destinationURL: destinationURL,
-                mimeType: mimeType,
-                addedAt: Date(),
-                task: task
+                suggestedFileName: suggestedFileName,
+                mimeType: mimeType
             )
-            
-            self.activeDownloads[task.taskIdentifier] = active
-            task.resume()
-            self.postDidStartDownload()
-            self.postDidChange()
         }
+    }
+
+    private func enqueueDownloadLocked(
+        sourceURL: URL,
+        originalURL: URL?,
+        suggestedFileName: String?,
+        mimeType: String?
+    ) {
+        guard storageIsAvailable else {
+            return
+        }
+        prepareStorageLocked()
+
+        let fileName = resolvedFileName(
+            suggestedFileName: suggestedFileName,
+            sourceURL: sourceURL,
+            mimeType: mimeType
+        )
+        let destinationURL = makeUniqueDestinationURLLocked(for: fileName)
+
+        let task = session.downloadTask(with: sourceURL)
+        let active = ActiveDownload(
+            id: UUID(),
+            sourceURL: sourceURL,
+            originalURL: originalURL,
+            fileName: destinationURL.lastPathComponent,
+            destinationURL: destinationURL,
+            mimeType: mimeType,
+            addedAt: Date(),
+            task: task
+        )
+
+        activeDownloads[task.taskIdentifier] = active
+        task.resume()
+        postDidStartDownload()
+        postDidChange()
     }
     
     // MARK: - Snapshots
@@ -461,7 +537,9 @@ final class DownloadStore: NSObject {
                     totalBytes: active.expectedBytes,
                     downloadedBytes: active.downloadedBytes,
                     bytesPerSecond: active.bytesPerSecond,
-                    addedAt: active.addedAt
+                    addedAt: active.addedAt,
+                    failureDescription: nil,
+                    canRetry: false
                 )
             }
             .sorted { $0.addedAt > $1.addedAt }
@@ -480,33 +558,61 @@ final class DownloadStore: NSObject {
                     totalBytes: active.expectedBytes,
                     downloadedBytes: active.downloadedBytes,
                     bytesPerSecond: active.bytesPerSecond,
-                    addedAt: active.addedAt
+                    addedAt: active.addedAt,
+                    failureDescription: nil,
+                    canRetry: false
                 )
             }
         
         let activeItems = (sessionItems + capturedItems)
             .sorted { $0.addedAt > $1.addedAt }
+
+        let terminalItems = terminalDownloads.values
+            .map { item in
+                DownloadItemSnapshot(
+                    id: item.id,
+                    fileName: item.fileName,
+                    fileURL: nil,
+                    sourceURL: item.sourceURL,
+                    originalURL: item.originalURL,
+                    mimeType: item.mimeType,
+                    state: item.state,
+                    fileExists: false,
+                    totalBytes: item.expectedBytes,
+                    downloadedBytes: item.downloadedBytes,
+                    bytesPerSecond: 0,
+                    addedAt: item.addedAt,
+                    failureDescription: item.failureDescription,
+                    canRetry: item.canRetry
+                )
+            }
+            .sorted { $0.addedAt > $1.addedAt }
         
         let completedItems = persistedDownloads
             .map { entry in
-                let fileURL = storage.downloadsDirectoryURL.appendingPathComponent(entry.relativePath, isDirectory: false)
+                let fileURL = DownloadFileSafety.containedFileURL(
+                    forRelativePath: entry.relativePath,
+                    in: storage.downloadsDirectoryURL
+                )
                 return DownloadItemSnapshot(
                     id: entry.id,
                     fileName: entry.fileName,
                     fileURL: fileURL,
-                    sourceURL: URL(string: entry.sourceURLString) ?? storage.downloadsDirectoryURL,
+                    sourceURL: URL(string: entry.sourceURLString) ?? fileURL ?? storage.downloadsDirectoryURL,
                     originalURL: entry.originalURLString.flatMap(URL.init(string:)),
                     mimeType: entry.mimeType,
                     state: .completed,
-                    fileExists: fileManager.fileExists(atPath: fileURL.path),
+                    fileExists: fileURL.map { fileManager.fileExists(atPath: $0.path) } ?? false,
                     totalBytes: entry.fileSize,
                     downloadedBytes: entry.fileSize,
                     bytesPerSecond: 0,
-                    addedAt: entry.addedAt
+                    addedAt: entry.addedAt,
+                    failureDescription: nil,
+                    canRetry: false
                 )
             }
         
-        return DownloadStoreSnapshot(summary: makeSummaryLocked(), items: activeItems + completedItems)
+        return DownloadStoreSnapshot(summary: makeSummaryLocked(), items: activeItems + terminalItems + completedItems)
     }
     
     private func makeSummaryLocked() -> DownloadStoreSummary {
@@ -526,7 +632,7 @@ final class DownloadStore: NSObject {
         }
         
         return DownloadStoreSummary(
-            totalCount: persistedDownloads.count + activeProgress.count,
+            totalCount: persistedDownloads.count + terminalDownloads.count + activeProgress.count,
             activeCount: activeProgress.count,
             aggregateProgress: min(max(aggregateProgress, 0), 1),
             hasUnviewedCompletedDownloads: hasUnviewedCompletedDownloads
@@ -536,6 +642,9 @@ final class DownloadStore: NSObject {
     // MARK: - Persistence
     
     private func prepareStorageLocked() {
+        guard storageIsAvailable else {
+            return
+        }
         try? fileManager.createDirectory(at: storage.downloadsDirectoryURL, withIntermediateDirectories: true)
         try? fileManager.createDirectory(at: storage.appDataDirectoryURL, withIntermediateDirectories: true)
         
@@ -548,40 +657,62 @@ final class DownloadStore: NSObject {
     }
     
     private func loadPersistedDownloadsLocked() {
-        guard let data = try? Data(contentsOf: storage.manifestFileURL) else {
+        guard storageIsAvailable else {
             persistedDownloads = []
-            savePersistedDownloadsLocked()
             return
         }
-        
-        if data.isEmpty {
-            persistedDownloads = []
-            savePersistedDownloadsLocked()
-            return
+
+        let recovery = DownloadManifestRecovery.recover(
+            primaryData: try? Data(contentsOf: storage.manifestFileURL),
+            backupData: try? Data(contentsOf: storage.manifestBackupFileURL),
+            decode: decodedAndValidatedEntries(from:)
+        )
+        persistedDownloads = recovery.entries.sorted { $0.addedAt > $1.addedAt }
+        if recovery.source != .primary {
+            writeManifestLocked(createBackup: false)
         }
-        
-        if let decoded = try? JSONDecoder().decode([PersistedDownloadEntry].self, from: data) {
-            persistedDownloads = decoded.sorted { $0.addedAt > $1.addedAt }
-            return
-        }
-        
-        persistedDownloads = []
-        savePersistedDownloadsLocked()
     }
     
     private func savePersistedDownloadsLocked() {
+        writeManifestLocked(createBackup: true)
+    }
+
+    private func writeManifestLocked(createBackup: Bool) {
+        guard storageIsAvailable else {
+            return
+        }
         guard let data = try? JSONEncoder().encode(persistedDownloads.sorted { $0.addedAt > $1.addedAt }) else {
             return
         }
         
+        if createBackup,
+           let currentData = try? Data(contentsOf: storage.manifestFileURL),
+           decodedAndValidatedEntries(from: currentData) != nil {
+            try? currentData.write(to: storage.manifestBackupFileURL, options: .atomic)
+        }
         try? data.write(to: storage.manifestFileURL, options: .atomic)
     }
     
+    private func decodedAndValidatedEntries(from data: Data) -> [PersistedDownloadEntry]? {
+        guard let decoded = try? JSONDecoder().decode([PersistedDownloadEntry].self, from: data) else {
+            return nil
+        }
+        return decoded.filter {
+            DownloadFileSafety.containedFileURL(
+                forRelativePath: $0.relativePath,
+                in: storage.downloadsDirectoryURL
+            ) != nil
+        }
+    }
+
     // MARK: - Files
     
     private func resolvedFileName(suggestedFileName: String?, sourceURL: URL, mimeType: String?) -> String {
         let fallbackName = sourceURL.lastPathComponent.isEmpty ? NSLocalizedString("Download", comment: "") : sourceURL.lastPathComponent
-        let initialName = sanitizeFileName(suggestedFileName ?? fallbackName)
+        let initialName = DownloadFileSafety.sanitizedFileName(
+            suggestedFileName ?? fallbackName,
+            fallback: NSLocalizedString("Download", comment: "")
+        )
         
         guard URL(fileURLWithPath: initialName).pathExtension.isEmpty,
               let mimeType,
@@ -597,54 +728,31 @@ final class DownloadStore: NSObject {
             return initialName
         }
         
-        return "\(initialName).\(preferredExtension)"
-    }
-    
-    private func sanitizeFileName(_ value: String) -> String {
-        let trimmedValue = value.trimmingCharacters(in: .whitespacesAndNewlines)
-        let invalidCharacters = CharacterSet(charactersIn: "/:\n\r")
-        let sanitized = trimmedValue
-            .components(separatedBy: invalidCharacters)
-            .filter { !$0.isEmpty }
-            .joined(separator: "-")
-        
-        return sanitized.isEmpty ? NSLocalizedString("Download", comment: "") : sanitized
+        return DownloadFileSafety.sanitizedFileName(
+            "\(initialName).\(preferredExtension)",
+            fallback: NSLocalizedString("Download", comment: "")
+        )
     }
     
     private func makeUniqueDestinationURLLocked(for fileName: String) -> URL {
-        let candidateURL = storage.downloadsDirectoryURL.appendingPathComponent(fileName, isDirectory: false)
         let activeNames = Set(
             activeDownloads.values.map { $0.destinationURL.lastPathComponent.lowercased() }
             + capturedDownloads.values.map { $0.destinationURL.lastPathComponent.lowercased() }
         )
-        
-        guard !fileManager.fileExists(atPath: candidateURL.path), !activeNames.contains(fileName.lowercased()) else {
-            let fileURL = URL(fileURLWithPath: fileName)
-            let baseName = fileURL.deletingPathExtension().lastPathComponent
-            let extensionName = fileURL.pathExtension
-            
-            for index in 2...10_000 {
-                let candidateName: String
-                if extensionName.isEmpty {
-                    candidateName = "\(baseName) \(index)"
-                } else {
-                    candidateName = "\(baseName) \(index).\(extensionName)"
-                }
-                
-                let duplicateURL = storage.downloadsDirectoryURL.appendingPathComponent(candidateName, isDirectory: false)
-                if !fileManager.fileExists(atPath: duplicateURL.path), !activeNames.contains(candidateName.lowercased()) {
-                    return duplicateURL
-                }
-            }
-            
-            return storage.downloadsDirectoryURL.appendingPathComponent(UUID().uuidString, isDirectory: false)
-        }
-        
-        return candidateURL
+        return DownloadFileSafety.uniqueDestinationURL(
+            for: fileName,
+            in: storage.downloadsDirectoryURL,
+            reservedFileNames: activeNames,
+            fileExists: { self.fileManager.fileExists(atPath: $0.path) }
+        )
     }
     
     private func importFileLocked(from sourceURL: URL, to destinationURL: URL) -> Bool {
-        guard fileManager.fileExists(atPath: sourceURL.path) else {
+        guard fileManager.fileExists(atPath: sourceURL.path),
+              DownloadFileSafety.containedFileURL(
+                forRelativePath: destinationURL.lastPathComponent,
+                in: storage.downloadsDirectoryURL
+              )?.standardizedFileURL == destinationURL.standardizedFileURL else {
             return false
         }
         
@@ -671,19 +779,40 @@ final class DownloadStore: NSObject {
     
     private func completeCapturedDownloadLocked(localFilePath: String, succeeded: Bool) {
         guard let active = capturedDownloads.removeValue(forKey: localFilePath) else {
-            try? fileManager.removeItem(at: URL(fileURLWithPath: localFilePath))
             return
         }
         
+        guard let sourceFileURL = DownloadFileSafety.capturedTemporaryFileURL(forPath: localFilePath) else {
+            terminalDownloads[active.id] = terminalDownload(
+                from: active,
+                state: .failed,
+                failureDescription: NSLocalizedString("Couldn’t save the downloaded file.", comment: "Invalid temporary file path"),
+                canRetry: false
+            )
+            postDidChange()
+            return
+        }
         guard succeeded else {
+            try? fileManager.removeItem(at: sourceFileURL)
+            terminalDownloads[active.id] = terminalDownload(
+                from: active,
+                state: .failed,
+                failureDescription: NSLocalizedString("Download failed in the browser engine.", comment: "Captured download failure"),
+                canRetry: false
+            )
             postDidChange()
             return
         }
         
-        let sourceFileURL = URL(fileURLWithPath: localFilePath)
         prepareStorageLocked()
         
         guard importFileLocked(from: sourceFileURL, to: active.destinationURL) else {
+            terminalDownloads[active.id] = terminalDownload(
+                from: active,
+                state: .failed,
+                failureDescription: NSLocalizedString("Couldn’t save the downloaded file.", comment: "File move failure"),
+                canRetry: false
+            )
             postDidChange()
             return
         }
@@ -714,7 +843,7 @@ final class DownloadStore: NSObject {
             bytesPerSecond: &active.bytesPerSecond,
             lastProgressSample: &active.lastProgressSample
         )
-        postDidChange()
+        postProgressDidChangeLocked()
     }
     
     private func updateTransferRate(
@@ -769,6 +898,13 @@ final class DownloadStore: NSObject {
             hasUnviewedCompletedDownloads = true
         } catch {
             try? fileManager.removeItem(at: temporaryLocation)
+            try? fileManager.removeItem(at: active.destinationURL)
+            terminalDownloads[active.id] = terminalDownload(
+                from: active,
+                state: .failed,
+                failureDescription: failureDescription(for: error),
+                canRetry: true
+            )
         }
         
         postDidChange()
@@ -803,24 +939,123 @@ final class DownloadStore: NSObject {
             lastProgressSample: &active.lastProgressSample
         )
         
-        let now = ProcessInfo.processInfo.systemUptime
-        if now - lastSessionProgressNotificationTime >= 0.5 {
-            lastSessionProgressNotificationTime = now
-            postDidChange()
-        }
+        postProgressDidChangeLocked()
     }
     
-    private func failDownload(taskIdentifier: Int) {
-        guard activeDownloads.removeValue(forKey: taskIdentifier) != nil else {
+    private func failDownload(taskIdentifier: Int, error: Error) {
+        guard let active = activeDownloads.removeValue(forKey: taskIdentifier) else {
             return
         }
-        
+        try? fileManager.removeItem(at: active.destinationURL)
+        terminalDownloads[active.id] = terminalDownload(
+            from: active,
+            state: .failed,
+            failureDescription: failureDescription(for: error),
+            canRetry: true
+        )
         postDidChange()
+    }
+
+    private func terminalDownload(
+        from active: ActiveDownload,
+        state: DownloadItemSnapshot.State,
+        failureDescription: String?,
+        canRetry: Bool
+    ) -> TerminalDownload {
+        TerminalDownload(
+            id: active.id,
+            sourceURL: active.sourceURL,
+            originalURL: active.originalURL,
+            fileName: active.fileName,
+            mimeType: active.mimeType,
+            addedAt: active.addedAt,
+            expectedBytes: active.expectedBytes,
+            downloadedBytes: active.downloadedBytes,
+            state: state,
+            failureDescription: failureDescription,
+            canRetry: canRetry
+        )
+    }
+
+    private func terminalDownload(
+        from active: CapturedDownload,
+        state: DownloadItemSnapshot.State,
+        failureDescription: String?,
+        canRetry: Bool
+    ) -> TerminalDownload {
+        TerminalDownload(
+            id: active.id,
+            sourceURL: active.sourceURL,
+            originalURL: nil,
+            fileName: active.fileName,
+            mimeType: active.mimeType,
+            addedAt: active.addedAt,
+            expectedBytes: active.expectedBytes,
+            downloadedBytes: active.downloadedBytes,
+            state: state,
+            failureDescription: failureDescription,
+            canRetry: canRetry
+        )
+    }
+
+    private func failureDescription(for error: Error) -> String {
+        let nsError = error as NSError
+        if nsError.domain == NSCocoaErrorDomain {
+            switch nsError.code {
+            case NSFileWriteOutOfSpaceError:
+                return NSLocalizedString("Not enough storage space.", comment: "Download failure")
+            case NSFileWriteNoPermissionError, NSFileReadNoPermissionError:
+                return NSLocalizedString("Reynard doesn’t have permission to save this file.", comment: "Download failure")
+            default:
+                return NSLocalizedString("Couldn’t save the downloaded file.", comment: "Download failure")
+            }
+        }
+
+        if nsError.domain == NSURLErrorDomain {
+            return NSLocalizedString("A network error interrupted the download.", comment: "Download failure")
+        }
+        return NSLocalizedString("The download could not be completed.", comment: "Download failure")
     }
     
     // MARK: - Notifications
     
     private func postDidChange() {
+        progressNotificationGeneration += 1
+        pendingProgressNotification?.cancel()
+        pendingProgressNotification = nil
+        lastProgressNotificationTime = ProcessInfo.processInfo.systemUptime
+        dispatchDidChangeNotification()
+    }
+
+    private func postProgressDidChangeLocked() {
+        guard pendingProgressNotification == nil else {
+            return
+        }
+
+        let elapsed = ProcessInfo.processInfo.systemUptime - lastProgressNotificationTime
+        if elapsed >= progressNotificationInterval {
+            lastProgressNotificationTime = ProcessInfo.processInfo.systemUptime
+            dispatchDidChangeNotification()
+            return
+        }
+
+        let generation = progressNotificationGeneration
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self, self.progressNotificationGeneration == generation else {
+                return
+            }
+            self.pendingProgressNotification = nil
+            self.lastProgressNotificationTime = ProcessInfo.processInfo.systemUptime
+            self.dispatchDidChangeNotification()
+        }
+        pendingProgressNotification = workItem
+        stateQueue.asyncAfter(
+            deadline: .now() + max(progressNotificationInterval - elapsed, 0),
+            execute: workItem
+        )
+    }
+
+    private func dispatchDidChangeNotification() {
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: .downloadStoreDidChange, object: self)
         }
@@ -866,8 +1101,7 @@ extension DownloadStore: URLSessionDownloadDelegate {
         }
         
         stateQueue.async {
-            _ = error
-            self.failDownload(taskIdentifier: task.taskIdentifier)
+            self.failDownload(taskIdentifier: task.taskIdentifier, error: error)
         }
     }
 }

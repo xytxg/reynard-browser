@@ -403,7 +403,9 @@ final class DownloadsViewController: UIViewController, UITableViewDataSource, UI
         lhs.fileExists == rhs.fileExists &&
         lhs.totalBytes == rhs.totalBytes &&
         lhs.downloadedBytes == rhs.downloadedBytes &&
-        lhs.bytesPerSecond == rhs.bytesPerSecond
+        lhs.bytesPerSecond == rhs.bytesPerSecond &&
+        lhs.failureDescription == rhs.failureDescription &&
+        lhs.canRetry == rhs.canRetry
     }
     
     // MARK: - UITableViewDataSource
@@ -492,6 +494,24 @@ final class DownloadsViewController: UIViewController, UITableViewDataSource, UI
             
             let configuration = UISwipeActionsConfiguration(actions: [deleteAction, shareAction, openAction])
             configuration.performsFirstActionWithFullSwipe = true
+            return configuration
+
+        case .failed, .cancelled:
+            let deleteAction = UIContextualAction(style: .destructive, title: NSLocalizedString("Delete", comment: "")) { _, _, completion in
+                DownloadStore.shared.removeDownload(id: item.id)
+                completion(true)
+            }
+            guard item.canRetry else {
+                return UISwipeActionsConfiguration(actions: [deleteAction])
+            }
+
+            let retryAction = UIContextualAction(style: .normal, title: NSLocalizedString("Retry", comment: "Download action")) { _, _, completion in
+                DownloadStore.shared.retry(id: item.id)
+                completion(true)
+            }
+            retryAction.backgroundColor = .systemBlue
+            let configuration = UISwipeActionsConfiguration(actions: [deleteAction, retryAction])
+            configuration.performsFirstActionWithFullSwipe = false
             return configuration
         }
     }
