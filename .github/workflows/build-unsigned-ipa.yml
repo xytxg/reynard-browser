@@ -75,15 +75,24 @@ jobs:
             brew install llvm@20
             llvm_prefix="$(brew --prefix llvm@20)"
           fi
+          if ! lld_prefix="$(brew --prefix lld@20 2>/dev/null)"; then
+            brew install lld@20
+            lld_prefix="$(brew --prefix lld@20)"
+          fi
           wasm_cc="$llvm_prefix/bin/clang"
           wasm_cxx="$llvm_prefix/bin/clang++"
+          wasm_ld="$lld_prefix/bin/wasm-ld"
           test -x "$wasm_cc"
           test -x "$wasm_cxx"
+          test -x "$wasm_ld"
+          export PATH="$lld_prefix/bin:$PATH"
+          echo "$lld_prefix/bin" >> "$GITHUB_PATH"
           "$wasm_cc" --version | tee dist/logs/wasm-clang-version.log
+          "$wasm_ld" --version | tee dist/logs/wasm-ld-version.log
           printf 'int main(void) { return 0; }\n' | \
             "$wasm_cc" --target=wasm32-wasi -x c -c -o "$RUNNER_TEMP/reynard-wasm-probe.o" -
           xcode_key="$(xcodebuild -version | shasum -a 256 | cut -c1-12)"
-          wasm_key="$("$wasm_cc" --version | shasum -a 256 | cut -c1-12)"
+          wasm_key="$({ "$wasm_cc" --version; "$wasm_ld" --version; } | shasum -a 256 | cut -c1-12)"
           echo "xcode-key=$xcode_key" >> "$GITHUB_OUTPUT"
           echo "wasm-key=$wasm_key" >> "$GITHUB_OUTPUT"
           echo "wasm-cc=$wasm_cc" >> "$GITHUB_OUTPUT"

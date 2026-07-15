@@ -48,7 +48,7 @@ IPA 文件名格式为 `Reynard-<版本>-<提交短 SHA>-unsigned.ipa`。推送 
 ## 本地源码构建
 
 需要 macOS、Xcode、Python 3、Rust/Cargo、`cbindgen 0.29.1`、支持
-`wasm32-wasi` 的 LLVM/Clang（Apple Clang 不包含该目标时可使用 Homebrew LLVM）、
+`wasm32-wasi` 的 LLVM/Clang 与 LLD（Apple Clang 不包含该目标时可使用 Homebrew LLVM/LLD）、
 与 Gecko 版本匹配的 WASI sysroot，以及足够的磁盘空间。GitHub Actions 会从对应的
 Mozilla 工具链任务取得并缓存 WASI sysroot。
 克隆仓库后运行：
