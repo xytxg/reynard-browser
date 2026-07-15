@@ -149,13 +149,6 @@ Build dependencies and the Gecko engine.
 
 To run Reynard, open `Reynard.xcodeproj` in Xcode and build/run it from there.
 
-### 简体中文与源码构建未签名 IPA
-
-本分支包含简体中文界面、下载与会话安全修复，以及从 idevice、Gecko 和 Reynard
-源码开始构建的 GitHub Actions 工作流。工作流不会下载或重新打包第三方现成 IPA。
-
-详细的中文使用、构建、侧载说明及当前限制见 [README.zh-CN.md](README.zh-CN.md)。
-
 ## Notes
 
 This project initially started out of curiosity. I wanted to see if I could get Gecko to run without the [BrowserEngineKit](https://developer.apple.com/documentation/browserenginekit) framework, so it could be further modified to run on iOS versions as far back as possible. I got it working, and since then, I’ve been focusing on developing engine patches for better UIKit integration, fixing bugs, and turning this into a full, usable browser.
