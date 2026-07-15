@@ -158,6 +158,7 @@ jobs:
         shell: bash
         env:
           WASM_CC: ${{ steps.toolchain.outputs.wasm-cc }}
+          WASM_CXX: ${{ steps.toolchain.outputs.wasm-cxx }}
         run: |
           set -euo pipefail
           wasi_root="$HOME/.cache/reynard-wasi"
@@ -171,12 +172,43 @@ jobs:
                 --from-build sysroot-wasm32-wasi
             ) 2>&1 | tee dist/logs/install-wasi-sysroot.log
           fi
+          compiler_rt_root="$wasi_root/compiler-rt-wasm32-wasi"
+          builtins="$(find "$compiler_rt_root" -type f \
+            -name 'libclang_rt.builtins*.a' -print -quit 2>/dev/null || true)"
+          if [[ -z "$builtins" ]]; then
+            (
+              cd "$wasi_root"
+              "$GITHUB_WORKSPACE/engine/firefox/mach" artifact toolchain \
+                --from-build wasm32-wasi-compiler-rt-20
+            ) 2>&1 | tee dist/logs/install-wasi-compiler-rt.log
+            builtins="$(find "$compiler_rt_root" -type f \
+              -name 'libclang_rt.builtins*.a' -print -quit)"
+          fi
           test -f "$wasi_sysroot/include/string.h"
+          test -s "$builtins"
+
+          clang_resource="$wasi_root/clang-resource"
+          wrapper_dir="$wasi_root/bin"
+          rm -rf "$clang_resource" "$wrapper_dir"
+          mkdir -p "$clang_resource/lib/wasm32-unknown-wasi" "$wrapper_dir"
+          ln -s "$("$WASM_CC" --print-resource-dir)/include" "$clang_resource/include"
+          cp "$builtins" \
+            "$clang_resource/lib/wasm32-unknown-wasi/libclang_rt.builtins.a"
+          wasm_cc_wrapper="$wrapper_dir/clang-wasm"
+          wasm_cxx_wrapper="$wrapper_dir/clang++-wasm"
+          printf '#!/bin/sh\nexec "%s" "-resource-dir=%s" "$@"\n' \
+            "$WASM_CC" "$clang_resource" > "$wasm_cc_wrapper"
+          printf '#!/bin/sh\nexec "%s" "-resource-dir=%s" "$@"\n' \
+            "$WASM_CXX" "$clang_resource" > "$wasm_cxx_wrapper"
+          chmod +x "$wasm_cc_wrapper" "$wasm_cxx_wrapper"
+
           printf '#include <string.h>\nint main(void) { return 0; }\n' | \
-            "$WASM_CC" --target=wasm32-wasi --sysroot="$wasi_sysroot" \
+            "$wasm_cc_wrapper" --target=wasm32-wasi --sysroot="$wasi_sysroot" \
               -x c -o "$RUNNER_TEMP/reynard-wasi-link-probe.wasm" -
           test -s "$RUNNER_TEMP/reynard-wasi-link-probe.wasm"
           echo "wasi-sysroot=$wasi_sysroot" >> "$GITHUB_OUTPUT"
+          echo "wasm-cc=$wasm_cc_wrapper" >> "$GITHUB_OUTPUT"
+          echo "wasm-cxx=$wasm_cxx_wrapper" >> "$GITHUB_OUTPUT"
 
       - name: Save Mozilla WASI sysroot cache
         if: steps.wasi-cache.outputs.cache-hit != 'true'
@@ -215,8 +247,8 @@ jobs:
       - name: Build Gecko for iOS
         shell: bash
         env:
-          WASM_CC: ${{ steps.toolchain.outputs.wasm-cc }}
-          WASM_CXX: ${{ steps.toolchain.outputs.wasm-cxx }}
+          WASM_CC: ${{ steps.wasi.outputs.wasm-cc }}
+          WASM_CXX: ${{ steps.wasi.outputs.wasm-cxx }}
           WASI_SYSROOT: ${{ steps.wasi.outputs.wasi-sysroot }}
         run: |
           set -euo pipefail
