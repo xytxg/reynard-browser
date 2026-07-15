@@ -1,0 +1,23 @@
+diff --git a/build/moz.configure/toolchain.configure b/build/moz.configure/toolchain.configure
+--- a/build/moz.configure/toolchain.configure
++++ b/build/moz.configure/toolchain.configure
+@@ -1795,6 +1795,19 @@ def select_linker_tmpl(host_or_target):
+             retcode, stdout, stderr = get_cmd_output(*cmd, env=env)
+             if retcode == 1 and "Logging ld64 options" in stderr:
+                 kind = "ld64"
++            elif retcode != 0 and target.kernel == "Darwin":
++                # Xcode 15 and later no longer emit the LD_PRINT_OPTIONS marker.
++                # Ask ld64 for its verbose version banner as a fallback.
++                fallback_cmd = (
++                    cmd_base + linker_flag + ["-Wl,-v"] + toolchain_flags
++                )
++                fallback_retcode, _, fallback_stderr = get_cmd_output(
++                    *fallback_cmd, env=env
++                )
++                if fallback_retcode == 0 and "@(#)PROGRAM:ld" in fallback_stderr:
++                    kind = "ld64"
++                else:
++                    return None
+ 
+             elif retcode != 0:
+                 return None
