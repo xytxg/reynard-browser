@@ -125,6 +125,45 @@ jobs:
           tools/development/update-gecko.sh 2>&1 | tee dist/logs/update-gecko.log
           tools/development/apply-patches.sh 2>&1 | tee dist/logs/apply-patches.log
 
+      - name: Restore Mozilla WASI sysroot cache
+        id: wasi-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.cache/reynard-wasi
+          key: wasi-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.wasm-key }}-${{ hashFiles('engine/release.txt') }}
+
+      - name: Prepare Mozilla WASI sysroot
+        id: wasi
+        shell: bash
+        env:
+          WASM_CC: ${{ steps.toolchain.outputs.wasm-cc }}
+        run: |
+          set -euo pipefail
+          wasi_root="$HOME/.cache/reynard-wasi"
+          wasi_sysroot="$wasi_root/sysroot-wasm32-wasi"
+          if [[ ! -f "$wasi_sysroot/include/string.h" ]]; then
+            rm -rf "$wasi_root"
+            mkdir -p "$wasi_root"
+            (
+              cd "$wasi_root"
+              "$GITHUB_WORKSPACE/engine/firefox/mach" artifact toolchain \
+                --from-build sysroot-wasm32-wasi
+            ) 2>&1 | tee dist/logs/install-wasi-sysroot.log
+          fi
+          test -f "$wasi_sysroot/include/string.h"
+          printf '#include <string.h>\nint main(void) { return 0; }\n' | \
+            "$WASM_CC" --target=wasm32-wasi --sysroot="$wasi_sysroot" \
+              -x c -o "$RUNNER_TEMP/reynard-wasi-link-probe.wasm" -
+          test -s "$RUNNER_TEMP/reynard-wasi-link-probe.wasm"
+          echo "wasi-sysroot=$wasi_sysroot" >> "$GITHUB_OUTPUT"
+
+      - name: Save Mozilla WASI sysroot cache
+        if: steps.wasi-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.cache/reynard-wasi
+          key: wasi-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.wasm-key }}-${{ hashFiles('engine/release.txt') }}
+
       - name: Restore Gecko object cache
         id: gecko-cache
         uses: actions/cache/restore@v4
@@ -157,9 +196,11 @@ jobs:
         env:
           WASM_CC: ${{ steps.toolchain.outputs.wasm-cc }}
           WASM_CXX: ${{ steps.toolchain.outputs.wasm-cxx }}
+          WASI_SYSROOT: ${{ steps.wasi.outputs.wasi-sysroot }}
         run: |
           set -euo pipefail
           "$WASM_CC" --version | tee dist/logs/wasm-compiler-selected.log
+          test -f "$WASI_SYSROOT/include/string.h"
           tools/development/build-gecko.sh 2>&1 | tee dist/logs/build-gecko.log
           test -s engine/firefox/obj-aarch64-apple-ios/dist/bin/XUL
           df -h | tee dist/logs/disk-after-gecko.log
