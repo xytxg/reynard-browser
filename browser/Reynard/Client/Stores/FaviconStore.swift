@@ -170,6 +170,13 @@ final class FaviconStore {
             }
         }
     }
+
+    func cancelOutstandingRequests() {
+        stateQueue.async {
+            self.activeRequests.values.forEach { $0.cancel() }
+            self.activeRequests.removeAll()
+        }
+    }
     
     // MARK: - Storage
     

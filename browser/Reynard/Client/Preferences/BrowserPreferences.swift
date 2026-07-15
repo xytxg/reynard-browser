@@ -65,6 +65,7 @@ final class BrowserPreferences {
             
             // Homepage
             key("HomepageSettings", "openingScreen"): HomepageOpeningScreen.homepage.rawValue,
+            key("HomepageSettings", "restoresPreviousSession"): true,
             key("HomepageSettings", "showsFavorites"): true,
             key("HomepageSettings", "showsFavoritesInPrivateBrowsing"): false,
             key("HomepageSettings", "favoriteRowCount"): 2,
@@ -342,6 +343,15 @@ final class BrowserPreferences {
     
     // MARK: - Homepage
     struct HomepageSettings {
+        static var restoresPreviousSession: Bool {
+            get {
+                return prefs.bool(forSetting: "HomepageSettings", key: "restoresPreviousSession")
+            }
+            set {
+                prefs.set(newValue, forSetting: "HomepageSettings", key: "restoresPreviousSession")
+            }
+        }
+
         static var openingScreen: HomepageOpeningScreen {
             get {
                 let rawValue = prefs.string(forSetting: "HomepageSettings", key: "openingScreen") ?? HomepageOpeningScreen.homepage.rawValue

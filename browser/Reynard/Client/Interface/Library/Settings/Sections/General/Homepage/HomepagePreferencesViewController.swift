@@ -9,11 +9,17 @@ import UIKit
 
 final class HomepagePreferencesViewController: SettingsTableViewController {
     private enum Section: CaseIterable {
+        case sessionRestore
         case openingScreen
         case includeOnHomepage
         
         var text: SettingsSectionText {
             switch self {
+            case .sessionRestore:
+                return SettingsSectionText(
+                    headerTitle: NSLocalizedString("Session", comment: "Browser session settings"),
+                    footerTitle: NSLocalizedString("Private tabs are never saved. Turning this off removes saved regular tabs and navigation state.", comment: "Session restore explanation")
+                )
             case .openingScreen:
                 return SettingsSectionText(headerTitle: NSLocalizedString("On Startup", comment: ""))
             case .includeOnHomepage:
@@ -21,6 +27,12 @@ final class HomepagePreferencesViewController: SettingsTableViewController {
             }
         }
     }
+
+    private lazy var sessionRestoreSwitch: UISwitch = {
+        let control = UISwitch()
+        control.addTarget(self, action: #selector(sessionRestoreSwitchChanged(_:)), for: .valueChanged)
+        return control
+    }()
     
     init() {
         super.init(style: .insetGrouped)
@@ -33,6 +45,7 @@ final class HomepagePreferencesViewController: SettingsTableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        sessionRestoreSwitch.isOn = Prefs.HomepageSettings.restoresPreviousSession
         tableView.reloadData()
     }
     
@@ -46,6 +59,8 @@ final class HomepagePreferencesViewController: SettingsTableViewController {
         }
         
         switch Section.allCases[section] {
+        case .sessionRestore:
+            return 1
         case .openingScreen:
             return HomepageOpeningScreen.allCases.count
         case .includeOnHomepage:
@@ -67,6 +82,12 @@ final class HomepagePreferencesViewController: SettingsTableViewController {
         }
         
         switch Section.allCases[indexPath.section] {
+        case .sessionRestore:
+            let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+            cell.selectionStyle = .none
+            cell.textLabel?.text = NSLocalizedString("Restore Previous Session", comment: "Session restore setting")
+            cell.accessoryView = sessionRestoreSwitch
+            return cell
         case .openingScreen:
             guard HomepageOpeningScreen.allCases.indices.contains(indexPath.row) else {
                 return UITableViewCell()
@@ -98,6 +119,8 @@ final class HomepagePreferencesViewController: SettingsTableViewController {
         }
         
         switch Section.allCases[indexPath.section] {
+        case .sessionRestore:
+            return
         case .openingScreen:
             guard HomepageOpeningScreen.allCases.indices.contains(indexPath.row) else {
                 return
@@ -114,6 +137,13 @@ final class HomepagePreferencesViewController: SettingsTableViewController {
                 preference: HomepageSectionPreferencesViewController.OverviewRow.allCases[indexPath.row].preference
             )
             navigationController?.pushViewController(viewController, animated: true)
+        }
+    }
+
+    @objc private func sessionRestoreSwitchChanged(_ sender: UISwitch) {
+        Prefs.HomepageSettings.restoresPreviousSession = sender.isOn
+        if !sender.isOn {
+            TabManagementStore.shared.clearPersistedSession()
         }
     }
 }

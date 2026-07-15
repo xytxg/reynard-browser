@@ -63,6 +63,8 @@ final class TabManagementStore {
     private let storage: StorageURLs
     private let stateQueue = DispatchQueue(label: "com.minh-ton.Reynard.TabManagementStore.Queue", qos: .userInitiated)
     private var database: OpaquePointer?
+    private var pendingPersistWorkItem: DispatchWorkItem?
+    private var persistGeneration = 0
     private let sqliteTransient = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
     
     private let recentlyClosedTabLimit = 10
@@ -85,17 +87,20 @@ final class TabManagementStore {
             thumbnailCacheDirectoryURL: directoryURL.appendingPathComponent("ThumbCache", isDirectory: true)
         )
         
-        stateQueue.sync {
+        let legacyPrivateTabIDs: [UUID] = stateQueue.sync {
             prepareStorageLocked()
             openDatabaseLocked()
             configureDatabaseLocked()
             createSchemaLocked()
             ensureStateRowLocked()
+            return purgePersistedPrivateTabsLocked()
         }
+        legacyPrivateTabIDs.forEach { NavigationHistoryStore.shared.removeNavigationHistory(for: $0) }
     }
     
     deinit {
         stateQueue.sync {
+            pendingPersistWorkItem?.cancel()
             guard let database else {
                 return
             }
@@ -112,10 +117,10 @@ final class TabManagementStore {
             let state = persistedStateLocked()
             return Snapshot(
                 regularTabs: fetchTabsLocked(isPrivate: false),
-                privateTabs: fetchTabsLocked(isPrivate: true),
+                privateTabs: [],
                 selectedRegularTabID: state.selectedRegularTabID,
-                selectedPrivateTabID: state.selectedPrivateTabID,
-                selectedTabMode: state.selectedTabMode,
+                selectedPrivateTabID: nil,
+                selectedTabMode: state.selectedTabMode == .private ? .regular : state.selectedTabMode,
                 lastTabOverview: state.lastTabOverview
             )
         }
@@ -140,44 +145,47 @@ final class TabManagementStore {
     
     func persistTabs(
         regularTabs: [Tab],
-        privateTabs: [Tab],
         selectedRegularTabID: UUID?,
-        selectedPrivateTabID: UUID?,
-        selectedTabMode: TabMode
+        restorationEnabled: Bool,
+        immediately: Bool = false
     ) {
-        let persistedRegularTabs = regularTabs.map {
+        let persistedRegularTabs = restorationEnabled ? regularTabs.map {
             PersistedTab(id: $0.id, title: $0.title, url: $0.url)
-        }
-        let persistedPrivateTabs = privateTabs.map {
-            PersistedTab(id: $0.id, title: $0.title, url: $0.url)
-        }
+        } : []
+        let persistedSelection = restorationEnabled ? selectedRegularTabID : nil
+        let persistedMode: TabMode = .regular
         
         stateQueue.async {
-            let lastTabOverview = self.persistedStateLocked().lastTabOverview
-            
-            guard self.executeLocked("BEGIN IMMEDIATE TRANSACTION;") else {
-                return
+            self.persistGeneration += 1
+            let generation = self.persistGeneration
+            self.pendingPersistWorkItem?.cancel()
+            let workItem = DispatchWorkItem { [weak self] in
+                guard let self, self.persistGeneration == generation else {
+                    return
+                }
+                self.pendingPersistWorkItem = nil
+                self.persistTabsLocked(
+                    persistedRegularTabs,
+                    selectedRegularTabID: persistedSelection,
+                    selectedTabMode: persistedMode
+                )
             }
-            
-            guard self.executeLocked("DELETE FROM tabs;"),
-                  self.saveStateLocked(
-                    selectedRegularTabID: selectedRegularTabID,
-                    selectedPrivateTabID: selectedPrivateTabID,
-                    selectedTabMode: selectedTabMode,
-                    lastTabOverview: lastTabOverview
-                  ),
-                  self.insertTabsLocked(persistedRegularTabs, isPrivate: false),
-                  self.insertTabsLocked(persistedPrivateTabs, isPrivate: true) else {
-                _ = self.executeLocked("ROLLBACK TRANSACTION;")
-                return
+            self.pendingPersistWorkItem = workItem
+            if immediately {
+                workItem.perform()
+            } else {
+                self.stateQueue.asyncAfter(deadline: .now() + 0.4, execute: workItem)
             }
-            
-            guard self.executeLocked("COMMIT TRANSACTION;") else {
-                _ = self.executeLocked("ROLLBACK TRANSACTION;")
-                return
-            }
-            
-            self.pruneThumbCacheLocked(validTabIDs: Set((persistedRegularTabs + persistedPrivateTabs).map(\.id)))
+        }
+    }
+
+    func clearPersistedSession() {
+        stateQueue.async {
+            self.persistGeneration += 1
+            self.pendingPersistWorkItem?.cancel()
+            self.pendingPersistWorkItem = nil
+            self.persistTabsLocked([], selectedRegularTabID: nil, selectedTabMode: .regular)
+            NavigationHistoryStore.shared.removeAllNavigationHistory()
         }
     }
     
@@ -641,6 +649,61 @@ final class TabManagementStore {
     }
     
     // MARK: - Tab Persistence
+
+    private func persistTabsLocked(
+        _ tabs: [PersistedTab],
+        selectedRegularTabID: UUID?,
+        selectedTabMode: TabMode
+    ) {
+        let lastTabOverview = persistedStateLocked().lastTabOverview
+
+        guard executeLocked("BEGIN IMMEDIATE TRANSACTION;") else {
+            return
+        }
+        guard executeLocked("DELETE FROM tabs;"),
+              saveStateLocked(
+                selectedRegularTabID: selectedRegularTabID,
+                selectedPrivateTabID: nil,
+                selectedTabMode: selectedTabMode,
+                lastTabOverview: lastTabOverview
+              ),
+              insertTabsLocked(tabs, isPrivate: false) else {
+            _ = executeLocked("ROLLBACK TRANSACTION;")
+            return
+        }
+        guard executeLocked("COMMIT TRANSACTION;") else {
+            _ = executeLocked("ROLLBACK TRANSACTION;")
+            return
+        }
+        pruneThumbCacheLocked(validTabIDs: Set(tabs.map(\.id)))
+    }
+
+    private func purgePersistedPrivateTabsLocked() -> [UUID] {
+        let privateTabIDs = fetchTabsLocked(isPrivate: true).map(\.id)
+        guard !privateTabIDs.isEmpty || persistedStateLocked().selectedPrivateTabID != nil else {
+            return []
+        }
+
+        let state = persistedStateLocked()
+        guard executeLocked("BEGIN IMMEDIATE TRANSACTION;"),
+              executeLocked("DELETE FROM tabs WHERE is_private = 1;"),
+              saveStateLocked(
+                selectedRegularTabID: state.selectedRegularTabID,
+                selectedPrivateTabID: nil,
+                selectedTabMode: .regular,
+                lastTabOverview: state.lastTabOverview
+              ),
+              executeLocked("COMMIT TRANSACTION;") else {
+            _ = executeLocked("ROLLBACK TRANSACTION;")
+            return []
+        }
+
+        privateTabIDs.forEach { tabID in
+            let thumbnailURL = thumbnailFileURL(for: tabID)
+            try? fileManager.removeItem(at: thumbnailURL)
+        }
+        return privateTabIDs
+    }
     
     private func insertTabsLocked(_ tabs: [PersistedTab], isPrivate: Bool) -> Bool {
         guard let statement = prepareStatementLocked(

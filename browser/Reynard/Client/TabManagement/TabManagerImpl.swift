@@ -68,13 +68,12 @@ final class TabManagerImplementation: NSObject, TabManager {
         faviconTasks.removeValue(forKey: tabID)?.cancel()
     }
     
-    private func persistState() {
+    private func persistState(immediately: Bool = false) {
         store.persistTabs(
             regularTabs: regularTabs,
-            privateTabs: privateTabs,
             selectedRegularTabID: regularTabs[safe: selectedRegularTabIndex]?.id,
-            selectedPrivateTabID: privateTabs[safe: selectedPrivateTabIndex]?.id,
-            selectedTabMode: selectedTabMode
+            restorationEnabled: Prefs.HomepageSettings.restoresPreviousSession,
+            immediately: immediately
         )
     }
     
@@ -150,6 +149,13 @@ final class TabManagerImplementation: NSObject, TabManager {
     }
     
     private func applyNavigationState(to tab: Tab) {
+        guard !tab.isPrivate, Prefs.HomepageSettings.restoresPreviousSession else {
+            tab.state.navigationState = NavigationAvailability(
+                canGoBack: tab.state.sessionNavigationAvailability.canGoBack,
+                canGoForward: tab.state.sessionNavigationAvailability.canGoForward
+            )
+            return
+        }
         tab.state.navigationState = sessionManager.navigationAvailability(
             for: tab.id,
             sessionState: tab.state.sessionNavigationAvailability
@@ -157,6 +163,10 @@ final class TabManagerImplementation: NSObject, TabManager {
     }
     
     private func recordNavigation(_ url: String, for tab: Tab) {
+        guard !tab.isPrivate, Prefs.HomepageSettings.restoresPreviousSession else {
+            applyNavigationState(to: tab)
+            return
+        }
         tab.state.navigationState = sessionManager.recordNavigation(
             to: url,
             for: tab.id,
@@ -316,6 +326,10 @@ final class TabManagerImplementation: NSObject, TabManager {
     // MARK: - Tab Restoration
     
     private func restoreTabsIfNeeded() -> Bool {
+        guard Prefs.HomepageSettings.restoresPreviousSession else {
+            store.clearPersistedSession()
+            return false
+        }
         guard regularTabs.isEmpty && privateTabs.isEmpty else {
             return true
         }
@@ -345,25 +359,7 @@ final class TabManagerImplementation: NSObject, TabManager {
             return tab
         }
         
-        privateTabs = snapshot.privateTabs.map { snapshot in
-            let tab = Tab(
-                id: snapshot.id,
-                session: createSession(
-                    tabID: snapshot.id,
-                    url: snapshot.url,
-                    windowId: nil,
-                    isPrivate: true
-                ),
-                title: snapshot.title,
-                url: snapshot.url,
-                favicon: cachedFavicon(for: snapshot.url),
-                thumbnail: snapshot.thumbnail,
-                isPrivate: true
-            )
-            tab.state.restoreState = restoredURL(from: snapshot.url).map(TabRestoreState.pending) ?? .none
-            tab.state.navigationState = sessionManager.restoreNavigation(for: tab.id)
-            return tab
-        }
+        privateTabs = []
         
         selectedRegularTabIndex = snapshot.selectedRegularTabID.flatMap { selectedTabID in
             regularTabs.firstIndex(where: { $0.id == selectedTabID })
@@ -819,11 +815,16 @@ final class TabManagerImplementation: NSObject, TabManager {
         
         let tab = tabs(for: mode)[index]
         tab.thumbnail = image
-        store.persistThumbnail(image, for: tab.id)
+        if !tab.isPrivate, Prefs.HomepageSettings.restoresPreviousSession {
+            store.persistThumbnail(image, for: tab.id)
+        }
         notifyUpdate(at: index, mode: mode, reason: .thumbnail)
     }
     
     func updateHistoryThumbnail(_ image: UIImage?, for tab: Tab, url: String) {
+        guard !tab.isPrivate, Prefs.HomepageSettings.restoresPreviousSession else {
+            return
+        }
         sessionManager.updateCurrentHistoryThumbnail(image, for: tab.id, matching: url)
     }
     
@@ -833,6 +834,27 @@ final class TabManagerImplementation: NSObject, TabManager {
     
     func invalidateNavigationThumbnails() {
         sessionManager.invalidateNavigationThumbnails()
+    }
+
+    func persistForBackground() {
+        persistState(immediately: true)
+    }
+
+    func handleMemoryWarning() {
+        let selectedTabID = selectedTab?.id
+        faviconTasks = faviconTasks.filter { tabID, task in
+            guard tabID == selectedTabID else {
+                task.cancel()
+                return false
+            }
+            return true
+        }
+        for tab in regularTabs + privateTabs where tab.id != selectedTabID {
+            tab.thumbnail = nil
+            tab.favicon = nil
+        }
+        sessionManager.invalidateNavigationThumbnails()
+        delegate?.tabManagerDidChangeTabs(self)
     }
     
     // MARK: - Session Factory

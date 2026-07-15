@@ -42,8 +42,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func sceneDidEnterBackground(_ scene: UIScene) {
-        (window?.rootViewController as? BrowserViewController)?
-            .sessionManager.setApplicationForeground(false)
+        guard let browserViewController = window?.rootViewController as? BrowserViewController else {
+            return
+        }
+        browserViewController.tabManager.persistForBackground()
+        browserViewController.sessionManager.setApplicationForeground(false)
     }
     
     private func handleIncomingURLContexts(_ urlContexts: Set<UIOpenURLContext>) {

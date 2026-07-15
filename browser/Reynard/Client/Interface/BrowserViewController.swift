@@ -175,6 +175,13 @@ final class BrowserViewController: UIViewController {
         super.viewDidLayoutSubviews()
         invalidateNavigationThumbnailsIfNeeded()
     }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        DownloadFileIconProvider.shared.clearMemoryCache()
+        FaviconStore.shared.cancelOutstandingRequests()
+        tabManager.handleMemoryWarning()
+    }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
