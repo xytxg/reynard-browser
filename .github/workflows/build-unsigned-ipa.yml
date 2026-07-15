@@ -82,15 +82,26 @@ jobs:
           git submodule update --init --depth 1 support/idevice
 
       - name: Restore Rust dependency cache
-        uses: actions/cache@v4
+        id: rust-cache
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
+            ~/.cargo/bin/cbindgen
             support/idevice/target
-          key: idevice-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-${{ hashFiles('support/idevice/ffi/Cargo.lock', 'tools/development/build-idevice.sh') }}
+          key: idevice-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-cbindgen-0.29.1-${{ hashFiles('support/idevice/ffi/Cargo.lock', 'tools/development/build-idevice.sh') }}
           restore-keys: |
-            idevice-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-
+            idevice-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-cbindgen-0.29.1-
+
+      - name: Install Gecko build tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! cbindgen --version 2>/dev/null | grep -Fxq 'cbindgen 0.29.1'; then
+            cargo install cbindgen --locked --version 0.29.1
+          fi
+          cbindgen --version
 
       - name: Download exact Gecko source and apply project patches
         shell: bash
@@ -100,7 +111,8 @@ jobs:
           tools/development/apply-patches.sh 2>&1 | tee dist/logs/apply-patches.log
 
       - name: Restore Gecko object cache
-        uses: actions/cache@v4
+        id: gecko-cache
+        uses: actions/cache/restore@v4
         with:
           path: engine/firefox/obj-aarch64-apple-ios
           key: gecko-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-${{ hashFiles('engine/release.txt', 'patches/**/*.patch', 'tools/development/build-gecko.sh') }}
@@ -114,6 +126,17 @@ jobs:
           tools/development/build-idevice.sh 2>&1 | tee dist/logs/build-idevice.log
           test -s browser/Reynard/JIT/RPPairing/libidevice_ffi.a
 
+      - name: Save Rust and idevice cache
+        if: steps.rust-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cargo/bin/cbindgen
+            support/idevice/target
+          key: idevice-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-cbindgen-0.29.1-${{ hashFiles('support/idevice/ffi/Cargo.lock', 'tools/development/build-idevice.sh') }}
+
       - name: Build Gecko for iOS
         shell: bash
         run: |
@@ -121,6 +144,13 @@ jobs:
           tools/development/build-gecko.sh 2>&1 | tee dist/logs/build-gecko.log
           test -s engine/firefox/obj-aarch64-apple-ios/dist/bin/XUL
           df -h | tee dist/logs/disk-after-gecko.log
+
+      - name: Save Gecko object cache
+        if: steps.gecko-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: engine/firefox/obj-aarch64-apple-ios
+          key: gecko-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-${{ hashFiles('engine/release.txt', 'patches/**/*.patch', 'tools/development/build-gecko.sh') }}
 
       - name: Build unsigned Reynard.app
         shell: bash

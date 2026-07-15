@@ -47,7 +47,8 @@ IPA 文件名格式为 `Reynard-<版本>-<提交短 SHA>-unsigned.ipa`。推送 
 
 ## 本地源码构建
 
-需要 macOS、Xcode、Python 3、Rust/Cargo，以及足够的磁盘空间。克隆仓库后运行：
+需要 macOS、Xcode、Python 3、Rust/Cargo、`cbindgen 0.29.1`，以及足够的磁盘空间。
+克隆仓库后运行：
 
 ```bash
 git clone --recursive https://github.com/xytxg/reynard-browser.git
