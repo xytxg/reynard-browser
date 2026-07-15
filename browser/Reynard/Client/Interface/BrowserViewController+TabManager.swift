@@ -187,8 +187,8 @@ extension BrowserViewController: TabManagerDelegate {
     }
     
     func tabManager(_ tabManager: TabManager, shouldStartExternalResponse response: ExternalResponseInfo, for session: GeckoSession) async -> Bool {
-        if addonCoordinator.handleExternalResponse(response) {
-            return true
+        if addonCoordinator.canHandleExternalResponse(response) {
+            return await addonCoordinator.confirmExternalResponse(response)
         }
         guard let download = DownloadStore.shared.pendingDownload(from: response) else {
             return false

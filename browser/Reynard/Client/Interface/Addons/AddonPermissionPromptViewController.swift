@@ -286,10 +286,12 @@ final class AddonPermissionPromptViewController: UITableViewController {
     
     private func promptMessage() -> String {
         let addonName = prompt.addon.metaData.name ?? prompt.addon.id
+        let addonVersion = prompt.addon.metaData.version.trimmingCharacters(in: .whitespacesAndNewlines)
+        let addonDisplayName = addonVersion.isEmpty ? addonName : "\(addonName) (\(addonVersion))"
         
         switch prompt.kind {
         case .install:
-            return String(format: NSLocalizedString("Add %@?", comment: "Add-on name"), addonName)
+            return String(format: NSLocalizedString("Add %@?", comment: "Add-on name and version"), addonDisplayName)
         case .optional:
             if prompt.permissions.isEmpty && prompt.origins.isEmpty && !prompt.dataCollectionPermissions.isEmpty {
                 return String(format: NSLocalizedString("%@ requests additional data collection.", comment: "Add-on name"), addonName)
