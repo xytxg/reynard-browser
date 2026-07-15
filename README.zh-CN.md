@@ -41,8 +41,9 @@ GitHub Actions 产物没有 Apple 开发证书、分发证书或 Provisioning Pr
    `Payload/Reynard.app` IPA。
 
 IPA 文件名格式为 `Reynard-<版本>-<提交短 SHA>-unsigned.ipa`。推送 `v*` 标签时，成功产物
-会同时上传到对应 GitHub Release，并明确标记为未签名构建。Pull Request 只运行快速检查，
-不会重复执行耗时的完整 Gecko 构建。
+会同时上传到对应 GitHub Release，并明确标记为未签名构建。Pull Request 默认只运行快速检查；
+需要按需验证完整包时，可在 PR 标题中加入 `[build ipa]`，避免每个 PR 都重复执行耗时的 Gecko
+构建。
 
 ## 本地源码构建
 

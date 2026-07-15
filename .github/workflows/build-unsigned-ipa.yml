@@ -41,7 +41,10 @@ jobs:
   build-ipa:
     name: Build Gecko and unsigned IPA
     needs: quality
-    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      startsWith(github.ref, 'refs/tags/v') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[build ipa]'))
     runs-on: macos-26
     timeout-minutes: 360
     permissions:
