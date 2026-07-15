@@ -154,9 +154,18 @@ final class PromptPresenter: PromptPresenting {
             return nil
         }
         
-        let message = request.directoryName.isEmpty
-        ? NSLocalizedString("Are you sure you want to upload all files? Only do this if you trust the site.", comment: "")
-        : NSLocalizedString("Are you sure you want to upload all files from \"\(request.directoryName)\"? Only do this if you trust the site.", comment: "")
+        let message: String
+        if request.directoryName.isEmpty {
+            message = NSLocalizedString("Are you sure you want to upload all files? Only do this if you trust the site.", comment: "")
+        } else {
+            message = String(
+                format: NSLocalizedString(
+                    "Are you sure you want to upload all files from \"%@\"? Only do this if you trust the site.",
+                    comment: "Directory name"
+                ),
+                request.directoryName
+            )
+        }
         
         return await withCheckedContinuation { continuation in
             let alert = UIAlertController(

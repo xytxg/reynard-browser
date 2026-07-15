@@ -1,0 +1,208 @@
+name: Build unsigned IPA from source
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: unsigned-ipa-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Static checks and pure Swift tests
+    runs-on: macos-26
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: |
+          set -euo pipefail
+          xcodebuild -version
+          python3 --version
+          rustc --version
+          cargo --version
+
+      - name: Validate localization and download safety
+        env:
+          REQUIRE_SWIFT: "1"
+        run: |
+          set -euo pipefail
+          tools/tests/run-static-tests.sh
+
+  build-ipa:
+    name: Build Gecko and unsigned IPA
+    needs: quality
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
+    runs-on: macos-26
+    timeout-minutes: 360
+    permissions:
+      contents: write
+    env:
+      CARGO_TERM_COLOR: always
+      CI: "true"
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          submodules: false
+
+      - name: Inspect build environment and Xcode project
+        id: toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist/logs dist/test-results
+          xcodebuild -version | tee dist/logs/xcode-version.log
+          xcodebuild -list -project browser/Reynard.xcodeproj | tee dist/logs/xcode-project-list.log
+          python3 --version | tee dist/logs/python-version.log
+          rustc --version | tee dist/logs/rust-version.log
+          cargo --version | tee -a dist/logs/rust-version.log
+          rustup target add aarch64-apple-ios
+          xcode_key="$(xcodebuild -version | shasum -a 256 | cut -c1-12)"
+          echo "xcode-key=$xcode_key" >> "$GITHUB_OUTPUT"
+          df -h | tee dist/logs/disk-before.log
+
+      - name: Initialize idevice source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git submodule update --init --depth 1 support/idevice
+
+      - name: Restore Rust dependency cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            support/idevice/target
+          key: idevice-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-${{ hashFiles('support/idevice/ffi/Cargo.lock', 'tools/development/build-idevice.sh') }}
+          restore-keys: |
+            idevice-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-
+
+      - name: Download exact Gecko source and apply project patches
+        shell: bash
+        run: |
+          set -euo pipefail
+          tools/development/update-gecko.sh 2>&1 | tee dist/logs/update-gecko.log
+          tools/development/apply-patches.sh 2>&1 | tee dist/logs/apply-patches.log
+
+      - name: Restore Gecko object cache
+        uses: actions/cache@v4
+        with:
+          path: engine/firefox/obj-aarch64-apple-ios
+          key: gecko-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-${{ hashFiles('engine/release.txt', 'patches/**/*.patch', 'tools/development/build-gecko.sh') }}
+          restore-keys: |
+            gecko-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-
+
+      - name: Build idevice support library
+        shell: bash
+        run: |
+          set -euo pipefail
+          tools/development/build-idevice.sh 2>&1 | tee dist/logs/build-idevice.log
+          test -s browser/Reynard/JIT/RPPairing/libidevice_ffi.a
+
+      - name: Build Gecko for iOS
+        shell: bash
+        run: |
+          set -euo pipefail
+          tools/development/build-gecko.sh 2>&1 | tee dist/logs/build-gecko.log
+          test -s engine/firefox/obj-aarch64-apple-ios/dist/bin/XUL
+          df -h | tee dist/logs/disk-after-gecko.log
+
+      - name: Build unsigned Reynard.app
+        shell: bash
+        run: |
+          set -euo pipefail
+          tools/release/build-unsigned-app.sh
+
+      - name: Package and verify unsigned IPA
+        id: package
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(awk -F ' = ' '/^CURRENT_VERSION = / { print $2; exit }' browser/Configuration/Reynard.xcconfig)"
+          short_sha="$(git rev-parse --short=7 HEAD)"
+          ipa_name="Reynard-${version}-${short_sha}-unsigned.ipa"
+          tools/release/create-unsigned-ipa.sh dist/Reynard.app "dist/$ipa_name" 2>&1 | tee dist/logs/package-ipa.log
+          shasum -a 256 "dist/$ipa_name" | tee "dist/$ipa_name.sha256"
+          echo "ipa-name=$ipa_name" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Collect symbols and final diagnostics
+        if: always()
+        shell: bash
+        run: |
+          set -uo pipefail
+          mkdir -p dist/symbols
+          while IFS= read -r -d '' symbol; do
+            ditto "$symbol" "dist/symbols/$(basename "$symbol")"
+          done < <(find build/DerivedData/Build/Products -maxdepth 4 -type d -name '*.dSYM' -print0 2>/dev/null)
+          df -h | tee dist/logs/disk-final.log
+
+      - name: Upload IPA, logs, tests, and symbols
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Reynard-source-unsigned-${{ github.run_number }}
+          path: |
+            dist/*.ipa
+            dist/*.sha256
+            dist/logs
+            dist/test-results
+            dist/symbols
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Require a real IPA artifact
+        shell: bash
+        env:
+          IPA_NAME: ${{ steps.package.outputs.ipa-name }}
+        run: |
+          set -euo pipefail
+          test -n "$IPA_NAME"
+          test -s "dist/$IPA_NAME"
+
+      - name: Create or update tagged release
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          IPA_NAME: ${{ steps.package.outputs.ipa-name }}
+        run: |
+          set -euo pipefail
+          note_file="dist/release-notes.md"
+          printf '%s\n\n%s\n' \
+            'Unsigned build. This IPA is not signed and cannot be installed directly without a compatible signing or sideloading method.' \
+            'Built from this tag’s Reynard, idevice, Gecko revision, and patch sources by GitHub Actions.' > "$note_file"
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" "dist/$IPA_NAME" "dist/$IPA_NAME.sha256" --clobber
+            gh release edit "$GITHUB_REF_NAME" --notes-file "$note_file"
+          else
+            gh release create "$GITHUB_REF_NAME" "dist/$IPA_NAME" "dist/$IPA_NAME.sha256" \
+              --title "$GITHUB_REF_NAME" --notes-file "$note_file"
+          fi
+
+      - name: Write build summary
+        if: always()
+        shell: bash
+        env:
+          IPA_NAME: ${{ steps.package.outputs.ipa-name }}
+        run: |
+          {
+            echo '## Reynard source build'
+            echo
+            echo "- Commit: $GITHUB_SHA"
+            echo "- IPA: ${IPA_NAME:-not produced}"
+            echo '- Signing: disabled; no certificate or provisioning profile is used.'
+            echo '- Installation: the IPA must be signed by a compatible sideloading method before normal installation.'
+          } >> "$GITHUB_STEP_SUMMARY"
