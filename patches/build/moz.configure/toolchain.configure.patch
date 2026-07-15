@@ -1,7 +1,7 @@
 diff --git a/build/moz.configure/toolchain.configure b/build/moz.configure/toolchain.configure
 --- a/build/moz.configure/toolchain.configure
 +++ b/build/moz.configure/toolchain.configure
-@@ -1795,6 +1795,19 @@ def select_linker_tmpl(host_or_target):
+@@ -1795,6 +1795,20 @@ def select_linker_tmpl(host_or_target):
              retcode, stdout, stderr = get_cmd_output(*cmd, env=env)
              if retcode == 1 and "Logging ld64 options" in stderr:
                  kind = "ld64"
@@ -11,10 +11,11 @@ diff --git a/build/moz.configure/toolchain.configure b/build/moz.configure/toolc
 +                fallback_cmd = (
 +                    cmd_base + linker_flag + ["-Wl,-v"] + toolchain_flags
 +                )
-+                fallback_retcode, _, fallback_stderr = get_cmd_output(
++                _, fallback_stdout, fallback_stderr = get_cmd_output(
 +                    *fallback_cmd, env=env
 +                )
-+                if fallback_retcode == 0 and "@(#)PROGRAM:ld" in fallback_stderr:
++                fallback_output = fallback_stdout + fallback_stderr
++                if "@(#)PROGRAM:ld" in fallback_output:
 +                    kind = "ld64"
 +                else:
 +                    return None
