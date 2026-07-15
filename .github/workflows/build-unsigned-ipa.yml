@@ -70,7 +70,19 @@ jobs:
           python3 --version | tee dist/logs/python-version.log
           rustc --version | tee dist/logs/rust-version.log
           cargo --version | tee -a dist/logs/rust-version.log
-          rustup target add aarch64-apple-ios
+          rust_target="aarch64-apple-ios"
+          for attempt in 1 2 3; do
+            if rustup target add "$rust_target"; then
+              break
+            fi
+            if [[ "$attempt" == "3" ]]; then
+              rustup show
+              exit 1
+            fi
+            echo "rustup target download failed (attempt $attempt/3); retrying..."
+            sleep "$((attempt * 10))"
+          done
+          rustup target list --installed | grep -Fx "$rust_target"
           if ! llvm_prefix="$(brew --prefix llvm@20 2>/dev/null)"; then
             brew install llvm@20
             llvm_prefix="$(brew --prefix llvm@20)"
