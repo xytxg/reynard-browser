@@ -71,8 +71,23 @@ jobs:
           rustc --version | tee dist/logs/rust-version.log
           cargo --version | tee -a dist/logs/rust-version.log
           rustup target add aarch64-apple-ios
+          if ! llvm_prefix="$(brew --prefix llvm@20 2>/dev/null)"; then
+            brew install llvm@20
+            llvm_prefix="$(brew --prefix llvm@20)"
+          fi
+          wasm_cc="$llvm_prefix/bin/clang"
+          wasm_cxx="$llvm_prefix/bin/clang++"
+          test -x "$wasm_cc"
+          test -x "$wasm_cxx"
+          "$wasm_cc" --version | tee dist/logs/wasm-clang-version.log
+          printf 'int main(void) { return 0; }\n' | \
+            "$wasm_cc" --target=wasm32-wasi -x c -c -o "$RUNNER_TEMP/reynard-wasm-probe.o" -
           xcode_key="$(xcodebuild -version | shasum -a 256 | cut -c1-12)"
+          wasm_key="$("$wasm_cc" --version | shasum -a 256 | cut -c1-12)"
           echo "xcode-key=$xcode_key" >> "$GITHUB_OUTPUT"
+          echo "wasm-key=$wasm_key" >> "$GITHUB_OUTPUT"
+          echo "wasm-cc=$wasm_cc" >> "$GITHUB_OUTPUT"
+          echo "wasm-cxx=$wasm_cxx" >> "$GITHUB_OUTPUT"
           df -h | tee dist/logs/disk-before.log
 
       - name: Initialize idevice source
@@ -115,9 +130,9 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: engine/firefox/obj-aarch64-apple-ios
-          key: gecko-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-${{ hashFiles('engine/release.txt', 'patches/**/*.patch', 'tools/development/build-gecko.sh') }}
+          key: gecko-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-${{ steps.toolchain.outputs.wasm-key }}-${{ hashFiles('engine/release.txt', 'patches/**/*.patch', 'tools/development/build-gecko.sh') }}
           restore-keys: |
-            gecko-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-
+            gecko-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-${{ steps.toolchain.outputs.wasm-key }}-
 
       - name: Build idevice support library
         shell: bash
@@ -139,8 +154,12 @@ jobs:
 
       - name: Build Gecko for iOS
         shell: bash
+        env:
+          WASM_CC: ${{ steps.toolchain.outputs.wasm-cc }}
+          WASM_CXX: ${{ steps.toolchain.outputs.wasm-cxx }}
         run: |
           set -euo pipefail
+          "$WASM_CC" --version | tee dist/logs/wasm-compiler-selected.log
           tools/development/build-gecko.sh 2>&1 | tee dist/logs/build-gecko.log
           test -s engine/firefox/obj-aarch64-apple-ios/dist/bin/XUL
           df -h | tee dist/logs/disk-after-gecko.log
@@ -150,7 +169,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: engine/firefox/obj-aarch64-apple-ios
-          key: gecko-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-${{ hashFiles('engine/release.txt', 'patches/**/*.patch', 'tools/development/build-gecko.sh') }}
+          key: gecko-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-${{ steps.toolchain.outputs.wasm-key }}-${{ hashFiles('engine/release.txt', 'patches/**/*.patch', 'tools/development/build-gecko.sh') }}
 
       - name: Build unsigned Reynard.app
         shell: bash
