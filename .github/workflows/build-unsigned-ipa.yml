@@ -223,8 +223,6 @@ jobs:
         with:
           path: engine/firefox/obj-aarch64-apple-ios
           key: gecko-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-${{ steps.toolchain.outputs.wasm-key }}-${{ hashFiles('engine/release.txt', 'patches/**/*.patch', 'tools/development/build-gecko.sh') }}
-          restore-keys: |
-            gecko-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-${{ steps.toolchain.outputs.wasm-key }}-
 
       - name: Build idevice support library
         shell: bash
@@ -250,10 +248,18 @@ jobs:
           WASM_CC: ${{ steps.wasi.outputs.wasm-cc }}
           WASM_CXX: ${{ steps.wasi.outputs.wasm-cxx }}
           WASI_SYSROOT: ${{ steps.wasi.outputs.wasi-sysroot }}
+          GECKO_CACHE_HIT: ${{ steps.gecko-cache.outputs.cache-hit }}
         run: |
           set -euo pipefail
           "$WASM_CC" --version | tee dist/logs/wasm-compiler-selected.log
           test -f "$WASI_SYSROOT/include/string.h"
+          if [[ "$GECKO_CACHE_HIT" == "true" ]]; then
+            # The source checkout has fresh mtimes, but an exact-key cache was
+            # built from this same Gecko revision, patches, and toolchain.
+            # Acknowledge the matching CLOBBER marker before the no-op rebuild.
+            test -s engine/firefox/obj-aarch64-apple-ios/dist/bin/XUL
+            touch engine/firefox/obj-aarch64-apple-ios/CLOBBER
+          fi
           tools/development/build-gecko.sh 2>&1 | tee dist/logs/build-gecko.log
           test -s engine/firefox/obj-aarch64-apple-ios/dist/bin/XUL
           df -h | tee dist/logs/disk-after-gecko.log
