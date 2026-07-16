@@ -9,6 +9,12 @@
             "state" : "translated",
             "value" : " of %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "，共 %@"
+          }
         }
       }
     },
@@ -19,6 +25,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ · Opened Tab"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · 已打开的标签页"
           }
         }
       }
@@ -31,6 +43,12 @@
             "state" : "translated",
             "value" : "%1$@ · Visited %2$@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · 访问于 %2$@"
+          }
         }
       }
     },
@@ -41,6 +59,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@ and %2$@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ 和 %2$@"
           }
         }
       }
@@ -53,6 +77,12 @@
             "state" : "translated",
             "value" : "%@ are disabled for Reynard. Open Settings to allow access."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reynard 的%@权限已关闭。请前往“设置”允许访问。"
+          }
         }
       }
     },
@@ -63,6 +93,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ has been updated. Approve the additional permissions before the updated version is installed. Dismissing this prompt keeps your current add-on version."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 已更新。请先批准新增权限再安装新版本。关闭此提示将保留当前的附加组件版本。"
           }
         }
       }
@@ -75,6 +111,12 @@
             "state" : "translated",
             "value" : "%@ is disabled for Reynard. Open Settings to allow access."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reynard 的%@权限已关闭。请前往“设置”允许访问。"
+          }
         }
       }
     },
@@ -85,6 +127,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ out of 5"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 分（满分 5 分）"
           }
         }
       }
@@ -109,6 +157,18 @@
               }
             }
           }
+        },
+        "zh-Hans" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$@ 分（满分 5 分）· %2$d 条评价"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -119,6 +179,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ requests additional data collection."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 请求收集更多数据。"
           }
         }
       }
@@ -131,6 +197,12 @@
             "state" : "translated",
             "value" : "%@ requests additional permissions."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 请求更多权限。"
+          }
         }
       }
     },
@@ -141,6 +213,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ Suggestions"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 建议"
           }
         }
       }
@@ -153,6 +231,12 @@
             "state" : "translated",
             "value" : "%1$@, and %2$@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ 和 %2$@"
+          }
         }
       }
     },
@@ -163,6 +247,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@/sec"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/秒"
           }
         }
       }
@@ -183,6 +273,18 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "%d add-ons couldn’t be updated."
+                }
+              }
+            }
+          }
+        },
+        "zh-Hans" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%d 个附加组件无法更新。"
                 }
               }
             }
@@ -210,6 +312,18 @@
               }
             }
           }
+        },
+        "zh-Hans" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%d 个附加组件需要获得权限才能更新。"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -229,6 +343,18 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "%d add-ons updated."
+                }
+              }
+            }
+          }
+        },
+        "zh-Hans" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "已更新 %d 个附加组件。"
                 }
               }
             }
@@ -256,6 +382,18 @@
               }
             }
           }
+        },
+        "zh-Hans" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%d 个域名"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -279,6 +417,18 @@
               }
             }
           }
+        },
+        "zh-Hans" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%d 个标签页"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -288,6 +438,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "▲ JIT-Less Mode is Currently Active"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "▲ 当前已启用无 JIT 模式"
           }
         }
       }
@@ -299,6 +455,12 @@
             "state" : "translated",
             "value" : "0 Tabs"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "0 个标签页"
+          }
         }
       }
     },
@@ -308,6 +470,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "A Developer Disk Image download is already in progress."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开发者磁盘映像正在下载。"
           }
         }
       }
@@ -319,6 +487,12 @@
             "state" : "translated",
             "value" : "A new version of Reynard Browser is available. Open Settings to update."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reynard 浏览器有新版本可用。请打开“设置”进行更新。"
+          }
         }
       }
     },
@@ -329,6 +503,12 @@
             "state" : "translated",
             "value" : "About"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关于"
+          }
         }
       }
     },
@@ -338,6 +518,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Access"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "访问权限"
           }
         }
       }
@@ -350,6 +536,12 @@
             "state" : "translated",
             "value" : "Access your data on websites in %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "访问 %@ 中网站上的数据"
+          }
         }
       }
     },
@@ -360,6 +552,12 @@
             "state" : "translated",
             "value" : "Activate JIT-Less Mode"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用无 JIT 模式"
+          }
         }
       }
     },
@@ -369,6 +567,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加"
           }
         }
       }
@@ -381,6 +585,12 @@
             "state" : "translated",
             "value" : "Add %@?"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加 %@？"
+          }
         }
       }
     },
@@ -390,6 +600,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add Add-on"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加附加组件"
           }
         }
       }
@@ -401,6 +617,12 @@
             "state" : "translated",
             "value" : "Add Bookmark"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加书签"
+          }
         }
       }
     },
@@ -410,6 +632,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add Language"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加语言"
           }
         }
       }
@@ -421,6 +649,12 @@
             "state" : "translated",
             "value" : "Add Language…"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加语言…"
+          }
         }
       }
     },
@@ -430,6 +664,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add to Favorites"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加到收藏夹"
           }
         }
       }
@@ -441,6 +681,12 @@
             "state" : "translated",
             "value" : "Add Website"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加网站"
+          }
         }
       }
     },
@@ -450,6 +696,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add Website…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加网站…"
           }
         }
       }
@@ -462,6 +714,12 @@
             "state" : "translated",
             "value" : "Add websites with sign-in failures, human verification challenges, or other issues to use the %@ user agent."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加登录失败、需要人机验证或存在其他问题的网站，使其使用 %@ 用户代理。"
+          }
         }
       }
     },
@@ -472,6 +730,12 @@
             "state" : "translated",
             "value" : "Add-ons"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "附加组件"
+          }
         }
       }
     },
@@ -481,6 +745,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Additional Options"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "其他选项"
           }
         }
       }
@@ -493,6 +763,12 @@
             "state" : "translated",
             "value" : "Address"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "地址"
+          }
         }
       }
     },
@@ -502,6 +778,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Address Bar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "地址栏"
           }
         }
       }
@@ -513,6 +795,12 @@
             "state" : "translated",
             "value" : "Admin Only"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅限管理员"
+          }
         }
       }
     },
@@ -522,6 +810,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Advanced"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "高级"
           }
         }
       }
@@ -533,6 +827,12 @@
             "state" : "translated",
             "value" : "After you close a tab, Reynard won’t remember any of your browsing history or cookies. However, downloads and new bookmarks will be saved."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭标签页后，Reynard 不会保留任何浏览历史记录或 Cookie，但下载内容和新书签仍会保存。"
+          }
         }
       }
     },
@@ -542,6 +842,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "All Downloads"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有下载"
           }
         }
       }
@@ -553,6 +859,12 @@
             "state" : "translated",
             "value" : "All History"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有历史记录"
+          }
         }
       }
     },
@@ -562,6 +874,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "All Websites"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有网站"
           }
         }
       }
@@ -574,6 +892,12 @@
             "state" : "translated",
             "value" : "Allow"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "允许"
+          }
         }
       }
     },
@@ -584,6 +908,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Allow %@ to access apps and services on devices connected to your local network?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "允许 %@ 访问本地网络中设备上的应用和服务吗？"
           }
         }
       }
@@ -596,6 +926,12 @@
             "state" : "translated",
             "value" : "Allow %@ to access other apps and services on this device?"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "允许 %@ 访问此设备上的其他应用和服务吗？"
+          }
         }
       }
     },
@@ -606,6 +942,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Allow %@ to play DRM-controlled content?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "允许 %@ 播放受 DRM 保护的内容吗？"
           }
         }
       }
@@ -618,6 +960,12 @@
             "state" : "translated",
             "value" : "Allow %@ to send notifications?"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "允许 %@ 发送通知吗？"
+          }
         }
       }
     },
@@ -628,6 +976,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Allow %@ to store data in persistent storage?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "允许 %@ 将数据保存到持久存储空间吗？"
           }
         }
       }
@@ -640,6 +994,12 @@
             "state" : "translated",
             "value" : "Allow %1$@ to use its cookies on %2$@?"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "允许 %1$@ 在 %2$@ 上使用其 Cookie 吗？"
+          }
         }
       }
     },
@@ -650,6 +1010,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Allow %@ to use motion & orientation sensors?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "允许 %@ 使用运动与方向传感器吗？"
           }
         }
       }
@@ -662,6 +1028,12 @@
             "state" : "translated",
             "value" : "Allow %@ to use your camera and microphone?"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "允许 %@ 使用你的相机和麦克风吗？"
+          }
         }
       }
     },
@@ -672,6 +1044,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Allow %@ to use your camera?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "允许 %@ 使用你的相机吗？"
           }
         }
       }
@@ -684,6 +1062,12 @@
             "state" : "translated",
             "value" : "Allow %@ to use your location?"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "允许 %@ 使用你的位置信息吗？"
+          }
         }
       }
     },
@@ -694,6 +1078,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Allow %@ to use your microphone?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "允许 %@ 使用你的麦克风吗？"
           }
         }
       }
@@ -706,6 +1096,12 @@
             "state" : "translated",
             "value" : "Allow Audio and Video"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "允许音频和视频"
+          }
         }
       }
     },
@@ -715,6 +1111,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Allow in Private Browsing"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "允许在无痕浏览中使用"
           }
         }
       }
@@ -726,6 +1128,12 @@
             "state" : "translated",
             "value" : "Allow on All Websites"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "允许在所有网站上使用"
+          }
         }
       }
     },
@@ -735,6 +1143,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Allow this add-on to access every website."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "允许此附加组件访问所有网站。"
           }
         }
       }
@@ -747,6 +1161,12 @@
             "state" : "translated",
             "value" : "Allowed %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已于 %@ 允许"
+          }
         }
       }
     },
@@ -756,6 +1176,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Allowed Websites"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已允许的网站"
           }
         }
       }
@@ -767,6 +1193,12 @@
             "state" : "translated",
             "value" : "Appearance"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "外观"
+          }
         }
       }
     },
@@ -777,6 +1209,12 @@
             "state" : "translated",
             "value" : "Apps and Services"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "应用与服务"
+          }
         }
       }
     },
@@ -786,6 +1224,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Are you sure you want to upload all files? Only do this if you trust the site."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要上传所有文件吗？仅在你信任此网站时执行此操作。"
           }
         }
       }
@@ -798,6 +1242,12 @@
             "state" : "translated",
             "value" : "Ask"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "询问"
+          }
         }
       }
     },
@@ -807,6 +1257,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Author"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "作者"
           }
         }
       }
@@ -818,6 +1274,12 @@
             "state" : "translated",
             "value" : "Autoplay"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自动播放"
+          }
         }
       }
     },
@@ -827,6 +1289,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Blank Page"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "空白页"
           }
         }
       }
@@ -839,6 +1307,12 @@
             "state" : "translated",
             "value" : "Block Audio and Video"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "阻止音频和视频"
+          }
         }
       }
     },
@@ -850,6 +1324,12 @@
             "state" : "translated",
             "value" : "Block Audio Only"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅阻止音频"
+          }
         }
       }
     },
@@ -859,6 +1339,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Blocked"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已阻止"
           }
         }
       }
@@ -870,6 +1356,12 @@
             "state" : "translated",
             "value" : "Bookmarks"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "书签"
+          }
         }
       }
     },
@@ -879,6 +1371,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bookmarks, History, and Tabs"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "书签、历史记录和标签页"
           }
         }
       }
@@ -891,6 +1389,12 @@
             "state" : "translated",
             "value" : "Bottom"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "底部"
+          }
         }
       }
     },
@@ -900,6 +1404,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Browsing"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "浏览"
           }
         }
       }
@@ -911,6 +1421,12 @@
             "state" : "translated",
             "value" : "Browsing History"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "浏览历史记录"
+          }
         }
       }
     },
@@ -920,6 +1436,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "bytes"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "字节"
           }
         }
       }
@@ -931,6 +1453,12 @@
             "state" : "translated",
             "value" : "Cached Images and Files"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "缓存的图片和文件"
+          }
         }
       }
     },
@@ -940,6 +1468,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Camera"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "相机"
           }
         }
       }
@@ -951,6 +1485,12 @@
             "state" : "translated",
             "value" : "Cancel"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
+          }
         }
       }
     },
@@ -961,6 +1501,12 @@
             "state" : "translated",
             "value" : "Cancel Download"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消下载"
+          }
         }
       }
     },
@@ -970,6 +1516,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancel Download?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消下载？"
           }
         }
       }
@@ -982,6 +1534,12 @@
             "state" : "translated",
             "value" : "Changed %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已于 %@ 更改"
+          }
         }
       }
     },
@@ -992,6 +1550,12 @@
             "state" : "translated",
             "value" : "Choose File"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择文件"
+          }
         }
       }
     },
@@ -1001,6 +1565,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Choose Folder"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择文件夹"
           }
         }
       }
@@ -1013,6 +1583,12 @@
             "state" : "translated",
             "value" : "Clear"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清除"
+          }
         }
       }
     },
@@ -1022,6 +1598,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Clear All"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全部清除"
           }
         }
       }
@@ -1033,6 +1615,12 @@
             "state" : "translated",
             "value" : "Clear Browsing Data"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清除浏览数据"
+          }
         }
       }
     },
@@ -1042,6 +1630,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Clear Downloads"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清除下载记录"
           }
         }
       }
@@ -1053,6 +1647,12 @@
             "state" : "translated",
             "value" : "Clear History"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清除历史记录"
+          }
         }
       }
     },
@@ -1062,6 +1662,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Clear Timeframe"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清除时间范围"
           }
         }
       }
@@ -1073,6 +1679,12 @@
             "state" : "translated",
             "value" : "Close All Tabs"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭所有标签页"
+          }
         }
       }
     },
@@ -1082,6 +1694,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Compatibility"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "兼容性"
           }
         }
       }
@@ -1093,6 +1711,12 @@
             "state" : "translated",
             "value" : "Complete Add-on Updates"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完成附加组件更新"
+          }
         }
       }
     },
@@ -1102,6 +1726,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Confirm Upload"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确认上传"
           }
         }
       }
@@ -1113,6 +1743,12 @@
             "state" : "translated",
             "value" : "Cookies and Website Data"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookie 和网站数据"
+          }
         }
       }
     },
@@ -1122,6 +1758,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Copy"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复制"
           }
         }
       }
@@ -1133,6 +1775,12 @@
             "state" : "translated",
             "value" : "Copy Link"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复制链接"
+          }
         }
       }
     },
@@ -1142,6 +1790,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Copy URL"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复制网址"
           }
         }
       }
@@ -1153,6 +1807,12 @@
             "state" : "translated",
             "value" : "Corrupt File"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件已损坏"
+          }
         }
       }
     },
@@ -1162,6 +1822,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Could not retrieve the download URL."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法获取下载地址。"
           }
         }
       }
@@ -1173,6 +1839,12 @@
             "state" : "translated",
             "value" : "Couldn’t Clear Browsing Data"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法清除浏览数据"
+          }
         }
       }
     },
@@ -1182,6 +1854,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Couldn’t Clear History"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法清除历史记录"
           }
         }
       }
@@ -1193,6 +1871,12 @@
             "state" : "translated",
             "value" : "Couldn’t Disable Add-on"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法停用附加组件"
+          }
         }
       }
     },
@@ -1202,6 +1886,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Couldn’t Enable Add-on"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法启用附加组件"
           }
         }
       }
@@ -1214,6 +1904,12 @@
             "state" : "translated",
             "value" : "Couldn’t install %@."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法安装 %@。"
+          }
         }
       }
     },
@@ -1223,6 +1919,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Couldn’t install this add-on."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法安装此附加组件。"
           }
         }
       }
@@ -1234,6 +1936,12 @@
             "state" : "translated",
             "value" : "Couldn’t Reload Add-on"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法重新载入附加组件"
+          }
         }
       }
     },
@@ -1243,6 +1951,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Couldn’t Remove Add-on"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法移除附加组件"
           }
         }
       }
@@ -1254,6 +1968,12 @@
             "state" : "translated",
             "value" : "Couldn’t Update Permissions"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法更新权限"
+          }
         }
       }
     },
@@ -1264,6 +1984,12 @@
             "state" : "translated",
             "value" : "Couldn’t Update Private Browsing Access"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法更新无痕浏览访问权限"
+          }
         }
       }
     },
@@ -1273,6 +1999,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cross-Site Cookies"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "跨站 Cookie"
           }
         }
       }
@@ -1285,6 +2017,12 @@
             "state" : "translated",
             "value" : "Custom"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自定义"
+          }
         }
       }
     },
@@ -1295,6 +2033,12 @@
             "state" : "translated",
             "value" : "Custom Search URL"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自定义搜索网址"
+          }
         }
       }
     },
@@ -1304,6 +2048,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Custom URL"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自定义网址"
           }
         }
       }
@@ -1316,6 +2066,12 @@
             "state" : "translated",
             "value" : "Date Added"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加日期"
+          }
         }
       }
     },
@@ -1327,6 +2083,12 @@
             "state" : "translated",
             "value" : "Day"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "浅色"
+          }
         }
       }
     },
@@ -1336,6 +2098,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Default Setting"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "默认设置"
           }
         }
       }
@@ -1347,6 +2115,12 @@
             "state" : "translated",
             "value" : "Delete"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除"
+          }
         }
       }
     },
@@ -1356,6 +2130,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete Bookmark"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除书签"
           }
         }
       }
@@ -1367,6 +2147,12 @@
             "state" : "translated",
             "value" : "Delete Folder"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除文件夹"
+          }
         }
       }
     },
@@ -1376,6 +2162,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Deleted"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已删除"
           }
         }
       }
@@ -1388,6 +2180,12 @@
             "state" : "translated",
             "value" : "Denied %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已于 %@ 拒绝"
+          }
         }
       }
     },
@@ -1397,6 +2195,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Denied Websites"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已拒绝的网站"
           }
         }
       }
@@ -1409,6 +2213,12 @@
             "state" : "translated",
             "value" : "Deny"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拒绝"
+          }
         }
       }
     },
@@ -1418,6 +2228,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Desktop Firefox"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "桌面版 Firefox"
           }
         }
       }
@@ -1429,6 +2245,12 @@
             "state" : "translated",
             "value" : "Details"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "详细信息"
+          }
         }
       }
     },
@@ -1438,6 +2260,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Developer Disk Image download was cancelled."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开发者磁盘映像下载已取消。"
           }
         }
       }
@@ -1449,6 +2277,12 @@
             "state" : "translated",
             "value" : "Developer Disk Image source URL is invalid."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开发者磁盘映像来源网址无效。"
+          }
         }
       }
     },
@@ -1459,6 +2293,12 @@
             "state" : "translated",
             "value" : "Device Apps and Services"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设备上的应用与服务"
+          }
         }
       }
     },
@@ -1468,6 +2308,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Discover Add-ons…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "发现附加组件…"
           }
         }
       }
@@ -1480,6 +2326,12 @@
             "state" : "translated",
             "value" : "Do you want to download \"%@\"?"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "要下载“%@”吗？"
+          }
         }
       }
     },
@@ -1491,6 +2343,12 @@
             "state" : "translated",
             "value" : "Do you want to stop downloading %@?"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "要停止下载 %@ 吗？"
+          }
         }
       }
     },
@@ -1500,6 +2358,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Don’t Allow"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不允许"
           }
         }
       }
@@ -1511,6 +2375,12 @@
             "state" : "translated",
             "value" : "Download"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载"
+          }
         }
       }
     },
@@ -1520,6 +2390,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Download Failed"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载失败"
           }
         }
       }
@@ -1531,6 +2407,12 @@
             "state" : "translated",
             "value" : "Download Reynard (.tipa)"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载 Reynard（.tipa）"
+          }
         }
       }
     },
@@ -1540,6 +2422,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Downloading"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在下载"
           }
         }
       }
@@ -1551,6 +2439,12 @@
             "state" : "translated",
             "value" : "Downloading Update"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在下载更新"
+          }
         }
       }
     },
@@ -1560,6 +2454,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Downloads"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载"
           }
         }
       }
@@ -1571,6 +2471,12 @@
             "state" : "translated",
             "value" : "e.g. youtube.com"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "例如 youtube.com"
+          }
         }
       }
     },
@@ -1580,6 +2486,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Edit"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "编辑"
           }
         }
       }
@@ -1591,6 +2503,12 @@
             "state" : "translated",
             "value" : "Edit Bookmark"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "编辑书签"
+          }
         }
       }
     },
@@ -1600,6 +2518,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Edit Bookmarks"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "编辑书签"
           }
         }
       }
@@ -1611,6 +2535,12 @@
             "state" : "translated",
             "value" : "Enable Add-on"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用附加组件"
+          }
         }
       }
     },
@@ -1620,6 +2550,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enable JIT"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用 JIT"
           }
         }
       }
@@ -1631,6 +2567,12 @@
             "state" : "translated",
             "value" : "Enable JIT to improve performance and ensure websites work properly."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用 JIT 可提升性能并确保网站正常运行。"
+          }
         }
       }
     },
@@ -1641,6 +2583,12 @@
             "state" : "translated",
             "value" : "Engine Version"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "引擎版本"
+          }
         }
       }
     },
@@ -1650,6 +2598,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Error"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "错误"
           }
         }
       }
@@ -1662,6 +2616,12 @@
             "state" : "translated",
             "value" : "Error %1$d: %2$@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "错误 %1$d：%2$@"
+          }
         }
       }
     },
@@ -1671,6 +2631,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Failed to enable JIT"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法启用 JIT"
           }
         }
       }
@@ -1682,6 +2648,12 @@
             "state" : "translated",
             "value" : "Favorites"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收藏夹"
+          }
         }
       }
     },
@@ -1691,6 +2663,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Files you download appear here"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你下载的文件会显示在这里"
           }
         }
       }
@@ -1702,6 +2680,12 @@
             "state" : "translated",
             "value" : "Firefox for Android"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Android 版 Firefox"
+          }
         }
       }
     },
@@ -1711,6 +2695,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Folders"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件夹"
           }
         }
       }
@@ -1722,6 +2712,12 @@
             "state" : "translated",
             "value" : "Frequently Visited"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "经常访问"
+          }
         }
       }
     },
@@ -1732,12 +2728,24 @@
             "state" : "translated",
             "value" : "General"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通用"
+          }
         }
       }
     },
     "GitHub - @minh-ton" : {
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub - @minh-ton"
+          }
+        },
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "GitHub - @minh-ton"
@@ -1752,6 +2760,12 @@
             "state" : "translated",
             "value" : "History"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "历史记录"
+          }
         }
       }
     },
@@ -1761,6 +2775,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Homepage"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "主页"
           }
         }
       }
@@ -1772,6 +2792,12 @@
             "state" : "translated",
             "value" : "Homepage Sections"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "主页栏目"
+          }
         }
       }
     },
@@ -1781,6 +2807,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import Failed"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入失败"
           }
         }
       }
@@ -1792,6 +2824,12 @@
             "state" : "translated",
             "value" : "Import Pairing File…"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入配对文件…"
+          }
         }
       }
     },
@@ -1801,6 +2839,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Incompatible"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不兼容"
           }
         }
       }
@@ -1812,6 +2856,12 @@
             "state" : "translated",
             "value" : "Information"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "信息"
+          }
         }
       }
     },
@@ -1821,6 +2871,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Install Add-on from File…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从文件安装附加组件…"
           }
         }
       }
@@ -1832,6 +2888,12 @@
             "state" : "translated",
             "value" : "Install the TrollStore version of Reynard to enable JIT automatically for improved performance and to ensure websites work properly."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "安装 TrollStore 版 Reynard 可自动启用 JIT，从而提升性能并确保网站正常运行。"
+          }
         }
       }
     },
@@ -1841,6 +2903,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Install TrollStore"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "安装 TrollStore"
           }
         }
       }
@@ -1852,6 +2920,12 @@
             "state" : "translated",
             "value" : "Installed Add-ons"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已安装的附加组件"
+          }
         }
       }
     },
@@ -1861,6 +2935,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Installing Add-on…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在安装附加组件…"
           }
         }
       }
@@ -1873,12 +2953,24 @@
             "state" : "translated",
             "value" : "It's extremely rare that you encounter this issue! Make sure that your TrollStore installation or jailbroken environment is properly configured.\n\nYou may use the browser without JIT temporarily until the next launch by activating JIT-Less Mode."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这种问题非常少见！请确保 TrollStore 或越狱环境配置正确。\n\n你可以启用无 JIT 模式，暂时使用浏览器直到下次启动。"
+          }
         }
       }
     },
     "JIT" : {
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "JIT"
+          }
+        },
+        "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "JIT"
@@ -1893,6 +2985,12 @@
             "state" : "translated",
             "value" : "JIT is not supported on the OS version you are using."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前系统版本不支持 JIT。"
+          }
         }
       }
     },
@@ -1903,6 +3001,12 @@
             "state" : "translated",
             "value" : "Keep Downloading"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "继续下载"
+          }
         }
       }
     },
@@ -1912,6 +3016,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Languages"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "语言"
           }
         }
       }
@@ -1924,6 +3034,12 @@
             "state" : "translated",
             "value" : "Last checked %@."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上次检查：%@。"
+          }
         }
       }
     },
@@ -1933,6 +3049,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last Hour"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "过去一小时"
           }
         }
       }
@@ -1944,6 +3066,12 @@
             "state" : "translated",
             "value" : "Last Tab"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上次打开的标签页"
+          }
         }
       }
     },
@@ -1953,6 +3081,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last Updated"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最近更新"
           }
         }
       }
@@ -1964,6 +3098,12 @@
             "state" : "translated",
             "value" : "Learn More"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "了解更多"
+          }
         }
       }
     },
@@ -1973,6 +3113,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Links"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "链接"
           }
         }
       }
@@ -1984,6 +3130,12 @@
             "state" : "translated",
             "value" : "Loading Add-ons…"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在载入附加组件…"
+          }
         }
       }
     },
@@ -1993,6 +3145,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Local Network"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本地网络"
           }
         }
       }
@@ -2004,6 +3162,12 @@
             "state" : "translated",
             "value" : "Local Network Devices"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本地网络设备"
+          }
         }
       }
     },
@@ -2013,6 +3177,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Location"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "位置"
           }
         }
       }
@@ -2024,6 +3194,12 @@
             "state" : "translated",
             "value" : "Make sure TrollStore's URL Scheme is enabled."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请确保已启用 TrollStore 的 URL Scheme。"
+          }
         }
       }
     },
@@ -2033,6 +3209,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Media"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "媒体"
           }
         }
       }
@@ -2044,6 +3226,12 @@
             "state" : "translated",
             "value" : "Microphone"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "麦克风"
+          }
         }
       }
     },
@@ -2053,6 +3241,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "More About This Add-on"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关于此附加组件的更多信息"
           }
         }
       }
@@ -2065,6 +3259,12 @@
             "state" : "translated",
             "value" : "Name"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "名称"
+          }
         }
       }
     },
@@ -2074,6 +3274,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Needs Permission to Update"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "需要权限才能更新"
           }
         }
       }
@@ -2085,6 +3291,12 @@
             "state" : "translated",
             "value" : "Network Error"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "网络错误"
+          }
         }
       }
     },
@@ -2094,6 +3306,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "New Folder"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新建文件夹"
           }
         }
       }
@@ -2106,6 +3324,12 @@
             "state" : "translated",
             "value" : "New required data collection: The developer says this add-on will collect %@."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新增的必要数据收集：开发者声明此附加组件将收集 %@。"
+          }
         }
       }
     },
@@ -2117,6 +3341,12 @@
             "state" : "translated",
             "value" : "New required permissions: %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新增的必要权限：%@"
+          }
         }
       }
     },
@@ -2126,6 +3356,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "New Tab"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新建标签页"
           }
         }
       }
@@ -2138,6 +3374,12 @@
             "state" : "translated",
             "value" : "Night"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "深色"
+          }
         }
       }
     },
@@ -2147,6 +3389,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "否"
           }
         }
       }
@@ -2158,6 +3406,12 @@
             "state" : "translated",
             "value" : "No Add-ons"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有附加组件"
+          }
         }
       }
     },
@@ -2167,6 +3421,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Add-ons Installed"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未安装附加组件"
           }
         }
       }
@@ -2178,6 +3438,12 @@
             "state" : "translated",
             "value" : "No matching bookmarks"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有匹配的书签"
+          }
         }
       }
     },
@@ -2187,6 +3453,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No matching downloads"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有匹配的下载记录"
           }
         }
       }
@@ -2198,6 +3470,12 @@
             "state" : "translated",
             "value" : "No matching history"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有匹配的历史记录"
+          }
         }
       }
     },
@@ -2207,6 +3485,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No release notes available."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂无更新说明。"
           }
         }
       }
@@ -2218,6 +3502,12 @@
             "state" : "translated",
             "value" : "No Update Available"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有可用更新"
+          }
         }
       }
     },
@@ -2227,6 +3517,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No updates found."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未发现更新。"
           }
         }
       }
@@ -2239,6 +3535,12 @@
             "state" : "translated",
             "value" : "None"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无"
+          }
         }
       }
     },
@@ -2248,6 +3550,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not Allowed in Private Browsing"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不允许在无痕浏览中使用"
           }
         }
       }
@@ -2259,6 +3567,12 @@
             "state" : "translated",
             "value" : "Not Verified"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未经验证"
+          }
         }
       }
     },
@@ -2268,6 +3582,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Number of Rows"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "行数"
           }
         }
       }
@@ -2279,6 +3599,12 @@
             "state" : "translated",
             "value" : "Number of Tabs"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "标签页数量"
+          }
         }
       }
     },
@@ -2288,6 +3614,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Number of Websites"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "网站数量"
           }
         }
       }
@@ -2300,6 +3632,12 @@
             "state" : "translated",
             "value" : "Off"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
         }
       }
     },
@@ -2309,6 +3647,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OK"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "好"
           }
         }
       }
@@ -2321,6 +3665,12 @@
             "state" : "translated",
             "value" : "On"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开启"
+          }
         }
       }
     },
@@ -2330,6 +3680,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "On Startup"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启动时"
           }
         }
       }
@@ -2342,6 +3698,12 @@
             "state" : "translated",
             "value" : "Open in\nFiles"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在“文件”中\n打开"
+          }
         }
       }
     },
@@ -2351,6 +3713,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Open in Files"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在“文件”中打开"
           }
         }
       }
@@ -2362,6 +3730,12 @@
             "state" : "translated",
             "value" : "Open in New Private Tab"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在新的无痕标签页中打开"
+          }
         }
       }
     },
@@ -2371,6 +3745,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Open in New Tab"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在新标签页中打开"
           }
         }
       }
@@ -2382,6 +3762,12 @@
             "state" : "translated",
             "value" : "Open New Tabs To"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新标签页打开到"
+          }
         }
       }
     },
@@ -2391,6 +3777,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Open Settings"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开设置"
           }
         }
       }
@@ -2402,6 +3794,12 @@
             "state" : "translated",
             "value" : "Open Tabs"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已打开的标签页"
+          }
         }
       }
     },
@@ -2411,6 +3809,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Option"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选项"
           }
         }
       }
@@ -2422,6 +3826,12 @@
             "state" : "translated",
             "value" : "Optional Data Collection"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可选数据收集"
+          }
         }
       }
     },
@@ -2431,6 +3841,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Optional Permissions"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可选权限"
           }
         }
       }
@@ -2442,6 +3858,12 @@
             "state" : "translated",
             "value" : "Page Zoom"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "页面缩放"
+          }
         }
       }
     },
@@ -2451,6 +3873,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Page Zoom on"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "以下网站的页面缩放"
           }
         }
       }
@@ -2462,6 +3890,12 @@
             "state" : "translated",
             "value" : "Performance Recommendation"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "性能建议"
+          }
         }
       }
     },
@@ -2471,6 +3905,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Permissions"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "权限"
           }
         }
       }
@@ -2482,6 +3922,12 @@
             "state" : "translated",
             "value" : "Persistent Storage"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "持久存储"
+          }
         }
       }
     },
@@ -2491,6 +3937,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Photo Library"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "照片图库"
           }
         }
       }
@@ -2503,6 +3955,12 @@
             "state" : "translated",
             "value" : "Please check that your pairing file is valid, your loopback VPN is on, and you're connected to a stable Wi-Fi network.\n\nYou may use the browser without JIT temporarily until the next launch by activating JIT-Less Mode."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请检查配对文件是否有效、环回 VPN 是否已开启，并确保设备连接到稳定的 Wi-Fi 网络。\n\n你可以启用无 JIT 模式，暂时使用浏览器直到下次启动。"
+          }
         }
       }
     },
@@ -2512,6 +3970,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Preparing JIT"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在准备 JIT"
           }
         }
       }
@@ -2523,6 +3987,12 @@
             "state" : "translated",
             "value" : "Previous 7 Days"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "过去 7 天"
+          }
         }
       }
     },
@@ -2532,6 +4002,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Previous 30 Days"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "过去 30 天"
           }
         }
       }
@@ -2543,6 +4019,12 @@
             "state" : "translated",
             "value" : "Privacy"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隐私"
+          }
         }
       }
     },
@@ -2552,6 +4034,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Private"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无痕"
           }
         }
       }
@@ -2563,6 +4051,12 @@
             "state" : "translated",
             "value" : "Private Browsing"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无痕浏览"
+          }
         }
       }
     },
@@ -2572,6 +4066,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Quit Reynard"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "退出 Reynard"
           }
         }
       }
@@ -2583,6 +4083,12 @@
             "state" : "translated",
             "value" : "Rating"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "评分"
+          }
         }
       }
     },
@@ -2593,6 +4099,12 @@
             "state" : "translated",
             "value" : "Recently Closed Tabs"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最近关闭的标签页"
+          }
         }
       }
     },
@@ -2602,6 +4114,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Remove"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "移除"
           }
         }
       }
@@ -2614,6 +4132,12 @@
             "state" : "translated",
             "value" : "Remove %@?"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "移除 %@？"
+          }
         }
       }
     },
@@ -2623,6 +4147,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Remove Add-on"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "移除附加组件"
           }
         }
       }
@@ -2634,6 +4164,12 @@
             "state" : "translated",
             "value" : "Remove Link"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "移除链接"
+          }
         }
       }
     },
@@ -2643,6 +4179,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Remove Recently Closed Tab"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "移除最近关闭的标签页"
           }
         }
       }
@@ -2654,6 +4196,12 @@
             "state" : "translated",
             "value" : "Request Desktop Website"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请求桌面网站"
+          }
         }
       }
     },
@@ -2663,6 +4211,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Request Desktop Website On"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在以下网站请求桌面版"
           }
         }
       }
@@ -2674,6 +4228,12 @@
             "state" : "translated",
             "value" : "Request Mobile Website"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请求移动网站"
+          }
         }
       }
     },
@@ -2683,6 +4243,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Required Data Collection"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "必要数据收集"
           }
         }
       }
@@ -2694,6 +4260,12 @@
             "state" : "translated",
             "value" : "Required DDI files are missing."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "缺少必要的 DDI 文件。"
+          }
         }
       }
     },
@@ -2703,6 +4275,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Required Permissions"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "必要权限"
           }
         }
       }
@@ -2715,6 +4293,12 @@
             "state" : "translated",
             "value" : "Reset"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重置"
+          }
         }
       }
     },
@@ -2724,6 +4308,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reset Page Zoom Settings"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重置页面缩放设置"
           }
         }
       }
@@ -2735,6 +4325,12 @@
             "state" : "translated",
             "value" : "Reset Permissions for All Websites"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重置所有网站的权限"
+          }
         }
       }
     },
@@ -2744,6 +4340,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reset Settings for This Website"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重置此网站的设置"
           }
         }
       }
@@ -2755,6 +4357,12 @@
             "state" : "translated",
             "value" : "Restart Required"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "需要重新启动"
+          }
         }
       }
     },
@@ -2764,6 +4372,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Restricted"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "受限制"
           }
         }
       }
@@ -2775,6 +4389,12 @@
             "state" : "translated",
             "value" : "Reynard Browser"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reynard 浏览器"
+          }
         }
       }
     },
@@ -2784,6 +4404,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reynard won’t remember any of your browsing history or cookies. However, downloads and new bookmarks will be saved."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reynard 不会保留任何浏览历史记录或 Cookie，但下载内容和新书签仍会保存。"
           }
         }
       }
@@ -2795,6 +4421,12 @@
             "state" : "translated",
             "value" : "Save"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存"
+          }
         }
       }
     },
@@ -2804,6 +4436,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Save to Photos"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "存储到照片"
           }
         }
       }
@@ -2815,6 +4453,12 @@
             "state" : "translated",
             "value" : "Search"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索"
+          }
         }
       }
     },
@@ -2824,6 +4468,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Search Bookmarks"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索书签"
           }
         }
       }
@@ -2835,6 +4485,12 @@
             "state" : "translated",
             "value" : "Search Browsing History"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索浏览历史记录"
+          }
         }
       }
     },
@@ -2844,6 +4500,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Search Downloads"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索下载记录"
           }
         }
       }
@@ -2855,6 +4517,12 @@
             "state" : "translated",
             "value" : "Search Engine"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索引擎"
+          }
         }
       }
     },
@@ -2864,6 +4532,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Search History"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索历史记录"
           }
         }
       }
@@ -2875,6 +4549,12 @@
             "state" : "translated",
             "value" : "Search Languages"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索语言"
+          }
         }
       }
     },
@@ -2884,6 +4564,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Search Opened Tabs"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索已打开的标签页"
           }
         }
       }
@@ -2895,6 +4581,12 @@
             "state" : "translated",
             "value" : "Search or enter address"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索或输入网址"
+          }
         }
       }
     },
@@ -2904,6 +4596,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Search Suggestion Provider"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索建议提供商"
           }
         }
       }
@@ -2915,6 +4613,12 @@
             "state" : "translated",
             "value" : "Search Suggestions"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索建议"
+          }
         }
       }
     },
@@ -2924,6 +4628,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select Option"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择选项"
           }
         }
       }
@@ -2935,6 +4645,12 @@
             "state" : "translated",
             "value" : "Select Options"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择多个选项"
+          }
         }
       }
     },
@@ -2944,6 +4660,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Settings"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置"
           }
         }
       }
@@ -2956,6 +4678,12 @@
             "state" : "translated",
             "value" : "Settings for %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 的设置"
+          }
         }
       }
     },
@@ -2965,6 +4693,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Share"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享"
           }
         }
       }
@@ -2976,6 +4710,12 @@
             "state" : "translated",
             "value" : "Share Image"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享图片"
+          }
         }
       }
     },
@@ -2985,6 +4725,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Share Link"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享链接"
           }
         }
       }
@@ -2996,6 +4742,12 @@
             "state" : "translated",
             "value" : "Show All"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示全部"
+          }
         }
       }
     },
@@ -3005,6 +4757,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Show All Websites"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示所有网站"
           }
         }
       }
@@ -3016,6 +4774,12 @@
             "state" : "translated",
             "value" : "Show Favorites"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示收藏夹"
+          }
         }
       }
     },
@@ -3025,6 +4789,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Show Folders on Top"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件夹置顶"
           }
         }
       }
@@ -3036,6 +4806,12 @@
             "state" : "translated",
             "value" : "Show Frequently Visited"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示经常访问"
+          }
         }
       }
     },
@@ -3045,6 +4821,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Show Full Website Address"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示完整网站地址"
           }
         }
       }
@@ -3056,6 +4838,12 @@
             "state" : "translated",
             "value" : "Show Image Previews"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示图片预览"
+          }
         }
       }
     },
@@ -3065,6 +4853,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Show in Private Browsing"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在无痕浏览中显示"
           }
         }
       }
@@ -3076,6 +4870,12 @@
             "state" : "translated",
             "value" : "Show Less"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收起"
+          }
         }
       }
     },
@@ -3085,6 +4885,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Show Link Previews"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示链接预览"
           }
         }
       }
@@ -3096,6 +4902,12 @@
             "state" : "translated",
             "value" : "Show Recently Closed Tabs"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示最近关闭的标签页"
+          }
         }
       }
     },
@@ -3105,6 +4917,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Show Search Suggestions"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示搜索建议"
           }
         }
       }
@@ -3116,6 +4934,12 @@
             "state" : "translated",
             "value" : "Show Tab Bar in Landscape"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "横屏时显示标签栏"
+          }
         }
       }
     },
@@ -3125,6 +4949,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Since this is your first time enabling JIT, Reynard needs to download and mount the Developer Disk Image. This is required for JIT to work properly."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "由于这是你首次启用 JIT，Reynard 需要下载并挂载开发者磁盘映像，这是 JIT 正常运行所必需的。"
           }
         }
       }
@@ -3136,6 +4966,12 @@
             "state" : "translated",
             "value" : "Some websites are available in multiple languages. Choose languages in the order you prefer."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有些网站提供多种语言。请按偏好顺序选择语言。"
+          }
         }
       }
     },
@@ -3146,6 +4982,12 @@
             "state" : "translated",
             "value" : "Sort By"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "排序方式"
+          }
         }
       }
     },
@@ -3155,6 +4997,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Support The Project"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "支持此项目"
           }
         }
       }
@@ -3167,6 +5015,12 @@
             "state" : "translated",
             "value" : "System"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "跟随系统"
+          }
         }
       }
     },
@@ -3176,6 +5030,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tabs"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "标签页"
           }
         }
       }
@@ -3187,6 +5047,12 @@
             "state" : "translated",
             "value" : "Take Photo"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拍照"
+          }
         }
       }
     },
@@ -3196,6 +5062,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Take Photo or Video"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拍照或录像"
           }
         }
       }
@@ -3207,6 +5079,12 @@
             "state" : "translated",
             "value" : "Take Video"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "录像"
+          }
         }
       }
     },
@@ -3216,6 +5094,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The app will now close for the JIT setting to take effect."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "应用即将关闭，以使 JIT 设置生效。"
           }
         }
       }
@@ -3228,6 +5112,12 @@
             "state" : "translated",
             "value" : "The required Developer Disk Image files for enabling JIT were not found.\n\nJIT has been disabled. Quit the app using the button below, then re-enable JIT from the browser settings."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未找到启用 JIT 所需的开发者磁盘映像文件。\n\nJIT 已停用。请使用下方按钮退出应用，然后在浏览器设置中重新启用 JIT。"
+          }
         }
       }
     },
@@ -3237,6 +5127,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This add-on"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此附加组件"
           }
         }
       }
@@ -3248,6 +5144,12 @@
             "state" : "translated",
             "value" : "This add-on couldn’t be updated."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法更新此附加组件。"
+          }
         }
       }
     },
@@ -3257,6 +5159,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This add-on doesn’t require any permissions."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此附加组件不需要任何权限。"
           }
         }
       }
@@ -3268,6 +5176,12 @@
             "state" : "translated",
             "value" : "This add-on isn’t supported by this version of Reynard and has been disabled."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此版本的 Reynard 不支持该附加组件，已将其停用。"
+          }
         }
       }
     },
@@ -3278,6 +5192,12 @@
             "state" : "translated",
             "value" : "This build does not support in-app updates. Visit the project's Releases page to download the latest version of the app."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此构建版本不支持应用内更新。请前往项目的 Releases 页面下载最新版本。"
+          }
         }
       }
     },
@@ -3287,6 +5207,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This will clear selected browsing data. This action cannot be undone."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这将清除所选的浏览数据，且无法撤销。"
           }
         }
       }
@@ -3311,6 +5237,18 @@
               }
             }
           }
+        },
+        "zh-Hans" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "这将关闭你的 %d 个标签页。"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -3320,6 +5258,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This will reset permissions for all websites. This action cannot be undone."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这将重置所有网站的权限，且无法撤销。"
           }
         }
       }
@@ -3331,6 +5275,12 @@
             "state" : "translated",
             "value" : "This will reset settings for this website. This action cannot be undone."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这将重置此网站的设置，且无法撤销。"
+          }
         }
       }
     },
@@ -3340,6 +5290,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Title"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "标题"
           }
         }
       }
@@ -3351,6 +5307,12 @@
             "state" : "translated",
             "value" : "Today"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今天"
+          }
         }
       }
     },
@@ -3360,6 +5322,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Today and Yesterday"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今天和昨天"
           }
         }
       }
@@ -3372,6 +5340,12 @@
             "state" : "translated",
             "value" : "Top"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "顶部"
+          }
         }
       }
     },
@@ -3381,6 +5355,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unable to access the app Application Support directory."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法访问应用的 Application Support 目录。"
           }
         }
       }
@@ -3392,6 +5372,12 @@
             "state" : "translated",
             "value" : "Unknown error."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未知错误。"
+          }
         }
       }
     },
@@ -3401,6 +5387,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unknown size"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未知大小"
           }
         }
       }
@@ -3412,6 +5404,12 @@
             "state" : "translated",
             "value" : "Unsupported"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不支持"
+          }
         }
       }
     },
@@ -3421,6 +5419,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unsupported Add-ons"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不受支持的附加组件"
           }
         }
       }
@@ -3432,6 +5436,12 @@
             "state" : "translated",
             "value" : "Untitled"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无标题"
+          }
         }
       }
     },
@@ -3441,6 +5451,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Update Add-on Permissions"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更新附加组件权限"
           }
         }
       }
@@ -3452,6 +5468,12 @@
             "state" : "translated",
             "value" : "Update All Add-ons"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更新所有附加组件"
+          }
         }
       }
     },
@@ -3461,6 +5483,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Update Available"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有可用更新"
           }
         }
       }
@@ -3472,6 +5500,12 @@
             "state" : "translated",
             "value" : "Update Failed"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更新失败"
+          }
         }
       }
     },
@@ -3481,6 +5515,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Update Now"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "立即更新"
           }
         }
       }
@@ -3492,6 +5532,12 @@
             "state" : "translated",
             "value" : "Update Unavailable"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更新不可用"
+          }
         }
       }
     },
@@ -3501,6 +5547,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Updated"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已更新"
           }
         }
       }
@@ -3512,6 +5564,12 @@
             "state" : "translated",
             "value" : "Updating Add-ons…"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在更新附加组件…"
+          }
         }
       }
     },
@@ -3521,6 +5579,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Updating…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在更新…"
           }
         }
       }
@@ -3532,6 +5596,12 @@
             "state" : "translated",
             "value" : "Upload"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上传"
+          }
         }
       }
     },
@@ -3541,6 +5611,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "URL"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "网址"
           }
         }
       }
@@ -3553,6 +5629,12 @@
             "state" : "translated",
             "value" : "Use %%s for search terms, as in example.com⁠/⁠search⁠?⁠q⁠=⁠%%s."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用 %%s 代表搜索词，例如 example.com⁠/⁠search⁠?⁠q⁠=⁠%%s。"
+          }
         }
       }
     },
@@ -3562,6 +5644,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Use Compatibility User Agent"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用兼容性用户代理"
           }
         }
       }
@@ -3574,6 +5662,12 @@
             "state" : "translated",
             "value" : "Use the %@ user agent for all websites to improve compatibility."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "对所有网站使用 %@ 用户代理以提高兼容性。"
+          }
         }
       }
     },
@@ -3584,6 +5678,12 @@
             "state" : "translated",
             "value" : "User Agent Overrides"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用户代理覆盖"
+          }
         }
       }
     },
@@ -3593,6 +5693,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Version"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "版本"
           }
         }
       }
@@ -3605,6 +5711,12 @@
             "state" : "translated",
             "value" : "Version %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "版本 %@"
+          }
         }
       }
     },
@@ -3614,6 +5726,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "View Source Code"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查看源代码"
           }
         }
       }
@@ -3625,6 +5743,12 @@
             "state" : "translated",
             "value" : "Website Language"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "网站语言"
+          }
         }
       }
     },
@@ -3634,6 +5758,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Website Permissions"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "网站权限"
           }
         }
       }
@@ -3645,6 +5775,12 @@
             "state" : "translated",
             "value" : "Website Settings"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "网站设置"
+          }
         }
       }
     },
@@ -3654,6 +5790,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Websites"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "网站"
           }
         }
       }
@@ -3665,6 +5807,12 @@
             "state" : "translated",
             "value" : "Websites With Custom Settings"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用自定义设置的网站"
+          }
         }
       }
     },
@@ -3674,6 +5822,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "When the download finishes, choose the app that you used to sideload Reynard in the share sheet to install the update."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下载完成后，请在共享菜单中选择你用来侧载 Reynard 的应用以安装更新。"
           }
         }
       }
@@ -3685,6 +5839,12 @@
             "state" : "translated",
             "value" : "Yes"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "是"
+          }
         }
       }
     },
@@ -3694,6 +5854,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yesterday"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "昨天"
           }
         }
       }
@@ -3706,6 +5872,12 @@
             "state" : "translated",
             "value" : "You may want to block access if it’s not clear why %@ needs this data."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如果不清楚 %@ 为何需要这些数据，建议阻止其访问。"
+          }
         }
       }
     },
@@ -3715,6 +5887,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Your browsing history appears here"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的浏览历史记录会显示在这里"
           }
         }
       }
@@ -3726,6 +5904,12 @@
             "state" : "translated",
             "value" : "Zoom Level"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "缩放比例"
+          }
         }
       }
     },
@@ -3735,6 +5919,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "A network error interrupted the download."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "网络错误导致下载中断。"
           }
         }
       }
@@ -3747,6 +5937,12 @@
             "state" : "translated",
             "value" : "Cancelled"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已取消"
+          }
         }
       }
     },
@@ -3756,6 +5952,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Couldn’t save the downloaded file."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法保存下载的文件。"
           }
         }
       }
@@ -3767,6 +5969,12 @@
             "state" : "translated",
             "value" : "Download failed in the browser engine."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "浏览器引擎下载失败。"
+          }
         }
       }
     },
@@ -3776,6 +5984,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not enough storage space."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "存储空间不足。"
           }
         }
       }
@@ -3788,6 +6002,12 @@
             "state" : "translated",
             "value" : "Retry"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重试"
+          }
         }
       }
     },
@@ -3797,6 +6017,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reynard doesn’t have permission to save this file."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reynard 没有保存此文件的权限。"
           }
         }
       }
@@ -3809,6 +6035,12 @@
             "state" : "translated",
             "value" : "Size: %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "大小：%@"
+          }
         }
       }
     },
@@ -3820,6 +6052,12 @@
             "state" : "translated",
             "value" : "Source: %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "来源：%@"
+          }
         }
       }
     },
@@ -3829,6 +6067,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The download could not be completed."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法完成下载。"
           }
         }
       }
@@ -3841,6 +6085,12 @@
             "state" : "translated",
             "value" : "Type: %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "类型：%@"
+          }
         }
       }
     },
@@ -3851,6 +6101,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unknown type"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未知类型"
           }
         }
       }
@@ -3863,6 +6119,12 @@
             "state" : "translated",
             "value" : "Private tabs are never saved. Turning this off removes saved regular tabs and navigation state."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "私密标签页永远不会保存。关闭此选项会移除已保存的普通标签页和导航状态。"
+          }
         }
       }
     },
@@ -3873,6 +6135,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Restore Previous Session"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "恢复上次浏览"
           }
         }
       }
@@ -3885,6 +6153,12 @@
             "state" : "translated",
             "value" : "Session"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "会话"
+          }
         }
       }
     },
@@ -3895,6 +6169,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Continue"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "继续"
           }
         }
       }
@@ -3907,6 +6187,12 @@
             "state" : "translated",
             "value" : "File: %@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件：%@"
+          }
         }
       }
     },
@@ -3917,6 +6203,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Install Add-on?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "安装附加组件？"
+          }
+        }
+      }
+    },
+    "Are you sure you want to upload all files from \"%@\"? Only do this if you trust the site." : {
+      "comment" : "Folder upload warning",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to upload all files from \"%@\"? Only do this if you trust the site."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要上传“%@”中的所有文件吗？仅在你信任此网站时执行此操作。"
           }
         }
       }
