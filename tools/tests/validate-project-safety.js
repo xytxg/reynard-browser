@@ -31,6 +31,18 @@ const unsignedBuild = read("tools/release/build-unsigned-app.sh");
 requireText(unsignedBuild, "CODE_SIGNING_ALLOWED=NO", "unsigned app build does not disable signing");
 requireText(unsignedBuild, "AD_HOC_CODE_SIGNING_ALLOWED=NO", "unsigned app build allows ad-hoc signing");
 
+const unsignedPackage = read("tools/release/create-unsigned-ipa.sh");
+requireText(
+  unsignedPackage,
+  "codesign --remove-signature",
+  "unsigned IPA packaging does not strip embedded Mach-O signatures"
+);
+requireText(
+  unsignedPackage,
+  "embedded.mobileprovision",
+  "unsigned IPA packaging does not reject provisioning profiles"
+);
+
 const tabStore = read("browser/Reynard/Client/Stores/TabManagementStore.swift");
 requireText(tabStore, "privateTabs: []", "private tabs can be returned from persistent storage");
 requireText(tabStore, "selectedPrivateTabID: nil", "private tab selection can be persisted");

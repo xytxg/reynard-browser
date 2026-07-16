@@ -18,7 +18,7 @@ if [[ ! -d "$SOURCE_APP" ]]; then
     exit 66
 fi
 
-for command_name in ditto file unzip zip; do
+for command_name in codesign ditto file unzip zip; do
     command -v "$command_name" >/dev/null || {
         echo "$command_name is required."
         exit 69
@@ -50,6 +50,15 @@ if find "$APP_PATH" \( -type d -name '_CodeSignature' -o -type f -name 'embedded
     echo "Signing metadata remains in the app bundle."
     exit 70
 fi
+
+# Xcode can copy Apple-signed compatibility Swift runtimes even when app code
+# signing is disabled. Strip those embedded Mach-O signatures from the copied
+# Payload so the IPA contains no signing identity of any kind.
+while IFS= read -r -d '' candidate; do
+    if file "$candidate" | grep -q 'Mach-O' && codesign --display "$candidate" >/dev/null 2>&1; then
+        codesign --remove-signature "$candidate"
+    fi
+done < <(find "$APP_PATH" -type f -print0)
 
 while IFS= read -r -d '' candidate; do
     if file "$candidate" | grep -q 'Mach-O' && codesign --display "$candidate" >/dev/null 2>&1; then
