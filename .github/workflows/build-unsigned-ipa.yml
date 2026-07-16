@@ -254,13 +254,14 @@ jobs:
           "$WASM_CC" --version | tee dist/logs/wasm-compiler-selected.log
           test -f "$WASI_SYSROOT/include/string.h"
           if [[ "$GECKO_CACHE_HIT" == "true" ]]; then
-            # The source checkout has fresh mtimes, but an exact-key cache was
-            # built from this same Gecko revision, patches, and toolchain.
-            # Acknowledge the matching CLOBBER marker before the no-op rebuild.
+            # The exact key covers the Gecko revision, patches, build script,
+            # Xcode, Clang, and LLD. Re-running Mach after a fresh checkout
+            # would rebuild valid cached objects solely because of new mtimes.
             test -s engine/firefox/obj-aarch64-apple-ios/dist/bin/XUL
-            touch engine/firefox/obj-aarch64-apple-ios/CLOBBER
+            echo "Using exact-key Gecko build cache." | tee dist/logs/build-gecko.log
+          else
+            tools/development/build-gecko.sh 2>&1 | tee dist/logs/build-gecko.log
           fi
-          tools/development/build-gecko.sh 2>&1 | tee dist/logs/build-gecko.log
           test -s engine/firefox/obj-aarch64-apple-ios/dist/bin/XUL
           df -h | tee dist/logs/disk-after-gecko.log
 
