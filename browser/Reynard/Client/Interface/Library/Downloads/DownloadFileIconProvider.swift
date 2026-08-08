@@ -17,6 +17,18 @@ final class DownloadFileIconProvider {
     private let thumbnailCache = NSCache<NSURL, UIImage>()
     private let placeholderCache = NSCache<NSString, UIImage>()
     private let fileManager = FileManager.default
+
+    private init() {
+        thumbnailCache.countLimit = 64
+        thumbnailCache.totalCostLimit = 12 * 1024 * 1024
+        placeholderCache.countLimit = 32
+        placeholderCache.totalCostLimit = 4 * 1024 * 1024
+    }
+
+    func clearMemoryCache() {
+        thumbnailCache.removeAllObjects()
+        placeholderCache.removeAllObjects()
+    }
     
     func placeholderIcon(for fileURL: URL) -> UIImage? {
         let fileName = fileURL.lastPathComponent
@@ -61,7 +73,7 @@ final class DownloadFileIconProvider {
         
         generateIcon(for: fileURL, size: size, contentTypeIdentifier: nil) { [weak self] image in
             if let image {
-                self?.thumbnailCache.setObject(image, forKey: fileURL as NSURL)
+                self?.thumbnailCache.setObject(image, forKey: fileURL as NSURL, cost: Self.imageCost(image))
                 completion(image)
                 return
             }
@@ -212,5 +224,10 @@ final class DownloadFileIconProvider {
     
     private func bestDocumentInteractionIcon(from icons: [UIImage]) -> UIImage? {
         return icons.last
+    }
+
+    private static func imageCost(_ image: UIImage) -> Int {
+        let pixels = image.size.width * image.scale * image.size.height * image.scale
+        return max(Int(pixels * 4), 1)
     }
 }

@@ -4,13 +4,18 @@
 
 Reynard is a **Gecko-based** web browser for iOS 13+.
 
+> [!NOTE]
+> This repository is the Simplified Chinese maintenance build. It preserves the upstream Gecko architecture
+> and publishes verified unsigned IPA source builds on this repository's
+> [Releases](https://github.com/xytxg/reynard-browser-zh/releases) page.
+
 Unlike other browsers on iOS that are forced to use Apple's **WebKit** engine (including Safari and all third-party browsers), Reynard uses **Gecko**. This is the same engine that powers the Firefox browser on desktop and Android devices.
 
 This project is mainly for users on older iOS versions who are stuck with an outdated version of WebKit. Because WebKit is bundled with the OS, these devices cannot receive engine updates and often fail to load modern websites. By using Gecko, which is kept up to date independently, Reynard allows these sites to work again. Users on newer iOS versions can also use the browser if they want an alternative to WebKit, including Firefox add-ons and other Gecko-exclusive features.
 
 ## Installation
 
-The latest builds are available for download on the [Releases](https://github.com/minh-ton/reynard-browser/releases) page. Please note that this project is still in an early experimental state, so expect bugs and missing features.
+The latest Simplified Chinese source builds are available on this repository's [Releases](https://github.com/xytxg/reynard-browser-zh/releases) page. These IPA files are unsigned and must be signed with a compatible sideloading method before installation. Please note that this project is still in an early experimental state, so expect bugs and missing features.
 
 ### TrollStore (iOS 14 - 16.6.1, 17.0)
 
@@ -20,7 +25,7 @@ For the best experience, I'd recommend sideloading Reynard via [TrollStore](http
 
 You should use [AltStore](https://altstore.io/) or [SideStore](https://sidestore.io/) to sideload the `Reynard.ipa` build when TrollStore is not available, especially on newer iOS versions. Please note that you must select the **Keep App Extensions** option during installation, as Reynard relies on its extensions to function and will not work without them. 
 
-You can also [click here](https://stikstore.app/altdirect/?url=https://github.com/minh-ton/reynard-browser/releases/download/0.0.1-a1/source.json&exclude=livecontainer,stikstore,trollapps,feather) to add the AltSource for Reynard to AltStore or SideStore.
+Download the latest unsigned Chinese build from this repository's Releases page, then let AltStore or SideStore sign it while preserving App Extensions. The legacy upstream AltSource is not used for these Chinese maintenance builds.
 
 > [!IMPORTANT]
 > - **LiveContainer is not supported** due to its own limitations.
@@ -129,8 +134,8 @@ To build the project, you'll need Xcode, [Python 3](https://www.python.org/downl
 Clone the repository.
 
 ```bash
-git clone --recursive https://github.com/minh-ton/reynard-browser
-cd reynard-browser
+git clone --recursive https://github.com/xytxg/reynard-browser-zh
+cd reynard-browser-zh
 ```
 
 Download Gecko and apply patches.
@@ -148,6 +153,13 @@ Build dependencies and the Gecko engine.
 ```
 
 To run Reynard, open `Reynard.xcodeproj` in Xcode and build/run it from there.
+
+### 简体中文与源码构建未签名 IPA
+
+本分支包含简体中文界面、下载与会话安全修复，以及从 idevice、Gecko 和 Reynard
+源码开始构建的 GitHub Actions 工作流。工作流不会下载或重新打包第三方现成 IPA。
+
+详细的中文使用、构建、侧载说明及当前限制见 [README.zh-CN.md](README.zh-CN.md)。
 
 ## Notes
 

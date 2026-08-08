@@ -157,7 +157,8 @@ public class GeckoSession {
     
     public func open(windowId: String? = nil) {
         if isOpen() {
-            fatalError("cannot open a GeckoSession twice")
+            NSLog("GeckoSession: ignored duplicate open request")
+            return
         }
         
         id = windowId ?? UUID().uuidString.replacingOccurrences(of: "-", with: "")
@@ -201,7 +202,11 @@ public class GeckoSession {
             isPrivateMode
         )
         guard let engineView = window?.view() else {
-            fatalError("GeckoView window has no view")
+            NSLog("GeckoSession: window opened without a view; closing the incomplete session")
+            window?.close()
+            window = nil
+            id = nil
+            return
         }
         autofillHandler.attach(to: engineView)
     }
@@ -337,3 +342,4 @@ public class GeckoSession {
         window?.setDynamicToolbarMaxHeight(max(0, height))
     }
 }
+

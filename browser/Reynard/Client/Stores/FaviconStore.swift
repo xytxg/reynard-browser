@@ -6,15 +6,12 @@
 //
 
 import CryptoKit
-import Darwin
 import Foundation
-import ObjectiveC.runtime
+import ImageIO
 import SQLite3
 import UIKit
 
 final class FaviconStore {
-    private typealias TransparencyAnalysisFunction = @convention(c) (AnyObject, Selector) -> Int
-    
     struct FaviconPresentation {
         let image: UIImage
         let shouldInset: Bool
@@ -27,13 +24,11 @@ final class FaviconStore {
     private static let imageFilePrefix = "img-"
     private static let maxHTMLBytes = 768 * 1024
     private static let maxImageBytes = 2 * 1024 * 1024
+    private static let maxImagePixelCount = 16 * 1024 * 1024
+    private static let maxImageDimension = 8 * 1024
     private static let maxRedirectDepth = 3
     private static let minimumTouchIconSideLength = 57
-    private static let safariSharedUIFramework = dlopen(
-        "/System/Library/PrivateFrameworks/SafariSharedUI.framework/SafariSharedUI",
-        RTLD_LAZY
-    )
-    private static let transparencyAnalysisSelector = NSSelectorFromString("safari_transparencyAnalysisResult")
+    private static let transparencySampleSideLength = 32
     
     private struct StorageURLs {
         let directoryURL: URL
@@ -126,9 +121,9 @@ final class FaviconStore {
     init(fileManager: FileManager = .default) {
         self.fileManager = fileManager
         
-        guard let applicationSupportDirectoryURL = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
-            fatalError("Application Support directory is unavailable")
-        }
+        let applicationSupportDirectoryURL =
+            fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+            ?? fileManager.temporaryDirectory
         
         let directoryURL = applicationSupportDirectoryURL
             .appendingPathComponent("AppData", isDirectory: true)
@@ -202,29 +197,32 @@ final class FaviconStore {
         }
         
         let requestKey = requestScopeKey(for: pageURL)
-        if let activeRequest = stateQueue.sync(execute: { activeRequests[requestKey] }) {
-            return await activeRequest.value
-        }
-        
-        let task = Task<UIImage?, Never>(priority: .utility) { [weak self] in
-            guard let self else {
-                return nil
+        let task = stateQueue.sync { () -> Task<UIImage?, Never> in
+            if let activeRequest = activeRequests[requestKey] {
+                return activeRequest
             }
             
-            let image = await self.fetchAndCacheFavicon(for: pageURL)
-            self.stateQueue.async {
-                self.activeRequests[requestKey] = nil
+            let newTask = Task<UIImage?, Never>(priority: .utility) { [weak self] in
+                guard let self else {
+                    return nil
+                }
+                
+                let image = await self.fetchAndCacheFavicon(for: pageURL)
+                self.stateQueue.async {
+                    self.activeRequests[requestKey] = nil
+                }
+                return image
             }
-            return image
-        }
-        
-        stateQueue.sync {
-            activeRequests[requestKey] = task
+            activeRequests[requestKey] = newTask
+            return newTask
         }
         return await task.value
     }
     
     func favicon(for pageURL: URL, webAppManifest: Any) async -> UIImage? {
+        guard URLUtils.isWebURL(pageURL) else {
+            return nil
+        }
         let manifestURLs = manifestIconURLs(from: webAppManifest, baseURL: pageURL)
         let candidates = manifestURLs.map {
             FetchCandidate(url: $0, requiresTouchIconSize: true)
@@ -256,6 +254,13 @@ final class FaviconStore {
                     try? self.fileManager.removeItem(at: imageURL)
                 }
             }
+        }
+    }
+
+    func cancelOutstandingRequests() {
+        stateQueue.async {
+            self.activeRequests.values.forEach { $0.cancel() }
+            self.activeRequests.removeAll()
         }
     }
     
@@ -396,16 +401,50 @@ final class FaviconStore {
     }
     
     private static func transparencyAnalysisResult(for image: UIImage) -> Int {
-        _ = safariSharedUIFramework
-        let selector = transparencyAnalysisSelector
-        guard image.responds(to: selector),
-              let method = class_getInstanceMethod(UIImage.self, selector) else {
-            assertionFailure("SafariSharedUI transparency analysis is unavailable")
+        guard let cgImage = image.cgImage else {
             return 1
         }
         
-        let function = unsafeBitCast(method_getImplementation(method), to: TransparencyAnalysisFunction.self)
-        return function(image, selector)
+        switch cgImage.alphaInfo {
+        case .none, .noneSkipFirst, .noneSkipLast:
+            return 1
+        default:
+            break
+        }
+        
+        let sideLength = transparencySampleSideLength
+        let bytesPerRow = sideLength * 4
+        let pixelCount = sideLength * sideLength
+        var pixels = [UInt8](repeating: 0, count: pixelCount * 4)
+        return pixels.withUnsafeMutableBytes { buffer in
+            guard let baseAddress = buffer.baseAddress,
+                  let context = CGContext(
+                    data: baseAddress,
+                    width: sideLength,
+                    height: sideLength,
+                    bitsPerComponent: 8,
+                    bytesPerRow: bytesPerRow,
+                    space: CGColorSpaceCreateDeviceRGB(),
+                    bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+                  ) else {
+                return 1
+            }
+            
+            context.clear(CGRect(x: 0, y: 0, width: sideLength, height: sideLength))
+            context.interpolationQuality = .low
+            context.draw(
+                cgImage,
+                in: CGRect(x: 0, y: 0, width: sideLength, height: sideLength)
+            )
+            
+            var transparentPixelCount = 0
+            for alphaIndex in stride(from: 3, to: pixelCount * 4, by: 4) {
+                if buffer[alphaIndex] < 250 {
+                    transparentPixelCount += 1
+                }
+            }
+            return transparentPixelCount * 100 >= pixelCount * 2 ? 0 : 1
+        }
     }
     
     private static func shouldInsetIcon(forTransparencyAnalysisResult result: Int) -> Bool {
@@ -961,7 +1000,7 @@ final class FaviconStore {
         
         guard let (data, response) = await data(for: request),
               data.count <= Self.maxImageBytes,
-              let image = UIImage(data: data) else {
+              let image = decodedImage(from: data) else {
             return nil
         }
         
@@ -1033,13 +1072,35 @@ final class FaviconStore {
         let pixelHeight = image.cgImage?.height ?? Int(image.size.height * image.scale)
         return min(pixelWidth, pixelHeight) >= Self.minimumTouchIconSideLength
     }
+
+    private func decodedImage(from data: Data) -> UIImage? {
+        guard let source = CGImageSourceCreateWithData(data as CFData, nil),
+              let properties =
+                CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any],
+              let width = (properties[kCGImagePropertyPixelWidth] as? NSNumber)?.intValue,
+              let height = (properties[kCGImagePropertyPixelHeight] as? NSNumber)?.intValue,
+              width > 0,
+              height > 0,
+              width <= Self.maxImageDimension,
+              height <= Self.maxImageDimension,
+              width <= Self.maxImagePixelCount / height else {
+            return nil
+        }
+        return UIImage(data: data)
+    }
     
     private func data(for request: URLRequest) async -> (Data, URLResponse)? {
-        await withCheckedContinuation { continuation in
+        guard let requestedURL = request.url,
+              URLUtils.isWebURL(requestedURL) else {
+            return nil
+        }
+        
+        return await withCheckedContinuation { continuation in
             let task = session.dataTask(with: request) { data, response, error in
                 guard error == nil,
                       let data,
-                      let response else {
+                      let response,
+                      URLUtils.isWebURL(response.url ?? requestedURL) else {
                     continuation.resume(returning: nil)
                     return
                 }

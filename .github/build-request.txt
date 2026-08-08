@@ -1,0 +1,4 @@
+Trigger unsigned IPA formal release build for the current submitted main branch.
+Requested: 2026-08-04 07:22 +08:00
+Source baseline: ad9e56788289fcd65cd377ac4e7da9258701d1ef
+Mode: formal release; update existing v0.9.0-zh.1 assets after successful verification.

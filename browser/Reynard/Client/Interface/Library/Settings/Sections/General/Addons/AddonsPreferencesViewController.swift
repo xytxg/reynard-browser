@@ -384,6 +384,7 @@ final class AddonsPreferencesViewController: SettingsTableViewController {
             
             do {
                 let stagedPackageURL = try Self.stageAddonPackage(from: packageURL)
+                defer { try? FileManager.default.removeItem(at: stagedPackageURL) }
                 _ = try await AddonRuntime.shared.install(url: stagedPackageURL.absoluteString)
                 await self.loadRuntimeAddons()
                 

@@ -209,6 +209,18 @@ final class NavigationHistoryStore {
             try? self.fileManager.removeItem(at: fileURL)
         }
     }
+
+    func removeAllNavigationHistory() {
+        queue.async {
+            guard let fileURLs = try? self.fileManager.contentsOfDirectory(
+                at: self.storageURL,
+                includingPropertiesForKeys: nil
+            ) else {
+                return
+            }
+            fileURLs.forEach { try? self.fileManager.removeItem(at: $0) }
+        }
+    }
     
     private func createStorageDirectory() {
         try? fileManager.createDirectory(at: storageURL, withIntermediateDirectories: true)

@@ -16,7 +16,25 @@ if [ ! -d "$FIREFOX_DIR" ]; then
 	exit 1
 fi
 
-mv "$FIREFOX_DIR/.mozconfig" "$FIREFOX_DIR/.mozconfig.bak"
+MOZCONFIG="$FIREFOX_DIR/.mozconfig"
+MOZCONFIG_BACKUP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/reynard-mozconfig.XXXXXX")"
+MOZCONFIG_BACKUP="$MOZCONFIG_BACKUP_DIR/.mozconfig"
+HAD_MOZCONFIG=0
+
+if [ -e "$MOZCONFIG" ]; then
+	mv "$MOZCONFIG" "$MOZCONFIG_BACKUP"
+	HAD_MOZCONFIG=1
+fi
+
+restore_mozconfig() {
+	rm -f "$MOZCONFIG"
+	if [ "$HAD_MOZCONFIG" -eq 1 ]; then
+		mv "$MOZCONFIG_BACKUP" "$MOZCONFIG"
+	fi
+	rmdir "$MOZCONFIG_BACKUP_DIR"
+}
+
+trap restore_mozconfig EXIT
 
 {
 	echo "ac_add_options --enable-application=mobile/ios"
@@ -26,10 +44,9 @@ mv "$FIREFOX_DIR/.mozconfig" "$FIREFOX_DIR/.mozconfig.bak"
 	echo "ac_add_options --enable-optimize"
 	echo "ac_add_options --enable-release"
 	echo "ac_add_options --enable-rust-simd"
-	echo "ac_add_options --enable-lto"
 	echo "ac_add_options --disable-debug"
 	echo "ac_add_options --disable-tests"
-} > "$FIREFOX_DIR/.mozconfig"
+} > "$MOZCONFIG"
 
 if ! rustup target list | grep -q "^$TARGET (installed)"; then
 	rustup target add "$TARGET"
@@ -38,5 +55,5 @@ fi
 cd "$FIREFOX_DIR"
 ./mach build
 
-rm "$FIREFOX_DIR/.mozconfig"
-mv "$FIREFOX_DIR/.mozconfig.bak" "$FIREFOX_DIR/.mozconfig"
+trap - EXIT
+restore_mozconfig

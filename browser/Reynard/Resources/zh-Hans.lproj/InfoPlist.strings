@@ -1,0 +1,5 @@
+"CFBundleDisplayName" = "Reynard";
+"NSCameraUsageDescription" = "允许网站扫描二维码、拍摄照片和进行视频通话。";
+"NSLocationWhenInUseUsageDescription" = "允许网站提供地图、路线和附近地点等基于位置的内容。";
+"NSMicrophoneUsageDescription" = "允许网站在通话和录音时使用麦克风。";
+"NSPhotoLibraryAddUsageDescription" = "允许浏览器把下载的图片和其他媒体保存到“照片”。";

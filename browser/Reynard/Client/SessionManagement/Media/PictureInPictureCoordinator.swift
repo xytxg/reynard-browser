@@ -93,6 +93,14 @@ final class PictureInPictureCoordinator: NSObject, PictureInPictureCoordinating 
         sessionManager.applicationStateObserver = self
         sessionManager.pictureInPictureHandler = self
     }
+
+    deinit {
+        observedSession?.pictureInPictureDelegate = nil
+        state.presentation?.controller.delegate = nil
+        mediaSession.observer = nil
+        sessionManager.applicationStateObserver = nil
+        sessionManager.pictureInPictureHandler = nil
+    }
     
     func selectedSessionDidChange() {
         if let presentation = state.presentation,

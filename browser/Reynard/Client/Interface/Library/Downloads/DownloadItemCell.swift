@@ -42,6 +42,7 @@ final class DownloadItemCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .preferredFont(forTextStyle: .body)
+        label.adjustsFontForContentSizeCategory = true
         label.textColor = .label
         label.numberOfLines = 1
         return label
@@ -51,6 +52,7 @@ final class DownloadItemCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .preferredFont(forTextStyle: .subheadline)
+        label.adjustsFontForContentSizeCategory = true
         label.textColor = .secondaryLabel
         label.numberOfLines = 2
         return label
@@ -126,6 +128,8 @@ final class DownloadItemCell: UITableViewCell {
     
     func configure(with item: DownloadItemSnapshot) {
         fileNameLabel.text = item.fileName
+        accessibilityLabel = item.fileName
+        defer { accessibilityValue = statusLabel.text }
         let isDeleted = item.state == .completed && !item.fileExists
         contentView.alpha = isDeleted ? 0.45 : 1
         fileNameLabel.textColor = isDeleted ? .secondaryLabel : .label
@@ -196,7 +200,20 @@ final class DownloadItemCell: UITableViewCell {
                     self.fileIconView.image = Self.iconProvider.placeholderIcon(for: fileURL) ?? Self.iconProvider.genericPlaceholderIcon()
                 }
             }
+
+        case .failed, .cancelled:
+            representedFileURL = nil
+            representedDownloadID = item.id
+            statusLabel.text = item.failureDescription ?? (item.state == .failed ? NSLocalizedString("Download Failed", comment: "") : NSLocalizedString("Cancelled", comment: "Download state"))
+            statusLabel.textColor = item.state == .failed ? .systemRed : .secondaryLabel
+            progressView.isHidden = true
+            progressView.progress = 0
+            let placeholderIcon = Self.iconProvider.genericPlaceholderIcon()
+            fileIconView.image = placeholderIcon
+            fileIconView.transform = .identity
+            fileIconView.tintColor = placeholderIcon == nil ? .label : nil
         }
+
     }
     
     // MARK: - Formatting

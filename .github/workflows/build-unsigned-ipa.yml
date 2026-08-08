@@ -1,0 +1,427 @@
+name: Build unsigned IPA from source
+
+run-name: >-
+  Unsigned IPA · ${{ github.ref_name }} · ${{ github.event_name }}
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: unsigned-ipa-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Static checks and pure Swift tests
+    runs-on: macos-26
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: |
+          set -euo pipefail
+          xcodebuild -version
+          python3 --version
+          rustc --version
+          cargo --version
+
+      - name: Validate localization and download safety
+        env:
+          REQUIRE_SWIFT: "1"
+        run: |
+          set -euo pipefail
+          tools/tests/run-static-tests.sh
+
+  build-ipa:
+    name: Build Gecko and unsigned IPA
+    needs: quality
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      startsWith(github.ref, 'refs/tags/v') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[build ipa]'))
+    runs-on: macos-26
+    timeout-minutes: 360
+    permissions:
+      contents: write
+    env:
+      CARGO_TERM_COLOR: always
+      CI: "true"
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          submodules: false
+
+      - name: Inspect build environment and Xcode project
+        id: toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist/logs dist/test-results
+          xcodebuild -version | tee dist/logs/xcode-version.log
+          xcodebuild -list -project browser/Reynard.xcodeproj | tee dist/logs/xcode-project-list.log
+          python3 --version | tee dist/logs/python-version.log
+          rustc --version | tee dist/logs/rust-version.log
+          cargo --version | tee -a dist/logs/rust-version.log
+          rust_target="aarch64-apple-ios"
+          for attempt in 1 2 3; do
+            if rustup target add "$rust_target"; then
+              break
+            fi
+            if [[ "$attempt" == "3" ]]; then
+              rustup show
+              exit 1
+            fi
+            echo "rustup target download failed (attempt $attempt/3); retrying..."
+            sleep "$((attempt * 10))"
+          done
+          rustup target list --installed | grep -Fx "$rust_target"
+          if ! brew list --versions llvm@20 >/dev/null 2>&1; then
+            brew install llvm@20
+          fi
+          llvm_prefix="$(brew --prefix llvm@20)"
+          if ! brew list --versions lld@20 >/dev/null 2>&1; then
+            brew install lld@20
+          fi
+          lld_prefix="$(brew --prefix lld@20)"
+          wasm_cc="$llvm_prefix/bin/clang"
+          wasm_cxx="$llvm_prefix/bin/clang++"
+          wasm_ld="$lld_prefix/bin/wasm-ld"
+          test -x "$wasm_cc"
+          test -x "$wasm_cxx"
+          test -x "$wasm_ld"
+          export PATH="$lld_prefix/bin:$PATH"
+          echo "$lld_prefix/bin" >> "$GITHUB_PATH"
+          "$wasm_cc" --version | tee dist/logs/wasm-clang-version.log
+          "$wasm_ld" --version | tee dist/logs/wasm-ld-version.log
+          printf 'int main(void) { return 0; }\n' | \
+            "$wasm_cc" --target=wasm32-wasi -x c -c -o "$RUNNER_TEMP/reynard-wasm-probe.o" -
+          xcode_key="$(xcodebuild -version | shasum -a 256 | cut -c1-12)"
+          wasm_key="$({ "$wasm_cc" --version; "$wasm_ld" --version; } | shasum -a 256 | cut -c1-12)"
+          echo "xcode-key=$xcode_key" >> "$GITHUB_OUTPUT"
+          echo "wasm-key=$wasm_key" >> "$GITHUB_OUTPUT"
+          echo "wasm-cc=$wasm_cc" >> "$GITHUB_OUTPUT"
+          echo "wasm-cxx=$wasm_cxx" >> "$GITHUB_OUTPUT"
+          df -h | tee dist/logs/disk-before.log
+
+      - name: Initialize idevice source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git submodule update --init --depth 1 support/idevice
+
+      - name: Restore Rust dependency cache
+        id: rust-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cargo/bin/cbindgen
+            support/idevice/target
+          key: idevice-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-cbindgen-0.29.4-${{ hashFiles('support/idevice/ffi/Cargo.lock', 'tools/development/build-idevice.sh') }}
+          restore-keys: |
+            idevice-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-cbindgen-0.29.4-
+
+      - name: Install Gecko build tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! cbindgen --version 2>/dev/null | grep -Fxq 'cbindgen 0.29.4'; then
+            cargo install cbindgen --locked --version 0.29.4
+          fi
+          cbindgen --version
+
+      - name: Download exact Gecko source and apply project patches
+        shell: bash
+        run: |
+          set -euo pipefail
+          tools/development/update-gecko.sh 2>&1 | tee dist/logs/update-gecko.log
+          tools/development/apply-patches.sh 2>&1 | tee dist/logs/apply-patches.log
+
+      - name: Restore Mozilla WASI sysroot cache
+        id: wasi-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.cache/reynard-wasi
+          key: wasi-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.wasm-key }}-${{ hashFiles('engine/release.txt') }}
+
+      - name: Prepare Mozilla WASI sysroot
+        id: wasi
+        shell: bash
+        env:
+          WASM_CC: ${{ steps.toolchain.outputs.wasm-cc }}
+          WASM_CXX: ${{ steps.toolchain.outputs.wasm-cxx }}
+        run: |
+          set -euo pipefail
+          wasi_root="$HOME/.cache/reynard-wasi"
+          wasi_sysroot="$wasi_root/sysroot-wasm32-wasi"
+          if [[ ! -f "$wasi_sysroot/include/string.h" ]]; then
+            rm -rf "$wasi_root"
+            mkdir -p "$wasi_root"
+            (
+              cd "$wasi_root"
+              "$GITHUB_WORKSPACE/engine/firefox/mach" artifact toolchain \
+                --from-build sysroot-wasm32-wasi
+            ) 2>&1 | tee dist/logs/install-wasi-sysroot.log
+          fi
+          compiler_rt_root="$wasi_root/compiler-rt-wasm32-wasi"
+          builtins="$(find "$compiler_rt_root" -type f \
+            -name 'libclang_rt.builtins*.a' -print -quit 2>/dev/null || true)"
+          if [[ -z "$builtins" ]]; then
+            # Firefox 153 ships its default Clang 21 WASI runtime under this
+            # exact Taskcluster build name; no -20 build exists.
+            (
+              cd "$wasi_root"
+              "$GITHUB_WORKSPACE/engine/firefox/mach" artifact toolchain \
+                --from-build wasm32-wasi-compiler-rt-21
+            ) 2>&1 | tee dist/logs/install-wasi-compiler-rt.log
+            builtins="$(find "$compiler_rt_root" -type f \
+              -name 'libclang_rt.builtins*.a' -print -quit)"
+          fi
+          test -f "$wasi_sysroot/include/string.h"
+          test -s "$builtins"
+
+          clang_resource="$wasi_root/clang-resource"
+          wrapper_dir="$wasi_root/bin"
+          rm -rf "$clang_resource" "$wrapper_dir"
+          mkdir -p "$clang_resource/lib/wasm32-unknown-wasi" "$wrapper_dir"
+          ln -s "$("$WASM_CC" --print-resource-dir)/include" "$clang_resource/include"
+          cp "$builtins" \
+            "$clang_resource/lib/wasm32-unknown-wasi/libclang_rt.builtins.a"
+          wasm_cc_wrapper="$wrapper_dir/clang-wasm"
+          wasm_cxx_wrapper="$wrapper_dir/clang++-wasm"
+          printf '#!/bin/sh\nexec "%s" "-resource-dir=%s" "$@"\n' \
+            "$WASM_CC" "$clang_resource" > "$wasm_cc_wrapper"
+          printf '#!/bin/sh\nexec "%s" "-resource-dir=%s" "$@"\n' \
+            "$WASM_CXX" "$clang_resource" > "$wasm_cxx_wrapper"
+          chmod +x "$wasm_cc_wrapper" "$wasm_cxx_wrapper"
+
+          printf '#include <string.h>\nint main(void) { return 0; }\n' | \
+            "$wasm_cc_wrapper" --target=wasm32-wasi --sysroot="$wasi_sysroot" \
+              -x c -o "$RUNNER_TEMP/reynard-wasi-link-probe.wasm" -
+          test -s "$RUNNER_TEMP/reynard-wasi-link-probe.wasm"
+          echo "wasi-sysroot=$wasi_sysroot" >> "$GITHUB_OUTPUT"
+          echo "wasm-cc=$wasm_cc_wrapper" >> "$GITHUB_OUTPUT"
+          echo "wasm-cxx=$wasm_cxx_wrapper" >> "$GITHUB_OUTPUT"
+
+      - name: Save Mozilla WASI sysroot cache
+        if: steps.wasi-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.cache/reynard-wasi
+          key: wasi-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.wasm-key }}-${{ hashFiles('engine/release.txt') }}
+
+      - name: Restore Gecko object cache
+        id: gecko-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: engine/firefox/obj-aarch64-apple-ios
+          key: gecko-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-${{ steps.toolchain.outputs.wasm-key }}-${{ hashFiles('engine/release.txt', 'patches/**/*.patch', 'tools/development/build-gecko.sh') }}
+
+      - name: Build idevice support library
+        shell: bash
+        run: |
+          set -euo pipefail
+          tools/development/build-idevice.sh 2>&1 | tee dist/logs/build-idevice.log
+          test -s browser/Reynard/JIT/RPPairing/libidevice_ffi.a
+
+      - name: Save Rust and idevice cache
+        if: steps.rust-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cargo/bin/cbindgen
+            support/idevice/target
+          key: idevice-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-cbindgen-0.29.4-${{ hashFiles('support/idevice/ffi/Cargo.lock', 'tools/development/build-idevice.sh') }}
+
+      - name: Build Gecko for iOS
+        shell: bash
+        env:
+          WASM_CC: ${{ steps.wasi.outputs.wasm-cc }}
+          WASM_CXX: ${{ steps.wasi.outputs.wasm-cxx }}
+          WASI_SYSROOT: ${{ steps.wasi.outputs.wasi-sysroot }}
+          GECKO_CACHE_HIT: ${{ steps.gecko-cache.outputs.cache-hit }}
+        run: |
+          set -euo pipefail
+          "$WASM_CC" --version | tee dist/logs/wasm-compiler-selected.log
+          test -f "$WASI_SYSROOT/include/string.h"
+          if [[ "$GECKO_CACHE_HIT" == "true" ]]; then
+            # The exact key covers the Gecko revision, patches, build script,
+            # Xcode, Clang, and LLD. Re-running Mach after a fresh checkout
+            # would rebuild valid cached objects solely because of new mtimes.
+            test -s engine/firefox/obj-aarch64-apple-ios/dist/bin/XUL
+            echo "Using exact-key Gecko build cache." | tee dist/logs/build-gecko.log
+          else
+            tools/development/build-gecko.sh 2>&1 | tee dist/logs/build-gecko.log
+          fi
+          test -s engine/firefox/obj-aarch64-apple-ios/dist/bin/XUL
+          df -h | tee dist/logs/disk-after-gecko.log
+
+      - name: Save Gecko object cache
+        if: steps.gecko-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: engine/firefox/obj-aarch64-apple-ios
+          key: gecko-${{ runner.os }}-${{ runner.arch }}-${{ steps.toolchain.outputs.xcode-key }}-${{ steps.toolchain.outputs.wasm-key }}-${{ hashFiles('engine/release.txt', 'patches/**/*.patch', 'tools/development/build-gecko.sh') }}
+
+      - name: Build unsigned Reynard.app
+        shell: bash
+        run: |
+          set -euo pipefail
+          tools/release/build-unsigned-app.sh
+
+      - name: Package and verify unsigned IPA
+        id: package
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(awk -F ' = ' '/^CURRENT_VERSION = / { print $2; exit }' browser/Configuration/Reynard.xcconfig)"
+          short_sha="$(git rev-parse --short=7 HEAD)"
+          ipa_name="Reynard-${version}-${short_sha}-unsigned.ipa"
+          tools/release/create-unsigned-ipa.sh dist/Reynard.app "dist/$ipa_name" 2>&1 | tee dist/logs/package-ipa.log
+          shasum -a 256 "dist/$ipa_name" | tee "dist/$ipa_name.sha256"
+          echo "ipa-name=$ipa_name" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Collect symbols and final diagnostics
+        if: always()
+        shell: bash
+        run: |
+          set -uo pipefail
+          mkdir -p dist/symbols
+          while IFS= read -r -d '' symbol; do
+            ditto "$symbol" "dist/symbols/$(basename "$symbol")"
+          done < <(find build/DerivedData/Build/Products -maxdepth 4 -type d -name '*.dSYM' -print0 2>/dev/null)
+          df -h | tee dist/logs/disk-final.log
+
+      - name: Upload IPA, logs, tests, and symbols
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Reynard-source-unsigned-${{ github.run_number }}
+          path: |
+            dist/*.ipa
+            dist/*.sha256
+            dist/logs
+            dist/test-results
+            dist/symbols
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Require a real IPA artifact
+        shell: bash
+        env:
+          IPA_NAME: ${{ steps.package.outputs.ipa-name }}
+        run: |
+          set -euo pipefail
+          test -n "$IPA_NAME"
+          test -s "dist/$IPA_NAME"
+
+      - name: Publish successful build release
+        id: release
+        if: github.event_name != 'pull_request'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          IPA_NAME: ${{ steps.package.outputs.ipa-name }}
+          VERSION: ${{ steps.package.outputs.version }}
+        run: |
+          set -euo pipefail
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            release_tag="$GITHUB_REF_NAME"
+            release_title="Reynard Browser 中文版 $VERSION"
+            release_kind="版本标签构建"
+            prerelease="false"
+          elif [[ "$GITHUB_EVENT_NAME" == "push" && "$GITHUB_REF" == "refs/heads/main" ]] &&
+               git log -1 --pretty=%B | grep -Fq '[formal release]'; then
+            release_tag="v${VERSION}-zh.1"
+            release_title="Reynard Browser 中文版 $VERSION"
+            release_kind="正式版本构建"
+            prerelease="false"
+          else
+            release_tag="build-$GITHUB_RUN_NUMBER"
+            release_title="Reynard Browser 中文版 $VERSION · Build $GITHUB_RUN_NUMBER"
+            release_kind="自动源码构建"
+            prerelease="true"
+          fi
+
+          note_file="dist/release-notes.md"
+          {
+            echo '## Reynard Browser 中文版自动构建'
+            echo
+            printf -- '- 类型：%s\n' "$release_kind"
+            printf -- '- 版本：`%s`\n' "$VERSION"
+            printf -- '- 提交：`%s`\n' "$GITHUB_SHA"
+            printf -- '- 工作流运行：[#%s](https://github.com/%s/actions/runs/%s)\n' \
+              "$GITHUB_RUN_NUMBER" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID"
+            echo
+            echo '> **未签名构建：此 IPA 没有签名，不能直接安装。**'
+            echo '> 安装前必须使用 TrollStore、AltStore、SideStore、个人证书或其他兼容方式签名/侧载，并保留 App Extensions。'
+            echo
+            echo '该文件由 GitHub Actions 从本仓库的 Reynard、idevice、指定 Gecko 版本和补丁源码完整构建；同时附带 SHA-256 校验文件。'
+            echo
+            echo 'Unsigned build. This IPA is not signed and cannot be installed directly without a compatible signing or sideloading method.'
+          } > "$note_file"
+
+          if gh release view "$release_tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$release_tag" "dist/$IPA_NAME" "dist/$IPA_NAME.sha256" \
+              --repo "$GITHUB_REPOSITORY" --clobber
+            gh release edit "$release_tag" --repo "$GITHUB_REPOSITORY" \
+              --title "$release_title" --notes-file "$note_file"
+          else
+            release_args=(
+              "$release_tag"
+              "dist/$IPA_NAME#未签名 IPA"
+              "dist/$IPA_NAME.sha256#SHA-256 校验"
+              --repo "$GITHUB_REPOSITORY"
+              --target "$GITHUB_SHA"
+              --title "$release_title"
+              --notes-file "$note_file"
+            )
+            if [[ "$prerelease" == "true" ]]; then
+              release_args+=(--prerelease)
+            fi
+            gh release create "${release_args[@]}"
+          fi
+
+          release_url="https://github.com/$GITHUB_REPOSITORY/releases/tag/$release_tag"
+          echo "release-tag=$release_tag" >> "$GITHUB_OUTPUT"
+          echo "release-url=$release_url" >> "$GITHUB_OUTPUT"
+          echo "Published $release_url"
+
+      - name: Write build summary
+        if: always()
+        shell: bash
+        env:
+          IPA_NAME: ${{ steps.package.outputs.ipa-name }}
+          RELEASE_URL: ${{ steps.release.outputs.release-url }}
+        run: |
+          {
+            echo '## Reynard source build'
+            echo
+            echo "- Commit: $GITHUB_SHA"
+            echo "- IPA: ${IPA_NAME:-not produced}"
+            echo '- Signing: disabled; no certificate or provisioning profile is used.'
+            echo '- Installation: the IPA must be signed by a compatible sideloading method before normal installation.'
+            if [[ -n "${RELEASE_URL:-}" ]]; then
+              echo "- Release: $RELEASE_URL"
+            elif [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+              echo '- Release: not published for pull request checks.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

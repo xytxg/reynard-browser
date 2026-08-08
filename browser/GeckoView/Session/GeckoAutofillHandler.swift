@@ -150,7 +150,7 @@ final class GeckoAutofillHandler: NSObject, GeckoSessionHandlerCommon {
     func attach(to view: UIView) {
         let selector = NSSelectorFromString("setAutofillDelegate:")
         guard view.responds(to: selector) else {
-            fatalError("Unimplemented")
+            return
         }
         view.perform(selector, with: self)
     }
@@ -158,7 +158,7 @@ final class GeckoAutofillHandler: NSObject, GeckoSessionHandlerCommon {
     func detach(from view: UIView) {
         let selector = NSSelectorFromString("setAutofillDelegate:")
         guard view.responds(to: selector) else {
-            fatalError("Unimplemented")
+            return
         }
         view.perform(selector, with: nil)
     }
@@ -301,7 +301,7 @@ final class GeckoAutofillHandler: NSObject, GeckoSessionHandlerCommon {
         }
         let selector = NSSelectorFromString("setInputDelegate:")
         guard view.responds(to: selector) else {
-            fatalError("Unimplemented")
+            return
         }
         view.perform(selector, with: nil)
     }
@@ -314,7 +314,7 @@ final class GeckoAutofillHandler: NSObject, GeckoSessionHandlerCommon {
         }
         let selector = NSSelectorFromString("activatePasswordInputForAutofill")
         guard view.responds(to: selector) else {
-            fatalError("Unimplemented")
+            return
         }
         view.perform(selector)
     }

@@ -73,14 +73,49 @@ final class AddonCoordinator: NSObject, AddonEmbedderDelegate {
         updateCoordinator.start()
         delegate?.refreshAddonChrome(self)
     }
+
+    func canHandleExternalResponse(_ response: ExternalResponseInfo) -> Bool {
+        return shouldInterceptAMOInstall(response)
+            && DownloadFileSafety.capturedTemporaryFileURL(forPath: response.localFilePath) != nil
+    }
     
-    func handleExternalResponse(_ response: ExternalResponseInfo) -> Bool {
-        guard shouldInterceptAMOInstall(response) else {
+    @MainActor
+    func confirmExternalResponse(_ response: ExternalResponseInfo) async -> Bool {
+        guard canHandleExternalResponse(response) else {
             return false
         }
-        
-        pendingAddonDownloadPaths.insert(response.localFilePath)
-        return true
+
+        guard let sourceURL = URL(string: response.url),
+              let presenter = UIApplication.shared.topViewController() else {
+            return false
+        }
+        let fileName = DownloadFileSafety.sanitizedFileName(
+            response.filename ?? sourceURL.lastPathComponent,
+            fallback: "extension.xpi"
+        )
+        let details = [
+            String(format: NSLocalizedString("Source: %@", comment: "Add-on source host"), sourceURL.host ?? sourceURL.absoluteString),
+            String(format: NSLocalizedString("File: %@", comment: "Add-on package name"), fileName),
+        ].joined(separator: "\n")
+
+        let confirmed: Bool = await withCheckedContinuation { continuation in
+            let alert = UIAlertController(
+                title: NSLocalizedString("Install Add-on?", comment: "Add-on source confirmation"),
+                message: details,
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel) { _ in
+                continuation.resume(returning: false)
+            })
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Continue", comment: "Add-on source confirmation"), style: .default) { _ in
+                continuation.resume(returning: true)
+            })
+            presenter.present(alert, animated: true)
+        }
+        if confirmed {
+            pendingAddonDownloadPaths.insert(response.localFilePath)
+        }
+        return confirmed
     }
     
     func shouldContinueExternalResponse(localFilePath: String) -> Bool {
@@ -92,7 +127,9 @@ final class AddonCoordinator: NSObject, AddonEmbedderDelegate {
             return false
         }
         
-        let packageFileURL = URL(fileURLWithPath: localFilePath)
+        guard let packageFileURL = DownloadFileSafety.capturedTemporaryFileURL(forPath: localFilePath) else {
+            return true
+        }
         guard succeeded else {
             try? FileManager.default.removeItem(at: packageFileURL)
             return true

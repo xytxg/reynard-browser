@@ -43,7 +43,10 @@ final class BackgroundAudioManager {
         }
         
         isRunning = true
-        startEngine()
+        guard startEngine() else {
+            isRunning = false
+            return
+        }
         startHealthCheck()
     }
     
@@ -63,7 +66,8 @@ final class BackgroundAudioManager {
         )
     }
     
-    private func startEngine() {
+    @discardableResult
+    private func startEngine() -> Bool {
         do {
             engine.stop()
             player.stop()
@@ -80,8 +84,16 @@ final class BackgroundAudioManager {
             scheduleSilence()
             try engine.start()
             player.play()
+            return true
         } catch {
             NSLog("BackgroundAudioManager: %@", error.localizedDescription)
+            player.stop()
+            engine.stop()
+            try? AVAudioSession.sharedInstance().setActive(
+                false,
+                options: .notifyOthersOnDeactivation
+            )
+            return false
         }
     }
     
@@ -120,7 +132,10 @@ final class BackgroundAudioManager {
             }
             player.play()
         } catch {
-            return
+            NSLog("BackgroundAudioManager: recovery failed: %@", error.localizedDescription)
+            if !startEngine() {
+                stop()
+            }
         }
     }
     
@@ -141,6 +156,8 @@ final class BackgroundAudioManager {
         
         engine = AVAudioEngine()
         player = AVAudioPlayerNode()
-        startEngine()
+        if !startEngine() {
+            stop()
+        }
     }
 }

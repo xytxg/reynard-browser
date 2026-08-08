@@ -1094,8 +1094,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "“%@”出现了问题。"
           }
         }
       }
@@ -1122,8 +1122,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "此网页出现了问题。"
           }
         }
       }
@@ -3302,8 +3302,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "内容"
           }
         }
       }
@@ -5890,8 +5890,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "进一步了解 %@ 保护…"
           }
         }
       }
@@ -7031,6 +7031,12 @@
             "state" : "translated",
             "value" : "Open in Background"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在后台打开"
+          }
         }
       }
     },
@@ -7562,8 +7568,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "预览"
           }
         }
       }
@@ -8181,8 +8187,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "重置桌面版网站设置"
           }
         }
       }
@@ -11017,8 +11023,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "%@ 保护会拦截什么"
           }
         }
       }
