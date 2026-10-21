@@ -1,5 +1,5 @@
 diff --git a/mobile/shared/modules/geckoview/GeckoViewContent.sys.mjs b/mobile/shared/modules/geckoview/GeckoViewContent.sys.mjs
-index c850b03ad280..e7bd51a1dd09 100644
+index 635806ea1724..0c5b324c7347 100644
 --- a/mobile/shared/modules/geckoview/GeckoViewContent.sys.mjs
 +++ b/mobile/shared/modules/geckoview/GeckoViewContent.sys.mjs
 @@ -3,6 +3,7 @@
@@ -10,29 +10,39 @@ index c850b03ad280..e7bd51a1dd09 100644
  
  export class GeckoViewContent extends GeckoViewModule {
    onInit() {
-@@ -14,6 +15,8 @@ export class GeckoViewContent extends GeckoViewModule {
-       "GeckoView:HasCookieBannerRuleForBrowsingContextTree",
-       "GeckoView:RestoreState",
-       "GeckoView:ContainsFormData",
+@@ -26,6 +27,11 @@ export class GeckoViewContent extends GeckoViewModule {
+       "GeckoView:GetWebCompatInfo",
+       "GeckoView:SendGleanBrokenSiteReport",
+       "GeckoView:SendMoreWebCompatInfo",
++
++      // New events
 +      "GeckoView:Autofill:FillOneTimeCode",
 +      "GeckoView:GetFocusedInputMetrics",
-       "GeckoView:ProcessBackPressed",
-       "GeckoView:ScrollBy",
-       "GeckoView:ScrollTo",
-@@ -279,6 +282,12 @@ export class GeckoViewContent extends GeckoViewModule {
-       case "GeckoView:ContainsFormData":
-         this._containsFormData(aCallback);
-         break;
++      "GeckoView:FetchImage",
+     ]);
+   }
+ 
+@@ -173,6 +179,19 @@ export class GeckoViewContent extends GeckoViewModule {
+   onEvent(aEvent, aData, aCallback) {
+     debug`onEvent: event=${aEvent}, data=${aData}`;
+ 
++    // New events
++    switch (aEvent) {
 +      case "GeckoView:Autofill:FillOneTimeCode":
 +        this._fillOneTimeCode(aData, aCallback);
-+        break;
++        return;
 +      case "GeckoView:GetFocusedInputMetrics":
 +        this._getFocusedInputMetrics(aCallback);
-+        break;
-       case "GeckoView:GetWebCompatInfo":
-         this._getWebCompatInfo(aCallback);
-         break;
-@@ -455,6 +464,39 @@ export class GeckoViewContent extends GeckoViewModule {
++        return;
++      case "GeckoView:FetchImage":
++        this._fetchImage(aData, aCallback);
++        return;
++    }
++
+     switch (aEvent) {
+       case "GeckoViewContent:ExitFullScreen":
+         this.browser.ownerDocument.exitFullscreen();
+@@ -491,6 +510,49 @@ export class GeckoViewContent extends GeckoViewModule {
      aCallback.onSuccess(await this.actor.containsFormData());
    }
  
@@ -59,16 +69,26 @@ index c850b03ad280..e7bd51a1dd09 100644
 +          });
 +        });
 +      }
-+      const actor =
-+        Services.focus.focusedContentBrowsingContext?.currentWindowGlobal?.getActor(
-+          "GeckoViewContent"
-+        );
++      const focusedContext = Services.focus.focusedContentBrowsingContext;
++      if (focusedContext?.top !== this.browser.browsingContext) {
++        aCallback.onSuccess(null);
++        return;
++      }
++      const actor = focusedContext.currentWindowGlobal?.getActor("GeckoViewContent");
 +      aCallback.onSuccess(actor ? await actor.sendQuery("GetFocusedInputMetrics") : null);
 +    } catch (error) {
 +      aCallback.onError(`Cannot get focused input metrics, error: ${error}`);
 +    }
 +  }
 +
-   async _hasCookieBannerRuleForBrowsingContextTree(aCallback) {
-     const { browsingContext } = this.actor;
-     aCallback.onSuccess(
++  async _fetchImage(aData, aCallback) {
++    try {
++      aCallback.onSuccess(await this.actor.sendQuery("FetchImage", aData));
++    } catch (error) {
++      aCallback.onError(`Cannot fetch image: ${error}`);
++    }
++  }
++
+   _findInPage(aData, aCallback) {
+     debug`findInPage: data=${aData} callback=${aCallback && "non-null"}`;
+ 

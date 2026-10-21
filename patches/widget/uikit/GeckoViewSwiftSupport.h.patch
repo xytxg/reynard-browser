@@ -1,15 +1,13 @@
 diff --git a/widget/uikit/GeckoViewSwiftSupport.h b/widget/uikit/GeckoViewSwiftSupport.h
-index e68fca9134c0..79b39c6a5ca3 100644
+index d91f21ba1ab2..990b42781a49 100644
 --- a/widget/uikit/GeckoViewSwiftSupport.h
 +++ b/widget/uikit/GeckoViewSwiftSupport.h
-@@ -18,14 +18,45 @@
- #endif
- 
- #import <Foundation/Foundation.h>
-+#import <AVFoundation/AVSampleBufferDisplayLayer.h>
+@@ -23,11 +23,77 @@
  #import <UIKit/UIKit.h>
  #import <xpc/xpc.h>
  
++NS_ASSUME_NONNULL_BEGIN
++
  @protocol SwiftEventDispatcher;
  
 +typedef NS_ENUM(NSInteger, GeckoInputHandling) {
@@ -30,30 +28,145 @@ index e68fca9134c0..79b39c6a5ca3 100644
 +  GeckoOverscrollAxisVertical = 1 << 1,
 +};
 +
-+@protocol GeckoViewInputResultDelegate <NSObject>
++typedef NS_OPTIONS(NSUInteger, GeckoEdgeSwipeDirections) {
++  GeckoEdgeSwipeDirectionLeft = 1 << 0,
++  GeckoEdgeSwipeDirectionRight = 1 << 1,
++};
++
++typedef NS_ENUM(NSUInteger, GeckoOrientationLockResult) {
++  GeckoOrientationLockResultSuccess,
++  GeckoOrientationLockResultRejected,
++  GeckoOrientationLockResultNotSupported,
++};
++
++@protocol GeckoViewInteractionDelegate <NSObject>
 +- (void)touchSequenceDidBegin:(uint64_t)sequenceId;
 +- (void)touchSequence:(uint64_t)sequenceId
 +    didResolveHandling:(GeckoInputHandling)handling
 +       scrollableEdges:(GeckoScrollableEdges)scrollableEdges
 +        overscrollAxes:(GeckoOverscrollAxes)overscrollAxes;
 +- (void)touchSequenceDidEnd:(uint64_t)sequenceId;
++- (void)trackpadScrollDidBegin:(CGPoint)delta;
++- (void)trackpadScrollDidUpdate:(CGPoint)delta;
++- (void)trackpadScrollDidEnd;
++- (void)trackpadScrollDidCancel;
++- (void)compositorScrollPositionDidChange:(double)scrollY zoom:(double)zoom;
++- (GeckoEdgeSwipeDirections)allowedEdgeSwipeDirections;
++- (void)edgeSwipeDidStart:(GeckoEdgeSwipeDirections)direction;
++- (void)edgeSwipeDidUpdate:(double)progress;
++- (void)edgeSwipeDidComplete:(GeckoEdgeSwipeDirections)direction;
++- (void)edgeSwipeDidEnd;
++@end
++
++@protocol GeckoViewKeyCommandDelegate <NSObject>
++- (nullable UIKeyCommand*)keyCommandForInput:(NSString*)input
++                               modifierFlags:(UIKeyModifierFlags)modifierFlags;
++- (BOOL)shouldDispatchKeyCommandToContent:(UIKeyCommand*)command
++    NS_SWIFT_NAME(shouldDispatchKeyCommandToContent(_:));
++- (void)contentDidHandleKeyCommand:(UIKeyCommand*)command
++    NS_SWIFT_NAME(contentDidHandleKeyCommand(_:));
 +@end
 +
  @protocol SwiftGeckoViewRuntime <NSObject>
  - (id<SwiftEventDispatcher>)runtimeDispatcher;
  - (id<SwiftEventDispatcher>)dispatcherByName:(const char*)name;
++- (void)lockScreenOrientation:(NSUInteger)orientationMask
++                   completion:
++                       (void (^)(GeckoOrientationLockResult result))completion;
++- (void)unlockScreenOrientation;
 +@optional
 +- (void)childProcessDidStartWithPID:(int32_t)pid
 +                        processType:(NSString*)processType;
  @end
  
  @protocol GeckoProcessExtension <NSObject>
-@@ -56,6 +87,8 @@
- 
- @protocol GeckoViewWindow <NSObject>
- - (UIView*)view;
-+- (AVSampleBufferDisplayLayer*)pictureInPictureDisplayLayer;
-+- (void)setInputResultDelegate:(id<GeckoViewInputResultDelegate>)delegate;
- - (void)close;
+@@ -35,38 +101,80 @@
  @end
  
+ @protocol EventCallback <NSObject>
+-- (void)sendSuccess:(id)response;
+-- (void)sendError:(id)response;
++- (void)sendSuccess:(nullable id)response;
++- (void)sendError:(nullable id)response;
+ @end
+ 
+ @protocol GeckoEventDispatcher <NSObject>
+ - (void)dispatchToGecko:(NSString*)type
+-                message:(id)message
+-               callback:(id<EventCallback>)callback;
++                message:(nullable id)message
++               callback:(nullable id<EventCallback>)callback;
+ - (BOOL)hasListener:(NSString*)type;
+ @end
+ 
+ @protocol SwiftEventDispatcher <NSObject>
+-- (void)attach:(id<GeckoEventDispatcher>)gecko;
++- (void)attach:(nullable id<GeckoEventDispatcher>)gecko;
+ - (void)dispatchToSwift:(NSString*)type
+-                message:(id)message
+-               callback:(id<EventCallback>)callback;
++                message:(nullable id)message
++               callback:(nullable id<EventCallback>)callback;
+ - (BOOL)hasListener:(NSString*)type;
+ // Called when GeckoView is ready to receive dispatched events from Swift.
+ - (void)activate;
+ @end
+ 
+ @protocol GeckoViewWindow <NSObject>
+-- (UIView*)view;
++// Window
++- (nullable UIView*)view;
+ - (void)close;
++
++// Interaction
++- (void)setInteractionDelegate:
++    (nullable id<GeckoViewInteractionDelegate>)delegate;
++
++// Layout
++- (void)setDynamicToolbarMaxHeight:(CGFloat)height minHeight:(CGFloat)minHeight;
++- (void)setContentOffsets:(CGFloat)top
++                   bottom:(CGFloat)bottom
++                 topInset:(CGFloat)topInset
++              bottomInset:(CGFloat)bottomInset
++      contentTranslationY:(CGFloat)contentTranslationY;
++- (void)updateScreenOrientation:(NSInteger)interfaceOrientation;
++
++// Keyboard
++- (void)setKeyCommandDelegate:
++    (nullable id<GeckoViewKeyCommandDelegate>)delegate;
++- (void)dismissSoftwareKeyboard;
++- (BOOL)focusForHardwareKeyboard;
++- (BOOL)isInHardwareKeyboardMode;
++
++// Error pages
++- (nullable NSString*)errorPageURI;
++- (BOOL)addCertExceptionForPageURI:(NSString*)pageURI
++    NS_SWIFT_NAME(addCertException(pageURI:));
++- (BOOL)reloadWithHttpsOnlyExceptionForPageURI:(NSString*)pageURI
++    NS_SWIFT_NAME(reloadWithHttpsOnlyException(pageURI:));
++
++// Printing
++- (void)printToPDFWithBrowsingContextId:(nullable NSNumber*)browsingContextId
++                             completion:(void (^_Nonnull)(
++                                            NSURL* _Nullable fileURL,
++                                            NSError* _Nullable error))completion
++    NS_SWIFT_NAME(printToPDF(browsingContextId:completion:));
++- (void)savePDFDocumentAtURL:(nonnull NSString*)sourceURL
++                  completion:
++                      (void (^_Nonnull)(NSURL* _Nullable fileURL,
++                                        NSError* _Nullable error))completion
++    NS_SWIFT_NAME(savePDFDocument(sourceURL:completion:));
+ @end
+ 
+ MOZ_BEGIN_EXTERN_C
+ 
+ MOZ_EXPORT MOZ_CAN_RUN_SCRIPT_BOUNDARY id<GeckoViewWindow> GeckoViewOpenWindow(
+-    NSString* aId, id<SwiftEventDispatcher> aDispatcher,
++    NSString* _Nullable aId, id<SwiftEventDispatcher> aDispatcher,
+     NSDictionary* aInitData, bool aPrivateMode);
+ 
+ MOZ_END_EXTERN_C
+ 
++NS_ASSUME_NONNULL_END
++
+ #endif /* GeckoView_GeckoViewSwiftSupport_h */

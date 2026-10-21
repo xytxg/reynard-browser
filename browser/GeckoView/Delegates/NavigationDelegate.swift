@@ -12,6 +12,7 @@ import Foundation
 public enum LoadRequestTarget {
     case current
     case new
+    case background
 }
 
 public struct LoadRequest {
@@ -20,7 +21,41 @@ public struct LoadRequest {
     public let target: LoadRequestTarget
     public let isRedirect: Bool
     public let hasUserGesture: Bool
+    public let isUserInitiatedNavigation: Bool
     public let isDirectNavigation: Bool
+}
+
+private func loadRequestTarget(from value: Int32) -> LoadRequestTarget {
+    switch value {
+    case 0, 1:
+        return .current
+    case 5:
+        return .background
+    default:
+        return .new
+    }
+}
+
+private func loadRequest(from message: [String: Any?]?) -> LoadRequest? {
+    guard let uri = message?["uri"] as? String else {
+        return nil
+    }
+    
+    let flags = PayloadValue.int(message?["flags"]) ?? 0
+    let targetValue = PayloadValue.int32(message?["where"]) ?? 0
+    let hasUserGesture = message?["hasUserGesture"] as? Bool ?? false
+    let isRedirectFlag = 0x800000
+    
+    return LoadRequest(
+        uri: uri,
+        triggerUri: message?["triggerUri"] as? String,
+        target: loadRequestTarget(from: targetValue),
+        isRedirect: (flags & isRedirectFlag) != 0,
+        hasUserGesture: hasUserGesture,
+        isUserInitiatedNavigation:
+            message?["isUserInitiatedNavigation"] as? Bool ?? hasUserGesture,
+        isDirectNavigation: true
+    )
 }
 
 // MARK: - Navigation Delegate
@@ -30,8 +65,15 @@ public protocol NavigationDelegate {
     func onCanGoBack(session: GeckoSession, canGoBack: Bool)
     func onCanGoForward(session: GeckoSession, canGoForward: Bool)
     func onLoadRequest(session: GeckoSession, request: LoadRequest) async -> AllowOrDeny
+    func onPreNavigation(session: GeckoSession, request: LoadRequest) async -> AllowOrDeny
     func onSubframeLoadRequest(session: GeckoSession, request: LoadRequest) async -> AllowOrDeny
-    func onNewSession(session: GeckoSession, uri: String, windowId: String) async -> GeckoSession?
+    func onLoadError(session: GeckoSession, error: WebRequestError) -> String?
+    func onNewSession(
+        session: GeckoSession,
+        uri: String,
+        windowId: String,
+        target: LoadRequestTarget
+    ) async -> GeckoSession?
 }
 
 extension NavigationDelegate {
@@ -39,8 +81,10 @@ extension NavigationDelegate {
     public func onCanGoBack(session: GeckoSession, canGoBack: Bool) {}
     public func onCanGoForward(session: GeckoSession, canGoForward: Bool) {}
     public func onLoadRequest(session: GeckoSession, request: LoadRequest) async -> AllowOrDeny { .allow }
+    public func onPreNavigation(session: GeckoSession, request: LoadRequest) async -> AllowOrDeny { .allow }
     public func onSubframeLoadRequest(session: GeckoSession, request: LoadRequest) async -> AllowOrDeny { .allow }
-    public func onNewSession(session: GeckoSession, uri: String, windowId: String) async -> GeckoSession? { nil }
+    public func onLoadError(session: GeckoSession, error: WebRequestError) -> String? { nil }
+    public func onNewSession(session: GeckoSession, uri: String, windowId: String, target: LoadRequestTarget) async -> GeckoSession? { nil }
 }
 
 // MARK: - Navigation Events
@@ -50,6 +94,7 @@ enum NavigationEvents: String, CaseIterable {
     case onNewSession = "GeckoView:OnNewSession"
     case onLoadError = "GeckoView:OnLoadError"
     case onLoadRequest = "GeckoView:OnLoadRequest"
+    case preNavigation = "GeckoView:OnPreNavigation"
 }
 
 // MARK: - Navigation Handler
@@ -91,10 +136,15 @@ func newNavigationHandler(_ session: GeckoSession) -> GeckoSessionHandler {
                 return false
             }
             
+            let target = loadRequestTarget(
+                from: PayloadValue.int32(message?["where"]) ?? 2
+            )
+            
             if let newSession = await delegate?.onNewSession(
                 session: session,
                 uri: uri,
-                windowId: requestedWindowID
+                windowId: requestedWindowID,
+                target: target
             ) {
                 if let windowId = newSession.id,
                    windowId != requestedWindowID {
@@ -109,34 +159,12 @@ func newNavigationHandler(_ session: GeckoSession) -> GeckoSessionHandler {
             return false
             
         case .onLoadError:
-            return nil
+            return delegate?.onLoadError(session: session, error: WebRequestError(message: message))
             
         case .onLoadRequest:
-            guard let uri = message?["uri"] as? String else {
+            guard let request = loadRequest(from: message) else {
                 return true
             }
-            
-            func convertTarget(_ value: Int32) -> LoadRequestTarget {
-                switch value {
-                case 0, 1:
-                    return .current
-                default:
-                    return .new
-                }
-            }
-            
-            let flags = PayloadValue.int(message?["flags"]) ?? 0
-            let targetValue = PayloadValue.int32(message?["where"]) ?? 0
-            
-            let isRedirectFlag = 0x800000
-            let request = LoadRequest(
-                uri: uri,
-                triggerUri: message?["triggerUri"] as? String,
-                target: convertTarget(targetValue),
-                isRedirect: (flags & isRedirectFlag) != 0,
-                hasUserGesture: message?["hasUserGesture"] as? Bool ?? false,
-                isDirectNavigation: true
-            )
             
             let isTopLevel = message?["isTopLevel"] as? Bool ?? true
             if isTopLevel {
@@ -145,6 +173,12 @@ func newNavigationHandler(_ session: GeckoSession) -> GeckoSessionHandler {
                 return await delegate?.onLoadRequest(session: session, request: request) == .deny
             }
             return await delegate?.onSubframeLoadRequest(session: session, request: request) == .deny
+            
+        case .preNavigation:
+            guard let request = loadRequest(from: message) else {
+                return false
+            }
+            return await delegate?.onPreNavigation(session: session, request: request) == .deny
         }
     }
 }

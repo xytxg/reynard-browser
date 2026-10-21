@@ -1,0 +1,138 @@
+diff --git a/gfx/layers/ipc/UiCompositorControllerChild.cpp b/gfx/layers/ipc/UiCompositorControllerChild.cpp
+index 94a9b3093944..7bc27937f95f 100644
+--- a/gfx/layers/ipc/UiCompositorControllerChild.cpp
++++ b/gfx/layers/ipc/UiCompositorControllerChild.cpp
+@@ -22,8 +22,10 @@
+ #  include "mozilla/widget/AndroidUiThread.h"
+ 
+ static RefPtr<nsThread> GetUiThread() { return mozilla::GetAndroidUiThread(); }
++#elif defined(MOZ_WIDGET_UIKIT)
++static nsCOMPtr<nsIThread> GetUiThread() { return do_GetMainThread(); }
+ #else
+-static RefPtr<nsThread> GetUiThread() {
++static nsCOMPtr<nsIThread> GetUiThread() {
+   MOZ_CRASH("Platform does not support UiCompositorController");
+   return nullptr;
+ }
+@@ -102,7 +104,19 @@ bool UiCompositorControllerChild::InvalidateAndRender() {
+ }
+ 
+ bool UiCompositorControllerChild::SetFixedBottomOffset(int32_t aOffset) {
+-  return SendFixedBottomOffset(aOffset);
++  return SetFixedLayerMargins(0, aOffset, 0, 0);
++}
++
++bool UiCompositorControllerChild::SetFixedLayerMargins(int32_t aTop,
++                                                       int32_t aBottom,
++                                                       int32_t aTopInset,
++                                                       int32_t aBottomInset) {
++  if (!mIsOpen) {
++    mFixedLayerMargins =
++        Some(FixedLayerMargins{aTop, aBottom, aTopInset, aBottomInset});
++    return true;
++  }
++  return SendFixedLayerMargins(aTop, aBottom, aTopInset, aBottomInset);
+ }
+ 
+ bool UiCompositorControllerChild::ToolbarAnimatorMessageFromUI(
+@@ -184,32 +198,51 @@ bool UiCompositorControllerChild::EnableLayerUpdateNotifications(
+   return SendEnableLayerUpdateNotifications(aEnable);
+ }
+ 
++#ifdef MOZ_WIDGET_UIKIT
++void UiCompositorControllerChild::SetNativeTextInputScrollers(
++    const nsTArray<ScrollableLayerGuid>& aScrollers) {
++  mNativeTextInputScrollers = aScrollers.Clone();
++  if (mIsOpen) {
++    SendNativeTextInputScrollers(mNativeTextInputScrollers);
++  }
++}
++#endif
++
+ void UiCompositorControllerChild::Destroy() {
+   MOZ_ASSERT(NS_IsMainThread());
+ 
++  auto destroy = [this]() {
++    MOZ_ASSERT(GetUiThread()->IsOnCurrentThread());
++
++    // Clear the process token so that we don't notify the GPUProcessManager
++    // about an abnormal shutdown, thereby tearing down the GPU process.
++    mProcessToken = 0;
++
++    if (mWidget) {
++      // Dispatch mWidget to main thread to prevent it from being destructed
++      // by the ui thread.
++      RefPtr<nsIWidget> widget = std::move(mWidget);
++      NS_ReleaseOnMainThread("UiCompositorControllerChild::mWidget",
++                             widget.forget());
++    }
++
++    if (mIsOpen) {
++      // Close the underlying IPC channel.
++      PUiCompositorControllerChild::Close();
++      mIsOpen = false;
++    }
++  };
++
++  if (GetUiThread()->IsOnCurrentThread()) {
++    destroy();
++    return;
++  }
++
+   layers::SynchronousTask task("UiCompositorControllerChild::Destroy");
+   GetUiThread()->Dispatch(NS_NewRunnableFunction(
+-      "layers::UiCompositorControllerChild::Destroy", [&]() {
+-        MOZ_ASSERT(GetUiThread()->IsOnCurrentThread());
++      "layers::UiCompositorControllerChild::Destroy", [destroy, &task]() {
+         AutoCompleteTask complete(&task);
+-
+-        // Clear the process token so that we don't notify the GPUProcessManager
+-        // about an abnormal shutdown, thereby tearing down the GPU process.
+-        mProcessToken = 0;
+-
+-        if (mWidget) {
+-          // Dispatch mWidget to main thread to prevent it from being destructed
+-          // by the ui thread.
+-          RefPtr<nsIWidget> widget = std::move(mWidget);
+-          NS_ReleaseOnMainThread("UiCompositorControllerChild::mWidget",
+-                                 widget.forget());
+-        }
+-
+-        if (mIsOpen) {
+-          // Close the underlying IPC channel.
+-          PUiCompositorControllerChild::Close();
+-          mIsOpen = false;
+-        }
++        destroy();
+       }));
+ 
+   task.Wait();
+@@ -345,6 +378,12 @@ void UiCompositorControllerChild::SendCachedValues() {
+                         mResize.ref().height, &resumed);
+     mResize.reset();
+   }
++  if (mFixedLayerMargins) {
++    const auto& margins = mFixedLayerMargins.ref();
++    SendFixedLayerMargins(margins.mTop, margins.mBottom, margins.mTopInset,
++                          margins.mBottomInset);
++    mFixedLayerMargins.reset();
++  }
+   if (mDefaultClearColor) {
+     SendDefaultClearColor(mDefaultClearColor.ref());
+     mDefaultClearColor.reset();
+@@ -353,6 +392,15 @@ void UiCompositorControllerChild::SendCachedValues() {
+     SendEnableLayerUpdateNotifications(mLayerUpdateEnabled.ref());
+     mLayerUpdateEnabled.reset();
+   }
++
++#ifdef MOZ_WIDGET_UIKIT
++  if (!mNativeTextInputScrollers.IsEmpty()) {
++    SendNativeTextInputScrollers(mNativeTextInputScrollers);
++  }
++  if (mWidget) {
++    mWidget->OnUiCompositorControllerOpen();
++  }
++#endif
+ }
+ 
+ #ifdef MOZ_WIDGET_ANDROID

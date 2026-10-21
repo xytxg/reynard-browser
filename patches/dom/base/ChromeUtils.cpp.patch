@@ -1,0 +1,28 @@
+diff --git a/dom/base/ChromeUtils.cpp b/dom/base/ChromeUtils.cpp
+index fa5b75742ad4..2d4befc266f2 100644
+--- a/dom/base/ChromeUtils.cpp
++++ b/dom/base/ChromeUtils.cpp
+@@ -2034,7 +2034,10 @@ already_AddRefed<Promise> ChromeUtils::RequestProcInfo(GlobalObject& aGlobal,
+ #ifdef XP_MACOSX
+             ,
+             /* aChildTask = */ aGeckoProcess->GetChildTask()
+-#endif  // XP_MACOSX
++#elif defined(XP_IOS)
++            ,
++            /* aChildConnection = */ aGeckoProcess->GetChildConnection()
++#endif  // XP_DARWIN
+         );
+       });
+ 
+@@ -2138,7 +2141,10 @@ already_AddRefed<Promise> ChromeUtils::RequestProcInfo(GlobalObject& aGlobal,
+ #ifdef XP_MACOSX
+             ,
+         /* aChildTask = */ contentParent->Process()->GetChildTask()
+-#endif  // XP_MACOSX
++#elif defined(XP_IOS)
++            ,
++        /* aChildConnection = */ contentParent->Process()->GetChildConnection()
++#endif  // XP_DARWIN
+     );
+   }
+ 

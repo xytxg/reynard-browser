@@ -1,0 +1,24 @@
+diff --git a/editor/libeditor/AutoClonedRangeArray.cpp b/editor/libeditor/AutoClonedRangeArray.cpp
+index d63e85239d4a..5cf198122db4 100644
+--- a/editor/libeditor/AutoClonedRangeArray.cpp
++++ b/editor/libeditor/AutoClonedRangeArray.cpp
+@@ -1608,6 +1608,19 @@ AutoClonedSelectionRangeArray::ExtendAnchorFocusRangeFor(
+           "nsFrameSelection::CreateRangeExtendedToNextHardLineBreak() failed");
+       directionAndAmountResult = nsIEditor::eNext;
+       break;
++    case nsIEditor::eToEndOfParagraph:
++      result = nsFrameSelection::CreateRangeExtendedToNextParagraphBoundary<
++          dom::Range>(*presShell, limitersAndCaretData, anchorFocusRange,
++                      rangeDirection);
++      if (NS_WARN_IF(aEditorBase.Destroyed())) {
++        return Err(NS_ERROR_EDITOR_DESTROYED);
++      }
++      NS_WARNING_ASSERTION(
++          result.isOk(),
++          "nsFrameSelection::CreateRangeExtendedToNextParagraphBoundary() "
++          "failed");
++      directionAndAmountResult = nsIEditor::eNext;
++      break;
+     default:
+       return aDirectionAndAmount;
+   }

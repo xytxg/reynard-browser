@@ -1,35 +1,30 @@
 diff --git a/gfx/layers/apz/util/APZCCallbackHelper.cpp b/gfx/layers/apz/util/APZCCallbackHelper.cpp
-index 7898e438e346..9e666da8dd89 100644
+index 3587f7b34c03..c7a455d443b9 100644
 --- a/gfx/layers/apz/util/APZCCallbackHelper.cpp
 +++ b/gfx/layers/apz/util/APZCCallbackHelper.cpp
-@@ -32,6 +32,8 @@
- #include "mozilla/dom/Document.h"
- #include "nsIInterfaceRequestorUtils.h"
- #include "nsLayoutUtils.h"
-+#include "nsIWidget.h"
-+#include "PuppetWidget.h"
- #include "nsMenuPopupFrame.h"
- #include "nsPrintfCString.h"
- #include "nsPIDOMWindow.h"
-@@ -185,6 +187,21 @@ static DisplayPortMargins ScrollFrame(nsIContent* aContent,
-   CSSPoint actualScrollOffset = ScrollFrameTo(sf, aRequest, scrollUpdated);
-   CSSPoint scrollDelta = apzScrollOffset - actualScrollOffset;
+@@ -162,10 +162,15 @@ static DisplayPortMargins ScrollFrame(nsIContent* aContent,
+     sf->SetScrollableByAPZ(!aRequest.IsScrollInfoLayer());
+     if (sf->IsRootScrollFrameOfDocument()) {
+       if (!APZCCallbackHelper::IsScrollInProgress(sf)) {
++        // APZ's visual viewport includes the toolbar covering its top, but
++        // the page's visual viewport starts below it.
++        const CSSPoint visualViewportOffset =
++            aRequest.GetVisualScrollOffset() +
++            CSSPoint(0, aRequest.GetObscuredTopInset());
+         APZCCH_LOG("Setting VV offset to %s\n",
+-                   ToString(aRequest.GetVisualScrollOffset()).c_str());
++                   ToString(visualViewportOffset).c_str());
+         if (sf->SetVisualViewportOffset(
+-                CSSPoint::ToAppUnits(aRequest.GetVisualScrollOffset()),
++                CSSPoint::ToAppUnits(visualViewportOffset),
+                 /* aRepaint = */ false)) {
+           // sf can't be destroyed if SetVisualViewportOffset returned true.
+           sf->MarkEverScrolled();
+@@ -398,6 +403,7 @@ void APZCCallbackHelper::UpdateRootFrame(const RepaintRequest& aRequest) {
+   SetDisplayPortMargins(presShell, content, displayPortMargins,
+                         aRequest.CalculateCompositedSizeInCssPixels());
+   SetPaintRequestTime(content, aRequest.GetPaintRequestTime());
++  presShell->SetFixedPositionMargins(aRequest.GetFixedPositionMargins());
+ }
  
-+  // If the scroll position was updated and an editable element is
-+  // focused, notify the widget of position change so that the parent process
-+  // updates the cached editor/caret/selection rects for UIKit's selection
-+  // display.
-+  if (scrollUpdated && sf && sf->IsRootScrollFrameOfDocument()) {
-+    if (PresShell* ps = sf->PresShell()) {
-+      if (nsIWidget* widget = ps->GetOwnWidget()) {
-+        if (widget->GetInputContext().mIMEState.IsEditable()) {
-+          static_cast<widget::PuppetWidget*>(widget)->AdjustIMECacheForScroll(
-+              actualScrollOffset);
-+        }
-+      }
-+    }
-+  }
-+
-   if (scrollUpdated) {
-     if (aRequest.IsScrollInfoLayer()) {
-       // In cases where the APZ scroll offset is different from the content
+ void APZCCallbackHelper::UpdateSubFrame(const RepaintRequest& aRequest) {

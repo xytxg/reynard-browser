@@ -76,8 +76,8 @@ enum CustomTrackingProtectionOption {
             (.isolateCrossSite, NSLocalizedString("Isolate Cross-Site Cookies", tableName: "SettingsLocalizable", comment: ""), nil),
             (.crossSiteAndSocialTrackers, NSLocalizedString("Cross-Site and Social Media Trackers", tableName: "SettingsLocalizable", comment: ""), nil),
             (.unvisitedWebsites, NSLocalizedString("Cookies from Unvisited Websites", tableName: "SettingsLocalizable", comment: ""), nil),
-            (.thirdParty, NSLocalizedString("All Third-Party Cookies", comment: ""), NSLocalizedString("May cause websites to break.", comment: "")),
-            (.all, NSLocalizedString("All Cookies", comment: ""), NSLocalizedString("Will cause websites to break.", comment: "")),
+            (.thirdParty, NSLocalizedString("All Third-Party Cookies", tableName: "SettingsLocalizable", comment: ""), NSLocalizedString("May cause websites to break", tableName: "SettingsLocalizable", comment: "")),
+            (.all, NSLocalizedString("All Cookies", tableName: "SettingsLocalizable", comment: ""), NSLocalizedString("Will cause websites to break", tableName: "SettingsLocalizable", comment: "")),
             (.none, NSLocalizedString("Do Not Block", comment: ""), nil),
         ]
     }
@@ -111,7 +111,7 @@ final class CustomTrackingProtectionOptionViewController: SettingsTableViewContr
             return UITableViewCell()
         }
         let displayedOption = option.options[indexPath.row]
-        let cell = UITableViewCell(style: displayedOption.description == nil ? .default : .subtitle, reuseIdentifier: nil)
+        let cell = SettingsTableViewCell(style: displayedOption.description == nil ? .default : .subtitle, reuseIdentifier: nil)
         cell.textLabel?.text = displayedOption.title
         cell.textLabel?.numberOfLines = 0
         cell.detailTextLabel?.text = displayedOption.description

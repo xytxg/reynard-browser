@@ -11,11 +11,13 @@ import UIKit
 final class SiteSettingsViewController: UITableViewController, UINavigationControllerDelegate {
     private let permissionCellReuseIdentifier = "Cell"
     private let trackingProtectionSwitch = UISwitch()
+    private let requestDesktopWebsiteSwitch = UISwitch()
+    private let useReaderAutomaticallySwitch = UISwitch()
     
     private enum Section {
         case availability
         case trackingProtection
-        case media
+        case content
         case permissions
         case websiteActions
     }
@@ -78,10 +80,8 @@ final class SiteSettingsViewController: UITableViewController, UINavigationContr
         case loaded
     }
     
-    private let mediaRows: [Row] = [
-        .autoplay,
-    ]
     private let permissionRows: [Row] = [
+        .autoplay,
         .camera,
         .microphone,
         .location,
@@ -102,7 +102,7 @@ final class SiteSettingsViewController: UITableViewController, UINavigationContr
         }
         
         sections.append(.trackingProtection)
-        sections.append(.media)
+        sections.append(.content)
         sections.append(.permissions)
         sections.append(.websiteActions)
         return sections
@@ -134,6 +134,8 @@ final class SiteSettingsViewController: UITableViewController, UINavigationContr
         super.viewDidLoad()
         configureView()
         trackingProtectionSwitch.addTarget(self, action: #selector(trackingProtectionSwitchDidChange), for: .valueChanged)
+        requestDesktopWebsiteSwitch.addTarget(self, action: #selector(requestDesktopWebsiteSwitchDidChange), for: .valueChanged)
+        useReaderAutomaticallySwitch.addTarget(self, action: #selector(useReaderAutomaticallySwitchDidChange), for: .valueChanged)
         Task { [weak self] in
             await self?.loadPermissionsFromGecko()
         }
@@ -172,8 +174,8 @@ final class SiteSettingsViewController: UITableViewController, UINavigationContr
         case .trackingProtection:
             return Prefs.TrackingProtectionPreferences.level == .off
             || hasTrackingProtectionException ? 1 : 2
-        case .media:
-            return loadState == .loaded ? mediaRows.count : 0
+        case .content:
+            return 3
         case .permissions:
             return loadState == .loaded ? permissionRows.count : 0
         case .websiteActions:
@@ -191,8 +193,8 @@ final class SiteSettingsViewController: UITableViewController, UINavigationContr
             return nil
         case .trackingProtection:
             return NSLocalizedString("Tracking Protection", comment: "")
-        case .media:
-            return NSLocalizedString("Media", comment: "")
+        case .content:
+            return NSLocalizedString("Content", comment: "Website settings section title")
         case .permissions:
             return NSLocalizedString("Permissions", comment: "")
         case .websiteActions:
@@ -213,8 +215,8 @@ final class SiteSettingsViewController: UITableViewController, UINavigationContr
             return availabilityCell(at: indexPath)
         case .trackingProtection:
             return trackingProtectionCell(at: indexPath)
-        case .media:
-            return permissionCell(at: indexPath)
+        case .content:
+            return contentCell(at: indexPath)
         case .permissions:
             return permissionCell(at: indexPath)
         case .websiteActions:
@@ -232,8 +234,8 @@ final class SiteSettingsViewController: UITableViewController, UINavigationContr
             handleAvailabilitySelection(at: indexPath)
         case .trackingProtection:
             showBlockedTrackers(at: indexPath)
-        case .media:
-            handlePermissionSelection(at: indexPath)
+        case .content:
+            handleContentSelection(at: indexPath)
         case .permissions:
             handlePermissionSelection(at: indexPath)
         case .websiteActions:
@@ -299,14 +301,8 @@ final class SiteSettingsViewController: UITableViewController, UINavigationContr
         cell.selectionStyle = .default
         cell.isUserInteractionEnabled = true
         
-        if #available(iOS 14.0, *) {
-            cell.detailTextLabel?.text = nil
-            cell.accessoryView = permissionMenuButton(for: row)
-            cell.accessoryType = .none
-        } else {
-            cell.detailTextLabel?.text = titles[selectedIndex]
-            cell.accessoryView = nil
-            cell.accessoryType = .disclosureIndicator
+        configureMenuCell(cell, titles: titles, selectedIndex: selectedIndex) { [weak self] index in
+            self?.applyOption(at: index, for: row)
         }
         return cell
     }
@@ -354,17 +350,47 @@ final class SiteSettingsViewController: UITableViewController, UINavigationContr
         return cell
     }
     
+    private func contentCell(at indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.row == 0 {
+            let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+            cell.textLabel?.text = NSLocalizedString("Request Desktop Website", comment: "")
+            requestDesktopWebsiteSwitch.isOn = SiteSettingsStore.shared.settings(for: host)?.websiteMode.map {
+                $0 == .desktop
+            } ?? Prefs.BrowsingSettings.requestDesktopWebsite
+            cell.accessoryView = requestDesktopWebsiteSwitch
+            cell.selectionStyle = .none
+            return cell
+        }
+        
+        if indexPath.row == 1 {
+            let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+            cell.textLabel?.text = NSLocalizedString("Use Reader Automatically", comment: "")
+            useReaderAutomaticallySwitch.isOn = SiteSettingsStore.shared.settings(for: host)?.readerMode
+            ?? Prefs.BrowsingSettings.useReaderAutomatically
+            cell.accessoryView = useReaderAutomaticallySwitch
+            cell.selectionStyle = .none
+            return cell
+        }
+        
+        let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
+        cell.textLabel?.text = NSLocalizedString("Page Zoom", comment: "")
+        let titles = PageZoomLevels.all.map { PageZoomLevels.displayText(for: $0) }
+        let selectedIndex = PageZoomLevels.all.firstIndex(of: selectedPageZoomLevel) ?? 0
+        configureMenuCell(cell, titles: titles, selectedIndex: selectedIndex) { [weak self] index in
+            self?.applyPageZoomLevel(PageZoomLevels.all[index])
+        }
+        return cell
+    }
+    
     private func row(at indexPath: IndexPath) -> Row? {
         guard visibleSections.indices.contains(indexPath.section) else {
             return nil
         }
         
         switch visibleSections[indexPath.section] {
-        case .media:
-            return mediaRows[safe: indexPath.row]
         case .permissions:
             return permissionRows[safe: indexPath.row]
-        case .availability, .trackingProtection, .websiteActions:
+        case .availability, .trackingProtection, .content, .websiteActions:
             return nil
         }
     }
@@ -400,6 +426,33 @@ final class SiteSettingsViewController: UITableViewController, UINavigationContr
             selectedIndex: selectedOptionIndex(for: row)
         ) { [weak self] optionIndex in
             self?.applyOption(at: optionIndex, for: row)
+        }
+        navigationController?.pushViewController(picker, animated: true)
+    }
+    
+    private func handleContentSelection(at indexPath: IndexPath) {
+        guard indexPath.row == 2 else {
+            return
+        }
+        
+        if #available(iOS 14.0, *) {
+            if #available(iOS 17.4, *),
+               let cell = tableView.cellForRow(at: indexPath),
+               let button = cell.accessoryView as? UIButton {
+                button.performPrimaryAction()
+            }
+            return
+        }
+        
+        let picker = SitePermissionOptionsViewController(
+            title: NSLocalizedString("Page Zoom", comment: ""),
+            options: PageZoomLevels.all.map { PageZoomLevels.displayText(for: $0) },
+            selectedIndex: PageZoomLevels.all.firstIndex(of: selectedPageZoomLevel) ?? 0
+        ) { [weak self] optionIndex in
+            guard PageZoomLevels.all.indices.contains(optionIndex) else {
+                return
+            }
+            self?.applyPageZoomLevel(PageZoomLevels.all[optionIndex])
         }
         navigationController?.pushViewController(picker, animated: true)
     }
@@ -450,8 +503,45 @@ final class SiteSettingsViewController: UITableViewController, UINavigationContr
         }
     }
     
+    @objc private func requestDesktopWebsiteSwitchDidChange(_ sender: UISwitch) {
+        if sender.isOn == Prefs.BrowsingSettings.requestDesktopWebsite {
+            _ = SiteSettingsStore.shared.clearWebsiteMode(for: host)
+        } else {
+            _ = SiteSettingsStore.shared.setWebsiteMode(sender.isOn ? .desktop : .mobile, for: host)
+        }
+        session.reload()
+    }
+    
+    @objc private func useReaderAutomaticallySwitchDidChange(_ sender: UISwitch) {
+        _ = SiteSettingsStore.shared.setReaderMode(sender.isOn, for: host)
+        session.reload()
+    }
+    
     @objc private func dismissModal() {
         dismiss(animated: true)
+    }
+    
+    // MARK: - Page Zoom
+    
+    private var selectedPageZoomLevel: Int {
+        return SiteSettingsStore.shared.settings(for: host)?.pageZoom
+        ?? Prefs.BrowsingSettings.defaultPageZoomLevel
+    }
+    
+    private func applyPageZoomLevel(_ level: Int) {
+        _ = SiteSettingsStore.shared.setPageZoom(level, for: host)
+        updateSessionPageZoom(level)
+        tableView.reloadData()
+    }
+    
+    private func updateSessionPageZoom(_ level: Int) {
+        session.updateSettings(
+            GeckoSessionSettings(
+                websiteMode: session.settings.websiteMode,
+                pageZoom: PageZoomSetting(level: level),
+                language: session.settings.language
+            )
+        )
     }
     
     // MARK: - Permissions
@@ -546,6 +636,20 @@ final class SiteSettingsViewController: UITableViewController, UINavigationContr
         )
     }
     
+    private func selectedOptionIndex(for row: Row) -> Int {
+        let permission = row.permission
+        switch SitePermissionStore.shared.resolvedAction(for: permission, host: host, session: session) {
+        case .allowed:
+            return 0
+        case .askToAllow:
+            return 1
+        case .blocked:
+            return 2
+        }
+    }
+    
+    // MARK: - Actions
+    
     private func confirmResetWebsiteSettings() {
         AlertPresenter.show(
             title: nil,
@@ -623,6 +727,12 @@ final class SiteSettingsViewController: UITableViewController, UINavigationContr
         loadedGeckoPermissions = []
         hasTrackingProtectionException = false
         trackingProtection.clearBlockedTrackers(for: session)
+        _ = SiteSettingsStore.shared.clearPageZoom(for: host)
+        _ = SiteSettingsStore.shared.clearWebsiteMode(for: host)
+        _ = SiteSettingsStore.shared.clearReaderMode(for: host)
+        requestDesktopWebsiteSwitch.isOn = Prefs.BrowsingSettings.requestDesktopWebsite
+        useReaderAutomaticallySwitch.isOn = Prefs.BrowsingSettings.useReaderAutomatically
+        updateSessionPageZoom(Prefs.BrowsingSettings.defaultPageZoomLevel)
         tableView.reloadData()
         session.reload()
     }
@@ -637,10 +747,33 @@ final class SiteSettingsViewController: UITableViewController, UINavigationContr
         ]
     }
     
+    // MARK: - Menu Cells
+    
+    private func configureMenuCell(
+        _ cell: UITableViewCell,
+        titles: [String],
+        selectedIndex: Int,
+        onSelect: @escaping (Int) -> Void
+    ) {
+        if #available(iOS 14.0, *) {
+            cell.detailTextLabel?.text = nil
+            cell.accessoryView = menuButton(titles: titles, selectedIndex: selectedIndex, onSelect: onSelect)
+            cell.accessoryType = .none
+        } else {
+            cell.detailTextLabel?.text = titles[selectedIndex]
+            cell.accessoryView = nil
+            cell.accessoryType = .disclosureIndicator
+        }
+    }
+    
     @available(iOS 14.0, *)
-    private func permissionMenuButton(for row: Row) -> UIButton {
+    private func menuButton(
+        titles: [String],
+        selectedIndex: Int,
+        onSelect: @escaping (Int) -> Void
+    ) -> UIButton {
         let button = UIButton(type: .system)
-        button.setTitle(SiteSettingsUtils.actionTitles(for: row.permission)[selectedOptionIndex(for: row)], for: .normal)
+        button.setTitle(titles[selectedIndex], for: .normal)
         button.setImage(UIImage(named: "reynard.chevron.up.chevron.down"), for: .normal)
         button.semanticContentAttribute = .forceRightToLeft
         button.contentHorizontalAlignment = .trailing
@@ -648,17 +781,20 @@ final class SiteSettingsViewController: UITableViewController, UINavigationContr
         if #available(iOS 15.0, *) {
             button.changesSelectionAsPrimaryAction = true
         }
-        button.menu = permissionMenu(for: row)
+        button.menu = menu(titles: titles, selectedIndex: selectedIndex, onSelect: onSelect)
         button.sizeToFit()
         return button
     }
     
     @available(iOS 14.0, *)
-    private func permissionMenu(for row: Row) -> UIMenu {
-        let selectedIndex = selectedOptionIndex(for: row)
-        let actions = SiteSettingsUtils.actionTitles(for: row.permission).enumerated().map { index, title in
-            UIAction(title: title, state: index == selectedIndex ? .on : .off) { [weak self] _ in
-                self?.applyOption(at: index, for: row)
+    private func menu(
+        titles: [String],
+        selectedIndex: Int,
+        onSelect: @escaping (Int) -> Void
+    ) -> UIMenu {
+        let actions = titles.enumerated().map { index, title in
+            UIAction(title: title, state: index == selectedIndex ? .on : .off) { _ in
+                onSelect(index)
             }
         }
         
@@ -666,18 +802,6 @@ final class SiteSettingsViewController: UITableViewController, UINavigationContr
             return UIMenu(title: "", options: .singleSelection, children: actions)
         }
         return UIMenu(title: "", children: actions)
-    }
-    
-    private func selectedOptionIndex(for row: Row) -> Int {
-        let permission = row.permission
-        switch SitePermissionStore.shared.resolvedAction(for: permission, host: host, session: session) {
-        case .allowed:
-            return 0
-        case .askToAllow:
-            return 1
-        case .blocked:
-            return 2
-        }
     }
 }
 

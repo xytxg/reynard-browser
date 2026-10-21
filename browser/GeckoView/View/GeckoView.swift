@@ -8,17 +8,25 @@
 import UIKit
 
 public class GeckoView: UIView {
-    public weak var inputResultDelegate: GeckoViewInputResultDelegate? {
+    public weak var interactionDelegate: GeckoViewInteractionDelegate? {
         didSet {
-            session?.window?.setInputResultDelegate(inputResultDelegate)
+            session?.window?.setInteractionDelegate(interactionDelegate)
+        }
+    }
+    
+    public weak var keyCommandDelegate: GeckoViewKeyCommandDelegate? {
+        didSet {
+            session?.window?.setKeyCommandDelegate(keyCommandDelegate)
         }
     }
     
     public var session: GeckoSession? {
         didSet {
-            oldValue?.window?.setInputResultDelegate(nil)
+            oldValue?.window?.setInteractionDelegate(nil)
+            oldValue?.window?.setKeyCommandDelegate(nil)
             embedSessionView()
-            session?.window?.setInputResultDelegate(inputResultDelegate)
+            session?.window?.setInteractionDelegate(interactionDelegate)
+            session?.window?.setKeyCommandDelegate(keyCommandDelegate)
         }
     }
     
@@ -31,7 +39,8 @@ public class GeckoView: UIView {
     }
     
     deinit {
-        session?.window?.setInputResultDelegate(nil)
+        session?.window?.setInteractionDelegate(nil)
+        session?.window?.setKeyCommandDelegate(nil)
     }
     
     private func embedSessionView() {

@@ -31,11 +31,30 @@ final class WebContentView: UIView, UIScrollViewDelegate {
     private var refreshingSession: GeckoSession?
     private var isTrackingPullProgress = false
     private var pullToRefreshRecognizer: PullToRefreshGestureRecognizer?
+    private var lastScrollState: (position: CGFloat, zoomScale: CGFloat)?
+    private var currentScrollY: CGFloat = 0
+    private var awaitsScrollInteraction = true
+    private var pageBackgroundTopConstraint: NSLayoutConstraint?
+    private var pageBackgroundBottomConstraint: NSLayoutConstraint?
     
     private let webView = GeckoView()
+    private let pageBackgroundView = UIView()
+    private let errorView = WebContentErrorView()
     private let scrollToTopTriggerView = UIScrollView() // For scrolling up when tap the iOS status bar
     private let refreshIndicatorContainer = UIView()
     private let refreshIndicator = UIActivityIndicatorView(style: .large)
+    
+    var historySwipeDirectionsProvider: (() -> GeckoEdgeSwipeDirections)?
+    var onHistorySwipeDidStart: ((GeckoEdgeSwipeDirections) -> Void)?
+    var onHistorySwipeDidUpdate: ((CGFloat) -> Void)?
+    var onHistorySwipeDidComplete: ((GeckoEdgeSwipeDirections) -> Void)?
+    var onHistorySwipeDidEnd: (() -> Void)?
+    var onVerticalScroll: ((CGFloat, CGFloat) -> Void)?
+    
+    var keyCommandDelegate: GeckoViewKeyCommandDelegate? {
+        get { return webView.keyCommandDelegate }
+        set { webView.keyCommandDelegate = newValue }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -49,7 +68,7 @@ final class WebContentView: UIView, UIScrollViewDelegate {
     }
     
     deinit {
-        webView.inputResultDelegate = nil
+        webView.interactionDelegate = nil
     }
     
     override func layoutSubviews() {
@@ -61,45 +80,95 @@ final class WebContentView: UIView, UIScrollViewDelegate {
         scrollToTopTriggerView.contentOffset.y = UX.scrollToTopTriggerOffset
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) == true else {
+            return
+        }
+        updateRefreshIndicatorTint()
+    }
+    
     private func configureHierarchy() {
+        backgroundColor = .systemBackground
         webView.translatesAutoresizingMaskIntoConstraints = false
+        pageBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+        errorView.translatesAutoresizingMaskIntoConstraints = false
         scrollToTopTriggerView.translatesAutoresizingMaskIntoConstraints = false
         refreshIndicatorContainer.translatesAutoresizingMaskIntoConstraints = false
         refreshIndicator.translatesAutoresizingMaskIntoConstraints = false
         scrollToTopTriggerView.delegate = self
         scrollToTopTriggerView.showsVerticalScrollIndicator = false
         scrollToTopTriggerView.contentInsetAdjustmentBehavior = .never
+        webView.interactionDelegate = self
+        pageBackgroundView.backgroundColor = .systemBackground
+        updateRefreshIndicatorTint()
+        errorView.isHidden = true
         refreshIndicator.hidesWhenStopped = false
         refreshIndicatorContainer.addSubview(refreshIndicator)
         addSubview(scrollToTopTriggerView)
-        addSubview(refreshIndicatorContainer)
+        addSubview(pageBackgroundView)
         addSubview(webView)
+        addSubview(refreshIndicatorContainer)
+        addSubview(errorView)
         resetRefreshIndicator()
         refreshIndicatorContainer.alpha = 0
     }
     
     private func configureConstraints() {
+        let topConstraint = pageBackgroundView.topAnchor.constraint(equalTo: topAnchor)
+        let bottomConstraint = pageBackgroundView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        NSLayoutConstraint.activate([topConstraint, bottomConstraint])
+        pageBackgroundTopConstraint = topConstraint
+        pageBackgroundBottomConstraint = bottomConstraint
+        
         NSLayoutConstraint.activate([
             scrollToTopTriggerView.topAnchor.constraint(equalTo: topAnchor),
             scrollToTopTriggerView.leadingAnchor.constraint(equalTo: leadingAnchor),
             scrollToTopTriggerView.trailingAnchor.constraint(equalTo: trailingAnchor),
             scrollToTopTriggerView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
+            pageBackgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            pageBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            
             webView.topAnchor.constraint(equalTo: topAnchor),
             webView.leadingAnchor.constraint(equalTo: leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: trailingAnchor),
             webView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
+            errorView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            errorView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            
             refreshIndicatorContainer.centerXAnchor.constraint(equalTo: centerXAnchor),
-            refreshIndicatorContainer.topAnchor.constraint(
-                equalTo: topAnchor,
-                constant: (UX.refreshingContentOffset - refreshIndicator.intrinsicContentSize.height) / 2
-            ),
             refreshIndicator.topAnchor.constraint(equalTo: refreshIndicatorContainer.topAnchor),
             refreshIndicator.leadingAnchor.constraint(equalTo: refreshIndicatorContainer.leadingAnchor),
             refreshIndicator.trailingAnchor.constraint(equalTo: refreshIndicatorContainer.trailingAnchor),
             refreshIndicator.bottomAnchor.constraint(equalTo: refreshIndicatorContainer.bottomAnchor),
         ])
+    }
+    
+    func positionRefreshIndicator(below topAnchor: NSLayoutYAxisAnchor) {
+        refreshIndicatorContainer.topAnchor.constraint(
+            equalTo: topAnchor,
+            constant: (UX.refreshingContentOffset - refreshIndicator.intrinsicContentSize.height) / 2
+        ).isActive = true
+    }
+    
+    func extendPageBackground(
+        from topAnchor: NSLayoutYAxisAnchor,
+        to bottomAnchor: NSLayoutYAxisAnchor
+    ) {
+        pageBackgroundTopConstraint?.isActive = false
+        pageBackgroundBottomConstraint?.isActive = false
+        let topConstraint = pageBackgroundView.topAnchor.constraint(equalTo: topAnchor)
+        let bottomConstraint = pageBackgroundView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        NSLayoutConstraint.activate([topConstraint, bottomConstraint])
+        pageBackgroundTopConstraint = topConstraint
+        pageBackgroundBottomConstraint = bottomConstraint
+    }
+    
+    func setFullscreen(_ fullscreen: Bool) {
+        pageBackgroundView.isHidden = fullscreen
+        backgroundColor = fullscreen ? .black : .systemBackground
     }
     
     func setVisibility(_ visibility: VisibilityState) {
@@ -113,7 +182,7 @@ final class WebContentView: UIView, UIScrollViewDelegate {
     
     private func applyVisibility() {
         isHidden = visibility == .hidden
-        scrollToTopTriggerView.scrollsToTop = visibility == .visible
+        scrollToTopTriggerView.scrollsToTop = visibility == .visible && errorView.isHidden
     }
     
     func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
@@ -121,26 +190,43 @@ final class WebContentView: UIView, UIScrollViewDelegate {
         return false
     }
     
-    func setSession(_ session: GeckoSession?) {
-        guard webView.session !== session else {
+    func setTab(_ tab: Tab?, pageBackgroundColor: UIColor? = nil) {
+        updateLoadError(for: tab)
+        pageBackgroundView.backgroundColor = pageBackgroundColor ?? .systemBackground
+        updateRefreshIndicatorTint()
+        
+        guard webView.session !== tab?.session else {
             return
         }
+        resetScrollTracking()
+        currentScrollY = 0
         refreshingSession = nil
         pullToRefreshRecognizer?.cancelPull()
-        webView.session = session
+        cancelRefreshPresentation()
+        webView.session = tab?.session
+    }
+    
+    func setPageBackgroundColor(_ color: UIColor) {
+        pageBackgroundView.backgroundColor = color
+        updateRefreshIndicatorTint()
+    }
+    
+    func resetScrollTracking() {
+        lastScrollState = nil
+        awaitsScrollInteraction = true
     }
     
     func setPullToRefreshEnabled(_ enabled: Bool) {
+        let enabled = enabled && errorView.isHidden
         guard enabled != (pullToRefreshRecognizer != nil) else {
             return
         }
         if enabled {
             installPullToRefreshRecognizer()
-            webView.inputResultDelegate = self
         } else if let pullToRefreshRecognizer {
-            webView.inputResultDelegate = nil
             refreshingSession = nil
             pullToRefreshRecognizer.cancelPull()
+            cancelRefreshPresentation()
             webView.removeGestureRecognizer(pullToRefreshRecognizer)
             self.pullToRefreshRecognizer = nil
         }
@@ -167,16 +253,56 @@ final class WebContentView: UIView, UIScrollViewDelegate {
         webView.addInteraction(interaction)
     }
     
+    func thumbnailFrame(in view: UIView) -> CGRect {
+        layoutIfNeeded()
+        return convert(thumbnailBounds, to: view)
+    }
+    
     func makeThumbnail() -> UIImage? {
         layoutIfNeeded()
-        guard bounds.width > 1, bounds.height > 1 else {
+        let captureBounds = thumbnailBounds
+        guard captureBounds.width > 1, captureBounds.height > 1 else {
             return nil
         }
         
-        let renderer = UIGraphicsImageRenderer(size: bounds.size)
+        let renderer = UIGraphicsImageRenderer(size: captureBounds.size)
         return renderer.image { context in
-            layer.render(in: context.cgContext)
+            context.cgContext.translateBy(x: -captureBounds.minX, y: -captureBounds.minY)
+            drawHierarchy(in: bounds, afterScreenUpdates: false)
         }
+    }
+    
+    private var thumbnailBounds: CGRect {
+        return bounds.union(pageBackgroundView.frame)
+    }
+    
+    var onErrorAction: ((WebContentErrorView.Action) -> Void)? {
+        get { return errorView.onAction }
+        set { errorView.onAction = newValue }
+    }
+    
+    func positionErrorView(
+        from topAnchor: NSLayoutYAxisAnchor,
+        to bottomAnchor: NSLayoutYAxisAnchor,
+        viewport: UIView
+    ) {
+        NSLayoutConstraint.activate([
+            errorView.topAnchor.constraint(equalTo: topAnchor),
+            errorView.bottomAnchor.constraint(equalTo: bottomAnchor),
+        ])
+        errorView.configureContentLayout(
+            topAnchor: viewport.topAnchor,
+            bottomAnchor: viewport.bottomAnchor
+        )
+    }
+    
+    func updateLoadError(for tab: Tab?) {
+        errorView.configure(
+            error: tab?.state.loadError,
+            canGoBack: tab?.state.navigationState.canGoBack == true
+        )
+        webView.accessibilityElementsHidden = !errorView.isHidden
+        applyVisibility()
     }
     
     private func installPullToRefreshRecognizer() {
@@ -192,10 +318,7 @@ final class WebContentView: UIView, UIScrollViewDelegate {
     @objc private func handlePullToRefresh(_ recognizer: PullToRefreshGestureRecognizer) {
         switch recognizer.state {
         case .began, .changed:
-            updatePullPresentation(
-                progress: recognizer.progress,
-                pullDistance: recognizer.pullDistance
-            )
+            updatePullPresentation(pullDistance: recognizer.pullDistance)
         case .ended where recognizer.progress >= 1:
             guard refreshingSession == nil,
                   let session = webView.session else {
@@ -214,12 +337,14 @@ final class WebContentView: UIView, UIScrollViewDelegate {
         }
     }
     
-    private func updatePullPresentation(progress: CGFloat, pullDistance: CGFloat) {
+    private func updatePullPresentation(pullDistance: CGFloat) {
         let viewportHeight = max(bounds.height, 1)
         let rubberBandDistance = UX.rubberBandCoefficient * pullDistance
         let contentOffset = rubberBandDistance * viewportHeight / (viewportHeight + rubberBandDistance)
+        let indicatorHeight = refreshIndicator.intrinsicContentSize.height
+        let opacity = (contentOffset - indicatorHeight) / (UX.refreshingContentOffset - indicatorHeight)
         setRefreshIndicatorProgress(contentOffset / UX.refreshingContentOffset)
-        refreshIndicatorContainer.alpha = progress
+        refreshIndicatorContainer.alpha = min(max(opacity, 0), 1)
         webView.transform = CGAffineTransform(translationX: 0, y: contentOffset)
     }
     
@@ -291,9 +416,16 @@ final class WebContentView: UIView, UIScrollViewDelegate {
         refreshIndicator.layer.beginTime = 0
         isTrackingPullProgress = false
     }
+    
+    private func updateRefreshIndicatorTint() {
+        guard let pageBackgroundColor = pageBackgroundView.backgroundColor else {
+            return
+        }
+        refreshIndicator.color = pageBackgroundColor.isLightColor(in: traitCollection) ? .black : .white
+    }
 }
 
-extension WebContentView: GeckoViewInputResultDelegate {
+extension WebContentView: GeckoViewInteractionDelegate {
     func touchSequenceDidBegin(_ sequenceID: UInt64) {
         pullToRefreshRecognizer?.beginInputSequence(sequenceID)
     }
@@ -304,6 +436,7 @@ extension WebContentView: GeckoViewInputResultDelegate {
         scrollableEdges: GeckoScrollableEdges,
         overscrollAxes: GeckoOverscrollAxes
     ) {
+        awaitsScrollInteraction = false
         pullToRefreshRecognizer?.resolveInputSequence(PullInputResult(
             sequenceID: sequenceID,
             inputHandling: inputHandling,
@@ -313,6 +446,63 @@ extension WebContentView: GeckoViewInputResultDelegate {
     }
     
     func touchSequenceDidEnd(_ sequenceID: UInt64) {}
+    
+    func trackpadScrollDidBegin(_ delta: CGPoint) {
+        awaitsScrollInteraction = false
+        guard currentScrollY <= 0.5 else {
+            return
+        }
+        pullToRefreshRecognizer?.beginTrackpadScroll(delta)
+    }
+    
+    func trackpadScrollDidUpdate(_ delta: CGPoint) {
+        pullToRefreshRecognizer?.updateTrackpadScroll(delta)
+    }
+    
+    func trackpadScrollDidEnd() {
+        pullToRefreshRecognizer?.endTrackpadScroll()
+    }
+    
+    func trackpadScrollDidCancel() {
+        pullToRefreshRecognizer?.cancelTrackpadScroll()
+    }
+    
+    func compositorScrollPositionDidChange(_ scrollY: Double, zoom: Double) {
+        currentScrollY = CGFloat(scrollY)
+        let currentState = (position: CGFloat(scrollY), zoomScale: CGFloat(zoom))
+        defer {
+            lastScrollState = currentState
+        }
+        guard !awaitsScrollInteraction,
+              let previousState = lastScrollState,
+              currentState.zoomScale == previousState.zoomScale || currentState.zoomScale == 1 else {
+            return
+        }
+        let scrollDelta = currentState.position - previousState.position
+        if scrollDelta != 0 {
+            onVerticalScroll?(scrollDelta, currentState.position)
+        }
+    }
+    
+    func allowedEdgeSwipeDirections() -> GeckoEdgeSwipeDirections {
+        return historySwipeDirectionsProvider?() ?? []
+    }
+    
+    func edgeSwipeDidStart(_ direction: GeckoEdgeSwipeDirections) {
+        onHistorySwipeDidStart?(direction)
+    }
+    
+    func edgeSwipeDidUpdate(_ progress: Double) {
+        onHistorySwipeDidUpdate?(CGFloat(progress))
+    }
+    
+    func edgeSwipeDidComplete(_ direction: GeckoEdgeSwipeDirections) {
+        onHistorySwipeDidComplete?(direction)
+    }
+    
+    func edgeSwipeDidEnd() {
+        onHistorySwipeDidEnd?()
+    }
 }
 
 private struct PullInputResult {
@@ -336,6 +526,7 @@ private final class PullToRefreshGestureRecognizer: UIGestureRecognizer {
     private var previousTap: (position: CGPoint, endTimestamp: TimeInterval)?
     private var hasTriggeredThresholdFeedback = false
     private var isAwaitingRefreshCompletion = false
+    private var isTrackingTrackpadScroll = false
     var pullDistance: CGFloat {
         return touchPosition.y - touchOrigin.y
     }
@@ -351,9 +542,20 @@ private final class PullToRefreshGestureRecognizer: UIGestureRecognizer {
         return state == .began || state == .changed
     }
     
+    override func reset() {
+        super.reset()
+        activeInputSequenceID = nil
+        isPullApproved = false
+        isTrackingTrackpadScroll = false
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
-        guard !isAwaitingRefreshCompletion,
-              let touch = validSingleTouch(in: touches, event: event) else {
+        guard !isAwaitingRefreshCompletion else {
+            state = .failed
+            return
+        }
+        
+        guard let touch = validSingleTouch(in: touches, event: event) else {
             return
         }
         
@@ -362,6 +564,7 @@ private final class PullToRefreshGestureRecognizer: UIGestureRecognizer {
         activeInputSequenceID = nil
         isPullApproved = false
         hasTriggeredThresholdFeedback = false
+        isTrackingTrackpadScroll = false
         
         if let previousTap {
             let interval = touch.timestamp - previousTap.endTimestamp
@@ -423,7 +626,8 @@ private final class PullToRefreshGestureRecognizer: UIGestureRecognizer {
     }
     
     func resolveInputSequence(_ result: PullInputResult) {
-        guard state == .possible,
+        guard !isAwaitingRefreshCompletion,
+              state == .possible,
               result.sequenceID == activeInputSequenceID else {
             return
         }
@@ -435,6 +639,54 @@ private final class PullToRefreshGestureRecognizer: UIGestureRecognizer {
         updatePullRecognition()
     }
     
+    func beginTrackpadScroll(_ delta: CGPoint) {
+        guard !isAwaitingRefreshCompletion, state == .possible else {
+            return
+        }
+        touchOrigin = .zero
+        touchPosition = delta
+        activeInputSequenceID = nil
+        isPullApproved = true
+        previousTap = nil
+        hasTriggeredThresholdFeedback = false
+        isTrackingTrackpadScroll = true
+        updatePullRecognition()
+    }
+    
+    func updateTrackpadScroll(_ delta: CGPoint) {
+        guard isTrackingTrackpadScroll else {
+            return
+        }
+        touchPosition.x += delta.x
+        touchPosition.y += delta.y
+        updatePullRecognition()
+    }
+    
+    func endTrackpadScroll() {
+        guard isTrackingTrackpadScroll else {
+            return
+        }
+        isTrackingTrackpadScroll = false
+        if isRecognizing {
+            isAwaitingRefreshCompletion = progress >= 1
+            state = .ended
+        } else {
+            state = .failed
+        }
+    }
+    
+    func cancelTrackpadScroll() {
+        guard isTrackingTrackpadScroll else {
+            return
+        }
+        isTrackingTrackpadScroll = false
+        if isRecognizing {
+            state = .cancelled
+        } else {
+            state = .failed
+        }
+    }
+    
     func completeRefresh() {
         isAwaitingRefreshCompletion = false
     }
@@ -444,6 +696,7 @@ private final class PullToRefreshGestureRecognizer: UIGestureRecognizer {
         activeInputSequenceID = nil
         isPullApproved = false
         isAwaitingRefreshCompletion = false
+        isTrackingTrackpadScroll = false
         if isRecognizing {
             state = .cancelled
         } else if state == .possible {

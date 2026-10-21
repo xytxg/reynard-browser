@@ -6,8 +6,9 @@
 //
 
 import UIKit
+import QuickLook
 
-final class DownloadsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIGestureRecognizerDelegate {
+final class DownloadsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIGestureRecognizerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate {
     private enum UX {
         static let estimatedRowHeight: CGFloat = 96
         static let sectionHeaderTopPadding: CGFloat = 0
@@ -79,6 +80,7 @@ final class DownloadsViewController: UIViewController, UITableViewDataSource, UI
     private var appActiveObserver: NSObjectProtocol?
     private var isSwipeEditing = false
     private var query = ""
+    private var quickLookPreviewItem: NSURL?
     
     // MARK: - Lifecycle
     
@@ -109,6 +111,7 @@ final class DownloadsViewController: UIViewController, UITableViewDataSource, UI
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        DownloadStore.shared.markCompletedAsViewed()
         installDownloadsNavigationMenuIfNeeded()
         reloadDownloads()
     }
@@ -400,6 +403,7 @@ final class DownloadsViewController: UIViewController, UITableViewDataSource, UI
         lhs.fileName == rhs.fileName &&
         lhs.fileURL == rhs.fileURL &&
         lhs.state == rhs.state &&
+        lhs.canPause == rhs.canPause &&
         lhs.fileExists == rhs.fileExists &&
         lhs.totalBytes == rhs.totalBytes &&
         lhs.downloadedBytes == rhs.downloadedBytes &&
@@ -448,21 +452,39 @@ final class DownloadsViewController: UIViewController, UITableViewDataSource, UI
         }
         
         switch item.state {
-        case .downloading:
-            let cancelAction = UIContextualAction(style: .destructive, title: NSLocalizedString("Cancel", comment: "")) { [weak self] _, _, completion in
+        case .downloading, .paused:
+            let cancelAction = UIContextualAction(style: .destructive, title: NSLocalizedString("Cancel", comment: "Download action")) { [weak self] _, _, completion in
                 self?.confirmCancelDownload(for: item, completion: completion)
             }
-            let configuration = UISwipeActionsConfiguration(actions: [cancelAction])
+            
+            var actions = [cancelAction]
+            if item.state == .paused {
+                let resumeAction = UIContextualAction(style: .normal, title: NSLocalizedString("Resume", comment: "Download action")) { _, _, completion in
+                    DownloadStore.shared.resume(id: item.id)
+                    completion(true)
+                }
+                resumeAction.backgroundColor = .systemBlue
+                actions.append(resumeAction)
+            } else if item.canPause {
+                let pauseAction = UIContextualAction(style: .normal, title: NSLocalizedString("Pause", comment: "Download action")) { _, _, completion in
+                    DownloadStore.shared.pause(id: item.id)
+                    completion(true)
+                }
+                pauseAction.backgroundColor = .systemOrange
+                actions.append(pauseAction)
+            }
+            
+            let configuration = UISwipeActionsConfiguration(actions: actions)
             configuration.performsFirstActionWithFullSwipe = false
             return configuration
             
-        case .completed:
+        case .cancelled, .failed, .completed:
             let deleteAction = UIContextualAction(style: .destructive, title: NSLocalizedString("Delete", comment: "")) { _, _, completion in
                 DownloadStore.shared.removeDownload(id: item.id)
                 completion(true)
             }
             
-            guard item.fileExists else {
+            guard item.state == .completed, item.fileExists else {
                 let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
                 configuration.performsFirstActionWithFullSwipe = true
                 return configuration
@@ -507,7 +529,7 @@ final class DownloadsViewController: UIViewController, UITableViewDataSource, UI
             return
         }
         
-        self.shareDownload(item, from: indexPath)
+        openDownload(item, from: indexPath)
     }
     
     func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
@@ -537,6 +559,61 @@ final class DownloadsViewController: UIViewController, UITableViewDataSource, UI
         }
         
         return LibrarySharedUtils.isTapOutsideSearchBar(touch, in: tableView, ignoring: searchBar)
+    }
+    
+    // MARK: - File Opening
+    
+    private func openDownload(_ item: DownloadItemSnapshot, from indexPath: IndexPath) {
+        if isHTMLDownload(item) {
+            guard let fileURL = item.fileURL else {
+                return
+            }
+            LibrarySharedUtils.openLinkInBrowser(fileURL.absoluteString, from: self)
+            return
+        }
+        
+        if let fileURL = item.fileURL,
+           QLPreviewController.canPreview(fileURL as NSURL) {
+            presentQuickLookPreview(for: fileURL)
+            return
+        }
+        
+        shareDownload(item, from: indexPath)
+    }
+    
+    private func isHTMLDownload(_ item: DownloadItemSnapshot) -> Bool {
+        let pathExtension = (item.fileURL?.pathExtension ?? URL(fileURLWithPath: item.fileName).pathExtension).lowercased()
+        if pathExtension == "html" || pathExtension == "htm" || pathExtension == "xhtml" {
+            return true
+        }
+        
+        guard let mimeType = item.mimeType?.lowercased() else {
+            return false
+        }
+        return mimeType.hasPrefix("text/html") || mimeType.hasPrefix("application/xhtml+xml")
+    }
+    
+    // MARK: - Quick Look
+    
+    func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
+        return quickLookPreviewItem == nil ? 0 : 1
+    }
+    
+    func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
+        return quickLookPreviewItem!
+    }
+    
+    func previewControllerDidDismiss(_ controller: QLPreviewController) {
+        quickLookPreviewItem = nil
+    }
+    
+    private func presentQuickLookPreview(for fileURL: URL) {
+        quickLookPreviewItem = fileURL as NSURL
+        
+        let previewController = QLPreviewController()
+        previewController.dataSource = self
+        previewController.delegate = self
+        present(previewController, animated: true)
     }
     
     // MARK: - Item Actions

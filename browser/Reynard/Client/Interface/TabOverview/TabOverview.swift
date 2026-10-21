@@ -21,6 +21,7 @@ protocol TabOverviewDataSource: AnyObject {
 
 protocol TabOverviewDelegate: AnyObject {
     func tabOverviewDidRequestClearTabs(_ tabOverview: TabOverview)
+    func tabOverviewDidRequestClearTabsOlderThan(_ tabOverview: TabOverview, age: TabOverviewClearTabsMenu.Age)
     func tabOverviewDidRequestNewTab(_ tabOverview: TabOverview)
     func tabOverviewDidRequestDone(_ tabOverview: TabOverview)
     func tabOverviewDidRequestDismiss(_ tabOverview: TabOverview, animated: Bool)
@@ -37,6 +38,8 @@ protocol TabOverviewPresentationContext: AnyObject {
     func setSearchFocused(_ focused: Bool, animated: Bool)
     func endEditing()
     func updateLayout(animated: Bool, duration: TimeInterval)
+    func prepareTabOverviewPresentation()
+    func tabOverviewDidFinishDismissal()
 }
 
 final class TabOverview: UIView {
@@ -45,7 +48,6 @@ final class TabOverview: UIView {
         static let tabCollectionItemSpacing: CGFloat = 16
         static let bottomToolbarContainerHeight: CGFloat = 144
         static let topToolbarContainerHeight: CGFloat = 76
-        static let statusBarFadeHeight: CGFloat = 56
         static let layoutAnimationDuration: TimeInterval = 0.22
     }
     
@@ -94,10 +96,24 @@ final class TabOverview: UIView {
         return max(contentView.bounds.height, 1) / width
     }
     
+    var visiblePreviewCropRect: CGRect? {
+        guard let context = presentationContext else {
+            return nil
+        }
+        return context.contentView
+            .thumbnailGeometry(in: context.containerView)?
+            .cropRect
+    }
+    
     let collection: TabOverviewCollection
     let topToolbar = TabOverviewTopToolbar()
     let bottomToolbar = TabOverviewBottomToolbar()
-    private let statusBarFadeView = TabOverviewStatusBarFadeView()
+    private let statusBarBlurView: VariableBlurView = {
+        let view = VariableBlurView()
+        view.direction = .down
+        view.dimmingTintColor = nil
+        return view
+    }()
     private(set) lazy var presentation = TabOverviewPresentation(tabOverview: self)
     
     private var regularTabsCollectionTopToContainerConstraint: NSLayoutConstraint!
@@ -112,6 +128,14 @@ final class TabOverview: UIView {
     private var appliesNextTabChangesWithoutAnimation = false
     
     // MARK: - Lifecycle
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        statusBarBlurView.frame = CGRect(
+            origin: .zero,
+            size: CGSize(width: bounds.width, height: safeAreaInsets.top)
+        )
+    }
     
     override init(frame: CGRect) {
         collection = TabOverviewCollection(
@@ -233,8 +257,8 @@ final class TabOverview: UIView {
         collection.collectionView(for: mode)
     }
     
-    func itemIndex(forTabAt index: Int, mode: Mode? = nil) -> Int? {
-        collection.itemIndex(forTabAt: index, mode: mode)
+    func itemIndex(forTabAt index: Int) -> Int? {
+        collection.itemIndex(forTabAt: index)
     }
     
     func prepareDismissSelection(to index: Int, mode: TabMode, previewImage: UIImage?) {
@@ -258,7 +282,7 @@ final class TabOverview: UIView {
     private func configureHierarchy() {
         addSubview(collection.privateTabsCollectionView)
         addSubview(collection.regularTabsCollectionView)
-        addSubview(statusBarFadeView)
+        addSubview(statusBarBlurView)
         addSubview(bottomToolbar)
         addSubview(topToolbar)
     }
@@ -272,17 +296,11 @@ final class TabOverview: UIView {
         privateTabsCollectionTopToToolbarConstraint = collection.privateTabsCollectionView.topAnchor.constraint(equalTo: topToolbar.bottomAnchor)
         privateTabsCollectionBottomToContainerConstraint = collection.privateTabsCollectionView.bottomAnchor.constraint(equalTo: bottomAnchor)
         privateTabsCollectionBottomToToolbarConstraint = collection.privateTabsCollectionView.bottomAnchor.constraint(equalTo: bottomToolbar.topAnchor)
-        
         NSLayoutConstraint.activate([
             collection.regularTabsCollectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             collection.regularTabsCollectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             collection.privateTabsCollectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             collection.privateTabsCollectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            
-            statusBarFadeView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            statusBarFadeView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            statusBarFadeView.topAnchor.constraint(equalTo: topAnchor),
-            statusBarFadeView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: UX.statusBarFadeHeight),
             
             topToolbar.leadingAnchor.constraint(equalTo: leadingAnchor),
             topToolbar.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -302,6 +320,8 @@ final class TabOverview: UIView {
         bottomToolbar.onTabModeChange = { [weak self] mode in self?.handleTabModeChange(mode) }
         topToolbar.onClearTabs = { [weak self] in self?.requestClearTabs() }
         bottomToolbar.onClearTabs = { [weak self] in self?.requestClearTabs() }
+        topToolbar.onClearTabsOlderThan = { [weak self] age in self?.requestClearTabsOlderThan(age) }
+        bottomToolbar.onClearTabsOlderThan = { [weak self] age in self?.requestClearTabsOlderThan(age) }
         topToolbar.onAddTab = { [weak self] in self?.requestNewTab() }
         bottomToolbar.onAddTab = { [weak self] in self?.requestNewTab() }
         topToolbar.onDone = { [weak self] in self?.requestDone() }
@@ -314,8 +334,13 @@ final class TabOverview: UIView {
         delegate?.tabOverviewDidRequestClearTabs(self)
     }
     
+    private func requestClearTabsOlderThan(_ age: TabOverviewClearTabsMenu.Age) {
+        delegate?.tabOverviewDidRequestClearTabsOlderThan(self, age: age)
+    }
+    
     private func handleTabModeChange(_ mode: Mode) {
         setMode(mode, animated: true)
+        collection.scrollToBottom(for: mode)
         TabManagementStore.shared.persistLastOverview(mode == .privateTabs ? .private : .regular)
     }
     
@@ -332,44 +357,7 @@ final class TabOverview: UIView {
         let visibleCount = mode == .privateTabs
         ? dataSource?.privateTabs.count ?? 0
         : regularCount
-        topToolbar.apply(tabCount: regularCount, hasVisibleTab: visibleCount > 0)
-        bottomToolbar.apply(tabCount: regularCount, hasVisibleTab: visibleCount > 0)
-    }
-}
-
-private final class TabOverviewStatusBarFadeView: UIView {
-    private let gradientLayer = CAGradientLayer()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        translatesAutoresizingMaskIntoConstraints = false
-        isUserInteractionEnabled = false
-        layer.addSublayer(gradientLayer)
-        updateGradientColors()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        gradientLayer.frame = bounds
-    }
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        updateGradientColors()
-    }
-    
-    private func updateGradientColors() {
-        gradientLayer.colors = [
-            UIColor.systemGray4.withAlphaComponent(0.34).cgColor,
-            UIColor.systemGray5.withAlphaComponent(0.16).cgColor,
-            UIColor.systemGray6.withAlphaComponent(0).cgColor,
-        ]
-        gradientLayer.locations = [0, 0.48, 1]
-        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
-        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
+        topToolbar.apply(tabCount: regularCount, visibleTabCount: visibleCount, hasVisibleTab: visibleCount > 0)
+        bottomToolbar.apply(tabCount: regularCount, visibleTabCount: visibleCount, hasVisibleTab: visibleCount > 0)
     }
 }

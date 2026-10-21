@@ -108,10 +108,9 @@ final class TabOverviewPresentation {
     // MARK: - Selection
     
     func prepareDismissSelection(to index: Int, mode: TabMode, previewImage: UIImage?) {
-        let selectedIndex = dataSource.selectedMode == mode ? dataSource.selectedIndex : nil
         dismissalTargetTabIndex = index
         dismissalTargetTabMode = mode
-        pendingSelectionTabIndex = index == selectedIndex ? nil : index
+        pendingSelectionTabIndex = index
         pendingSelectionTabMode = mode
         pendingSelectionPreviewImage = previewImage
     }
@@ -147,8 +146,9 @@ final class TabOverviewPresentation {
             pendingSelectionTabIndex = nil
             pendingSelectionTabMode = nil
             pendingSelectionPreviewImage = nil
+            let token = presentationToken
             dataSource.captureThumbnail(forTabAt: dataSource.selectedIndex, mode: dataSource.selectedMode) { [weak self] _ in
-                guard let self else { return }
+                guard let self, self.presentationToken == token else { return }
                 
                 self.tabOverview.reloadTabs()
                 self.tabOverview.isHidden = false
@@ -163,17 +163,13 @@ final class TabOverviewPresentation {
             return
         }
         
-        let finalProgress: CGFloat = visible ? 1 : 0
-        applyPresentationProgress(finalProgress)
-        
-        state = visible ? .presented : .dismissed
-        if !visible {
-            commitPendingTabSelection()
-            tabOverview.isHidden = true
-            applyPresentationProgress(0)
-        }
+        applyPresentationProgress(0)
+        commitPendingTabSelection()
+        tabOverview.isHidden = true
+        state = .dismissed
         context.updateLayout(animated: false, duration: 0)
         context.tabBar.updateLayout()
+        context.tabOverviewDidFinishDismissal()
     }
     
     // MARK: - Presentation Progress
@@ -201,6 +197,27 @@ final class TabOverviewPresentation {
         }
     }
     
+    private func finishPresentationWithoutAnimation(chromeSnapshot: UIView?) {
+        chromeSnapshot?.removeFromSuperview()
+        context.containerView.bringSubviewToFront(tabOverview)
+        tabOverview.setActiveToolbarAlpha(1)
+        applyPresentationProgress(1)
+        context.browserChrome.setBottomToolbarHidden(true)
+        context.updateLayout(animated: false, duration: 0)
+        state = .presented
+    }
+    
+    private func finishDismissalWithoutAnimation(commitSelection: Bool = true) {
+        if commitSelection {
+            commitPendingTabSelection()
+        }
+        state = .dismissed
+        applyPresentationProgress(0)
+        tabOverview.isHidden = true
+        context.updateLayout(animated: false, duration: 0)
+        context.tabOverviewDidFinishDismissal()
+    }
+    
     // MARK: - Phone Animations
     
     private func presentOnPhone() {
@@ -215,22 +232,23 @@ final class TabOverviewPresentation {
         let selectedIndex = dataSource.selectedIndex
         context.containerView.layoutIfNeeded()
         let bottomChromeView = context.browserChrome.bottomToolbarTransitionView()
-        bottomChromeView?.frame = context.browserChrome.bottomToolbarTransitionFrame(in: context.containerView)
-        if let bottomChromeView {
-            context.containerView.addSubview(bottomChromeView)
-        }
-        context.updateLayout(animated: false, duration: 0)
+        context.prepareTabOverviewPresentation()
         dataSource.captureThumbnail(forTabAt: selectedIndex, mode: dataSource.selectedMode) { [weak self] _ in
             guard let self, self.presentationToken == token else {
                 bottomChromeView?.removeFromSuperview()
                 return
             }
             
+            if let bottomChromeView {
+                bottomChromeView.frame = self.context.browserChrome.bottomToolbarTransitionFrame(in: self.context.containerView)
+                self.context.containerView.addSubview(bottomChromeView)
+            }
             self.animatePhonePresentation(selectedIndex: selectedIndex, bottomChromeView: bottomChromeView)
         }
     }
     
     private func animatePhonePresentation(selectedIndex: Int, bottomChromeView: UIView?) {
+        tabOverview.applyLayout(toolbarPosition: context.browserLayout.tabOverviewToolbarPosition, animated: false)
         tabOverview.invalidateCollectionLayouts()
         tabOverview.reloadTabs()
         tabOverview.isHidden = false
@@ -252,22 +270,30 @@ final class TabOverviewPresentation {
         
         guard let selectedCell = selectedTabCard(at: selectedIndex),
               let bottomChromeView else {
-            applyPresentationProgress(1)
-            context.updateLayout(animated: false, duration: 0)
-            state = .presented
+            finishPresentationWithoutAnimation(chromeSnapshot: bottomChromeView)
             return
         }
         
-        guard let transitionView = selectedCell.makeTransitionSnapshot() else {
-            applyPresentationProgress(1)
-            context.updateLayout(animated: false, duration: 0)
-            state = .presented
+        guard let previewImage = selectedCell.previewImage else {
+            finishPresentationWithoutAnimation(chromeSnapshot: bottomChromeView)
             return
         }
+        let transitionView = selectedCell.makeTransitionSnapshot()
+        let pageSnapshot = makePageSnapshot(image: previewImage)
         
         let finalContentFrame = selectedCell.transitionSnapshotFrame(in: context.containerView)
+        let closeButtonTransitionView = selectedCell.makeCloseButtonTransitionSnapshot(
+            in: context.containerView,
+            containerFrame: finalContentFrame
+        )
         let finalPreviewFrame = selectedCell.webpagePreviewImageFrame(in: context.containerView)
-        let contentFrame = context.contentView.frame
+        let contentFrame = context.contentView.frame(in: context.containerView)
+        guard let thumbnailGeometry = context.contentView.thumbnailGeometry(in: context.containerView) else {
+            finishPresentationWithoutAnimation(chromeSnapshot: bottomChromeView)
+            return
+        }
+        let fullImageFrame = thumbnailGeometry.fullFrame
+        let visibleCropRect = thumbnailGeometry.cropRect
         
         selectedCell.setTransitionState(.hiddenForAnimation)
         tabOverview.alpha = 1
@@ -281,7 +307,21 @@ final class TabOverviewPresentation {
             previewFrame: finalPreviewFrame,
             sourceFrame: contentFrame
         )
+        closeButtonTransitionView.transform = transitionView.transform
+        configurePageSnapshot(
+            pageSnapshot,
+            containerFrame: fullImageFrame,
+            clipFrame: fullImageFrame,
+            imageFrame: aspectFillFrame(
+                for: previewImage,
+                cropRect: CGRect(origin: .zero, size: CGSize(width: 1, height: 1)),
+                in: fullImageFrame
+            ),
+            cornerRadius: 0
+        )
         context.containerView.insertSubview(transitionView, belowSubview: context.contentView)
+        context.containerView.insertSubview(pageSnapshot, aboveSubview: transitionView)
+        context.containerView.insertSubview(closeButtonTransitionView, aboveSubview: pageSnapshot)
         
         context.contentView.setTransitionHidden(true)
         context.browserChrome.setBottomToolbarHidden(true)
@@ -293,26 +333,29 @@ final class TabOverviewPresentation {
             chromeSnapshotView: bottomChromeView,
             originalCollectionTransform: standardCollectionTransform
         )
+        activePresentationTransition.pageSnapshotView = pageSnapshot
+        activePresentationTransition.closeButtonSnapshotView = closeButtonTransitionView
         self.activePresentationTransition = activePresentationTransition
         
         UIView.animate(withDuration: UX.presentationAnimationDuration, delay: 0, usingSpringWithDamping: UX.presentationSpringDamping, initialSpringVelocity: 1, options: [.curveEaseInOut, .allowUserInteraction]) {
             transitionView.transform = .identity
+            closeButtonTransitionView.transform = .identity
+            self.configurePageSnapshot(
+                pageSnapshot,
+                containerFrame: fullImageFrame,
+                clipFrame: finalPreviewFrame,
+                imageFrame: self.aspectFillFrame(
+                    for: previewImage,
+                    cropRect: visibleCropRect,
+                    in: finalPreviewFrame
+                ),
+                cornerRadius: UX.transitionPreviewCornerRadius
+            )
             bottomChromeView.alpha = 0
             self.tabOverview.bottomToolbar.alpha = 1
             selectedCollection.transform = standardCollectionTransform
         } completion: { _ in
-            guard self.activePresentationTransition === activePresentationTransition else {
-                return
-            }
-            
-            self.finishPresentationTransition(activePresentationTransition)
-            self.activePresentationTransition = nil
-            
-            self.context.containerView.bringSubviewToFront(self.tabOverview)
-            self.context.contentView.setTransitionHidden(false)
-            self.context.browserChrome.setBottomToolbarHidden(false)
-            self.context.updateLayout(animated: false, duration: 0)
-            self.state = .presented
+            self.completePresentationTransition(activePresentationTransition)
         }
     }
     
@@ -324,47 +367,55 @@ final class TabOverviewPresentation {
         tabOverview.alpha = 1
         tabOverview.bottomToolbar.alpha = 1
         context.containerView.bringSubviewToFront(tabOverview)
+        context.contentView.setTransitionTransform(.identity)
         context.containerView.layoutIfNeeded()
         
         let selectedCollection = tabOverview.currentCollectionView()
         selectedCollection.layoutIfNeeded()
         
-        let standardCollectionTransform = selectedCollection.transform
-        
         guard let selectedCell = selectedTabCard(at: overviewIndex),
               let sourceFrame = selectedTabCardPreviewFrame(at: overviewIndex),
+              let collectionSnapshot = makeCollectionSnapshot(selectedCollection, hidingPreviewOf: selectedCell),
               let bottomChromeView = tabOverview.bottomToolbar.snapshotView(afterScreenUpdates: false) else {
-            state = .dismissed
-            applyPresentationProgress(0)
-            tabOverview.isHidden = true
-            commitPendingTabSelection()
-            context.updateLayout(animated: false, duration: 0)
+            finishDismissalWithoutAnimation()
             return
         }
-        
-        selectedCell.setTransitionState(.hiddenForAnimation)
         
         let pageSnapshot = makeDismissalPreviewSnapshot(for: overviewIndex)
         guard let pageSnapshot else {
-            state = .dismissed
-            applyPresentationProgress(0)
-            tabOverview.isHidden = true
-            commitPendingTabSelection()
-            context.updateLayout(animated: false, duration: 0)
+            finishDismissalWithoutAnimation()
             return
         }
         
-        pageSnapshot.frame = sourceFrame
-        pageSnapshot.layer.cornerRadius = UX.transitionPreviewCornerRadius
-        pageSnapshot.layer.cornerCurve = .continuous
-        pageSnapshot.layer.masksToBounds = true
+        commitPendingTabSelection()
+        context.updateLayout(animated: false, duration: 0)
+        context.containerView.layoutIfNeeded()
         
+        guard let thumbnailGeometry = context.contentView.thumbnailGeometry(in: context.containerView) else {
+            finishDismissalWithoutAnimation(commitSelection: false)
+            return
+        }
+        let fullImageFrame = thumbnailGeometry.fullFrame
+        let visibleCropRect = thumbnailGeometry.cropRect
+        
+        configurePageSnapshot(
+            pageSnapshot,
+            containerFrame: fullImageFrame,
+            clipFrame: sourceFrame,
+            imageFrame: aspectFillFrame(
+                for: pageSnapshot.image,
+                cropRect: visibleCropRect,
+                in: sourceFrame
+            ),
+            cornerRadius: UX.transitionPreviewCornerRadius
+        )
         bottomChromeView.frame = tabOverview.bottomToolbar.frame
         
+        context.containerView.addSubview(collectionSnapshot)
         context.containerView.addSubview(pageSnapshot)
         context.containerView.addSubview(bottomChromeView)
+        selectedCollection.alpha = 0
         
-        commitPendingTabSelection()
         state = .dismissing
         presentationProgress = 0
         context.updateLayout(animated: false, duration: 0)
@@ -376,29 +427,38 @@ final class TabOverviewPresentation {
         bringBrowserChromeToFrontForDismissal()
         
         UIView.animate(withDuration: UX.dismissalAnimationDuration, delay: 0, usingSpringWithDamping: UX.dismissalSpringDamping, initialSpringVelocity: 1, options: [.curveEaseInOut]) {
-            pageSnapshot.frame = self.context.contentView.frame
-            pageSnapshot.layer.cornerRadius = 0
+            self.configurePageSnapshot(
+                pageSnapshot,
+                containerFrame: fullImageFrame,
+                clipFrame: fullImageFrame,
+                imageFrame: self.aspectFillFrame(
+                    for: pageSnapshot.image,
+                    cropRect: CGRect(origin: .zero, size: CGSize(width: 1, height: 1)),
+                    in: fullImageFrame
+                ),
+                cornerRadius: 0
+            )
             bottomChromeView.alpha = 0
             self.tabOverview.alpha = 0
-            for collectionView in self.tabOverview.collection.allCollectionViews {
-                collectionView.alpha = 0
-            }
-            selectedCollection.transform = standardCollectionTransform.scaledBy(x: UX.transitionCollectionInitialScale, y: UX.transitionCollectionInitialScale)
+            collectionSnapshot.alpha = 0
+            collectionSnapshot.transform = CGAffineTransform(
+                scaleX: UX.transitionCollectionInitialScale,
+                y: UX.transitionCollectionInitialScale
+            )
             self.context.browserChrome.setChromeTransition(topAlpha: 1, bottomAlpha: 1, bottomTranslationY: 0)
         } completion: { _ in
+            collectionSnapshot.removeFromSuperview()
             pageSnapshot.removeFromSuperview()
             bottomChromeView.removeFromSuperview()
             selectedCell.setTransitionState(.visible)
-            selectedCollection.transform = standardCollectionTransform
             
             self.context.contentView.setTransitionHidden(false)
-            for collectionView in self.tabOverview.collection.allCollectionViews {
-                collectionView.alpha = 1
-            }
+            selectedCollection.alpha = 1
             self.tabOverview.collection.setPresentationVerticalOffset(0)
             self.tabOverview.isHidden = true
             self.tabOverview.bottomToolbar.alpha = 1
             self.state = .dismissed
+            self.context.tabOverviewDidFinishDismissal()
         }
     }
     
@@ -416,22 +476,23 @@ final class TabOverviewPresentation {
         let selectedIndex = dataSource.selectedIndex
         context.containerView.layoutIfNeeded()
         let topChromeView = context.browserChrome.topToolbarTransitionView()
-        topChromeView?.frame = context.browserChrome.topToolbarTransitionFrame(in: context.containerView)
-        if let topChromeView {
-            context.containerView.addSubview(topChromeView)
-        }
-        context.updateLayout(animated: false, duration: 0)
+        context.prepareTabOverviewPresentation()
         dataSource.captureThumbnail(forTabAt: selectedIndex, mode: dataSource.selectedMode) { [weak self] _ in
             guard let self, self.presentationToken == token else {
                 topChromeView?.removeFromSuperview()
                 return
             }
             
+            if let topChromeView {
+                topChromeView.frame = self.context.browserChrome.topToolbarTransitionFrame(in: self.context.containerView)
+                self.context.containerView.addSubview(topChromeView)
+            }
             self.animatePadPresentation(selectedIndex: selectedIndex, topChromeView: topChromeView)
         }
     }
     
     private func animatePadPresentation(selectedIndex: Int, topChromeView: UIView?) {
+        tabOverview.applyLayout(toolbarPosition: context.browserLayout.tabOverviewToolbarPosition, animated: false)
         tabOverview.invalidateCollectionLayouts()
         tabOverview.reloadTabs()
         tabOverview.isHidden = false
@@ -451,22 +512,30 @@ final class TabOverviewPresentation {
         let standardCollectionTransform = selectedCollection.transform
         
         guard let selectedCell = selectedTabCard(at: selectedIndex) else {
-            applyPresentationProgress(1)
-            context.updateLayout(animated: false, duration: 0)
-            state = .presented
+            finishPresentationWithoutAnimation(chromeSnapshot: topChromeView)
             return
         }
         
-        guard let transitionView = selectedCell.makeTransitionSnapshot() else {
-            applyPresentationProgress(1)
-            context.updateLayout(animated: false, duration: 0)
-            state = .presented
+        guard let previewImage = selectedCell.previewImage else {
+            finishPresentationWithoutAnimation(chromeSnapshot: topChromeView)
             return
         }
+        let transitionView = selectedCell.makeTransitionSnapshot()
+        let pageSnapshot = makePageSnapshot(image: previewImage)
         
         let finalContentFrame = selectedCell.transitionSnapshotFrame(in: context.containerView)
+        let closeButtonTransitionView = selectedCell.makeCloseButtonTransitionSnapshot(
+            in: context.containerView,
+            containerFrame: finalContentFrame
+        )
         let finalPreviewFrame = selectedCell.webpagePreviewImageFrame(in: context.containerView)
-        let contentFrame = context.contentView.frame
+        let contentFrame = context.contentView.frame(in: context.containerView)
+        guard let thumbnailGeometry = context.contentView.thumbnailGeometry(in: context.containerView) else {
+            finishPresentationWithoutAnimation(chromeSnapshot: topChromeView)
+            return
+        }
+        let fullImageFrame = thumbnailGeometry.fullFrame
+        let visibleCropRect = thumbnailGeometry.cropRect
         
         selectedCell.setTransitionState(.hiddenForAnimation)
         tabOverview.alpha = 1
@@ -479,7 +548,21 @@ final class TabOverviewPresentation {
             previewFrame: finalPreviewFrame,
             sourceFrame: contentFrame
         )
+        closeButtonTransitionView.transform = transitionView.transform
+        configurePageSnapshot(
+            pageSnapshot,
+            containerFrame: fullImageFrame,
+            clipFrame: fullImageFrame,
+            imageFrame: aspectFillFrame(
+                for: previewImage,
+                cropRect: CGRect(origin: .zero, size: CGSize(width: 1, height: 1)),
+                in: fullImageFrame
+            ),
+            cornerRadius: 0
+        )
         context.containerView.insertSubview(transitionView, belowSubview: context.contentView)
+        context.containerView.insertSubview(pageSnapshot, aboveSubview: transitionView)
+        context.containerView.insertSubview(closeButtonTransitionView, aboveSubview: pageSnapshot)
         context.contentView.setTransitionHidden(true)
         context.browserChrome.setBottomToolbarHidden(true)
         
@@ -490,27 +573,31 @@ final class TabOverviewPresentation {
             chromeSnapshotView: topChromeView,
             originalCollectionTransform: standardCollectionTransform
         )
+        activePresentationTransition.pageSnapshotView = pageSnapshot
+        activePresentationTransition.closeButtonSnapshotView = closeButtonTransitionView
         self.activePresentationTransition = activePresentationTransition
         
         UIView.animate(withDuration: UX.presentationAnimationDuration, delay: 0, usingSpringWithDamping: UX.presentationSpringDamping, initialSpringVelocity: 1, options: [.curveEaseInOut, .allowUserInteraction]) {
             transitionView.transform = .identity
+            closeButtonTransitionView.transform = .identity
+            self.configurePageSnapshot(
+                pageSnapshot,
+                containerFrame: fullImageFrame,
+                clipFrame: finalPreviewFrame,
+                imageFrame: self.aspectFillFrame(
+                    for: previewImage,
+                    cropRect: visibleCropRect,
+                    in: finalPreviewFrame
+                ),
+                cornerRadius: UX.transitionPreviewCornerRadius
+            )
             topChromeView?.alpha = 0
             self.tabOverview.setActiveToolbarAlpha(1)
             selectedCollection.transform = standardCollectionTransform
             self.context.browserChrome.setChromeTransition(topAlpha: 0, bottomAlpha: 1, bottomTranslationY: 0)
+            self.context.tabBar.setPresentationAlpha(0)
         } completion: { _ in
-            guard self.activePresentationTransition === activePresentationTransition else {
-                return
-            }
-            
-            self.finishPresentationTransition(activePresentationTransition)
-            self.activePresentationTransition = nil
-            
-            self.context.containerView.bringSubviewToFront(self.tabOverview)
-            self.context.contentView.setTransitionHidden(false)
-            self.context.browserChrome.setBottomToolbarHidden(false)
-            self.context.updateLayout(animated: false, duration: 0)
-            self.state = .presented
+            self.completePresentationTransition(activePresentationTransition)
         }
     }
     
@@ -522,6 +609,7 @@ final class TabOverviewPresentation {
         tabOverview.alpha = 1
         tabOverview.setActiveToolbarAlpha(1)
         context.containerView.bringSubviewToFront(tabOverview)
+        context.contentView.setTransitionTransform(.identity)
         context.containerView.layoutIfNeeded()
         
         let selectedCollection = tabOverview.currentCollectionView()
@@ -530,38 +618,45 @@ final class TabOverviewPresentation {
         }
         selectedCollection.layoutIfNeeded()
         
-        let standardCollectionTransform = selectedCollection.transform
-        
         guard let selectedCell = selectedTabCard(at: overviewIndex),
-              let sourceFrame = selectedTabCardPreviewFrame(at: overviewIndex) else {
-            state = .dismissed
-            applyPresentationProgress(0)
-            tabOverview.isHidden = true
-            commitPendingTabSelection()
-            context.updateLayout(animated: false, duration: 0)
+              let sourceFrame = selectedTabCardPreviewFrame(at: overviewIndex),
+              let collectionSnapshot = makeCollectionSnapshot(selectedCollection, hidingPreviewOf: selectedCell) else {
+            finishDismissalWithoutAnimation()
             return
         }
-        
-        selectedCell.setTransitionState(.hiddenForAnimation)
         
         let pageSnapshot = makeDismissalPreviewSnapshot(for: overviewIndex)
         guard let pageSnapshot else {
-            state = .dismissed
-            applyPresentationProgress(0)
-            tabOverview.isHidden = true
-            commitPendingTabSelection()
-            context.updateLayout(animated: false, duration: 0)
+            finishDismissalWithoutAnimation()
             return
         }
         
-        pageSnapshot.frame = sourceFrame
-        pageSnapshot.layer.cornerRadius = UX.transitionPreviewCornerRadius
-        pageSnapshot.layer.cornerCurve = .continuous
-        pageSnapshot.layer.masksToBounds = true
-        
-        context.containerView.addSubview(pageSnapshot)
-        
         commitPendingTabSelection()
+        context.updateLayout(animated: false, duration: 0)
+        context.containerView.layoutIfNeeded()
+        
+        guard let thumbnailGeometry = context.contentView.thumbnailGeometry(in: context.containerView) else {
+            finishDismissalWithoutAnimation(commitSelection: false)
+            return
+        }
+        let fullImageFrame = thumbnailGeometry.fullFrame
+        let visibleCropRect = thumbnailGeometry.cropRect
+        
+        configurePageSnapshot(
+            pageSnapshot,
+            containerFrame: fullImageFrame,
+            clipFrame: sourceFrame,
+            imageFrame: aspectFillFrame(
+                for: pageSnapshot.image,
+                cropRect: visibleCropRect,
+                in: sourceFrame
+            ),
+            cornerRadius: UX.transitionPreviewCornerRadius
+        )
+        context.containerView.addSubview(collectionSnapshot)
+        context.containerView.addSubview(pageSnapshot)
+        selectedCollection.alpha = 0
+        
         state = .dismissing
         presentationProgress = 0
         context.updateLayout(animated: false, duration: 0)
@@ -570,32 +665,42 @@ final class TabOverviewPresentation {
         context.contentView.setTransitionHidden(true)
         context.browserChrome.setChromeTransition(topAlpha: 0, bottomAlpha: 0, bottomTranslationY: 0)
         context.tabBar.setPresentationAlpha(0)
+        context.containerView.bringSubviewToFront(context.tabBar)
         bringBrowserChromeToFrontForDismissal()
         
         UIView.animate(withDuration: UX.dismissalAnimationDuration, delay: 0, usingSpringWithDamping: UX.dismissalSpringDamping, initialSpringVelocity: 1, options: [.curveEaseInOut]) {
-            pageSnapshot.frame = self.context.contentView.frame
-            pageSnapshot.layer.cornerRadius = 0
+            self.configurePageSnapshot(
+                pageSnapshot,
+                containerFrame: fullImageFrame,
+                clipFrame: fullImageFrame,
+                imageFrame: self.aspectFillFrame(
+                    for: pageSnapshot.image,
+                    cropRect: CGRect(origin: .zero, size: CGSize(width: 1, height: 1)),
+                    in: fullImageFrame
+                ),
+                cornerRadius: 0
+            )
             self.tabOverview.alpha = 0
-            for collectionView in self.tabOverview.collection.allCollectionViews {
-                collectionView.alpha = 0
-            }
-            selectedCollection.transform = standardCollectionTransform.scaledBy(x: UX.transitionCollectionInitialScale, y: UX.transitionCollectionInitialScale)
+            collectionSnapshot.alpha = 0
+            collectionSnapshot.transform = CGAffineTransform(
+                scaleX: UX.transitionCollectionInitialScale,
+                y: UX.transitionCollectionInitialScale
+            )
             self.tabOverview.setActiveToolbarAlpha(0)
             self.context.browserChrome.setChromeTransition(topAlpha: 1, bottomAlpha: 1, bottomTranslationY: 0)
             self.context.tabBar.setPresentationAlpha(1)
         } completion: { _ in
+            collectionSnapshot.removeFromSuperview()
             pageSnapshot.removeFromSuperview()
             selectedCell.setTransitionState(.visible)
-            selectedCollection.transform = standardCollectionTransform
             
             self.context.contentView.setTransitionHidden(false)
-            for collectionView in self.tabOverview.collection.allCollectionViews {
-                collectionView.alpha = 1
-            }
+            selectedCollection.alpha = 1
             self.tabOverview.collection.setPresentationVerticalOffset(0)
             self.tabOverview.isHidden = true
             self.tabOverview.setActiveToolbarAlpha(1)
             self.state = .dismissed
+            self.context.tabOverviewDidFinishDismissal()
         }
     }
     
@@ -605,7 +710,7 @@ final class TabOverviewPresentation {
         return mode == .private ? dataSource.privateTabs : dataSource.regularTabs
     }
     
-    private func makeDismissalPreviewSnapshot(for index: Int) -> UIView? {
+    private func makeDismissalPreviewSnapshot(for index: Int) -> TabOverviewPageSnapshotView? {
         let mode = dismissalTargetTabMode ?? dataSource.selectedMode
         let tabs = tabs(for: mode)
         let image = pendingSelectionPreviewImage ?? tabs[safe: index]?.thumbnail
@@ -613,12 +718,82 @@ final class TabOverviewPresentation {
             return nil
         }
         
-        let imageView = UIImageView(image: image)
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = UX.transitionPreviewCornerRadius
-        imageView.layer.cornerCurve = .continuous
-        return imageView
+        return makePageSnapshot(image: image)
+    }
+    
+    private func makePageSnapshot(image: UIImage) -> TabOverviewPageSnapshotView {
+        return TabOverviewPageSnapshotView(image: image)
+    }
+    
+    private func makeCollectionSnapshot(
+        _ collectionView: UICollectionView,
+        hidingPreviewOf selectedCell: TabOverviewCard
+    ) -> UIView? {
+        selectedCell.setPreviewSurfaceHidden(true)
+        defer { selectedCell.setPreviewSurfaceHidden(false) }
+        guard let snapshot = collectionView.snapshotView(afterScreenUpdates: true) else {
+            return nil
+        }
+        snapshot.frame = collectionView.convert(collectionView.bounds, to: context.containerView)
+        return snapshot
+    }
+    
+    private func configurePageSnapshot(
+        _ snapshot: TabOverviewPageSnapshotView,
+        containerFrame: CGRect,
+        clipFrame: CGRect,
+        imageFrame: CGRect,
+        cornerRadius: CGFloat
+    ) {
+        snapshot.frame = containerFrame
+        snapshot.setFrames(
+            clipFrame: clipFrame.offsetBy(dx: -containerFrame.minX, dy: -containerFrame.minY),
+            imageFrame: imageFrame.offsetBy(dx: -clipFrame.minX, dy: -clipFrame.minY)
+        )
+        snapshot.setPreviewStyle(cornerRadius: cornerRadius)
+    }
+    
+    private func aspectFillFrame(
+        for image: UIImage,
+        cropRect: CGRect,
+        in containerFrame: CGRect
+    ) -> CGRect {
+        let imageSize = image.size
+        guard imageSize.width > 0,
+              imageSize.height > 0,
+              cropRect.width > 0,
+              cropRect.height > 0,
+              containerFrame.width > 0,
+              containerFrame.height > 0 else {
+            return containerFrame
+        }
+        
+        let cropSize = CGSize(
+            width: imageSize.width * cropRect.width,
+            height: imageSize.height * cropRect.height
+        )
+        let scale = max(
+            containerFrame.width / cropSize.width,
+            containerFrame.height / cropSize.height
+        )
+        let scaledSize = CGSize(
+            width: imageSize.width * scale,
+            height: imageSize.height * scale
+        )
+        let scaledCropSize = CGSize(
+            width: cropSize.width * scale,
+            height: cropSize.height * scale
+        )
+        let cropOrigin = CGPoint(
+            x: containerFrame.midX - (scaledCropSize.width / 2),
+            y: containerFrame.midY - (scaledCropSize.height / 2)
+        )
+        return CGRect(
+            x: cropOrigin.x - (cropRect.minX * scaledSize.width),
+            y: cropOrigin.y - (cropRect.minY * scaledSize.height),
+            width: scaledSize.width,
+            height: scaledSize.height
+        )
     }
     
     private func bringBrowserChromeToFrontForDismissal() {
@@ -653,12 +828,38 @@ final class TabOverviewPresentation {
         state = .presented
     }
     
+    func finishPresentationForScrolling(in collectionView: UICollectionView) {
+        guard let transition = activePresentationTransition,
+              transition.selectedCollectionView === collectionView else {
+            return
+        }
+        completePresentationTransition(transition)
+    }
+    
+    private func completePresentationTransition(_ transition: ActivePresentationTransition) {
+        guard activePresentationTransition === transition else {
+            return
+        }
+        finishPresentationTransition(transition)
+        activePresentationTransition = nil
+        
+        context.containerView.bringSubviewToFront(tabOverview)
+        context.contentView.setTransitionHidden(false)
+        context.browserChrome.setBottomToolbarHidden(false)
+        context.updateLayout(animated: false, duration: 0)
+        state = .presented
+    }
+    
     private func finishPresentationTransition(_ transition: ActivePresentationTransition) {
         transition.cardSnapshotView?.layer.removeAllAnimations()
+        transition.closeButtonSnapshotView?.layer.removeAllAnimations()
+        transition.pageSnapshotView?.layer.removeAllAnimations()
         transition.chromeSnapshotView?.layer.removeAllAnimations()
         transition.selectedCollectionView?.layer.removeAllAnimations()
         transition.chromeSnapshotView?.removeFromSuperview()
         transition.cardSnapshotView?.removeFromSuperview()
+        transition.closeButtonSnapshotView?.removeFromSuperview()
+        transition.pageSnapshotView?.removeFromSuperview()
         transition.selectedTabCard?.setTransitionState(.visible)
         transition.selectedCollectionView?.transform = transition.originalCollectionTransform
     }
@@ -699,9 +900,7 @@ final class TabOverviewPresentation {
             pendingSelectionPreviewImage = nil
         }
         
-        let selectedIndex = pendingSelectionTabMode == dataSource.selectedMode ? dataSource.selectedIndex : nil
         guard let target = pendingSelectionTabIndex,
-              target != selectedIndex,
               let mode = pendingSelectionTabMode else {
             return
         }
@@ -732,10 +931,67 @@ final class TabOverviewPresentation {
     }
 }
 
+private final class TabOverviewPageSnapshotView: UIView {
+    private enum UX {
+        static let borderWidth: CGFloat = 0.5
+        static let shadowOpacity: Float = 0.12
+        static let shadowRadius: CGFloat = 8
+        static let shadowOffset = CGSize(width: 0, height: 3)
+    }
+    
+    let image: UIImage
+    private let shadowView: UIView
+    private let clippingView: UIView
+    private let imageView: UIImageView
+    
+    init(image: UIImage) {
+        self.image = image
+        shadowView = UIView()
+        clippingView = UIView()
+        imageView = UIImageView(image: image)
+        super.init(frame: .zero)
+        clipsToBounds = false
+        isUserInteractionEnabled = false
+        shadowView.backgroundColor = .systemBackground
+        shadowView.layer.cornerCurve = .continuous
+        shadowView.layer.shadowColor = UIColor.black.cgColor
+        shadowView.layer.shadowOpacity = 0
+        shadowView.layer.shadowRadius = UX.shadowRadius
+        shadowView.layer.shadowOffset = UX.shadowOffset
+        clippingView.clipsToBounds = true
+        clippingView.layer.borderColor = UIColor.separator.withAlphaComponent(0.2).cgColor
+        imageView.contentMode = .scaleToFill
+        addSubview(shadowView)
+        addSubview(clippingView)
+        clippingView.addSubview(imageView)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setFrames(clipFrame: CGRect, imageFrame: CGRect) {
+        shadowView.frame = clipFrame
+        clippingView.frame = clipFrame
+        imageView.frame = imageFrame
+    }
+    
+    func setPreviewStyle(cornerRadius: CGFloat) {
+        let displaysCardStyle = cornerRadius > 0
+        shadowView.layer.cornerRadius = cornerRadius
+        shadowView.layer.shadowOpacity = displaysCardStyle ? UX.shadowOpacity : 0
+        clippingView.layer.cornerRadius = cornerRadius
+        clippingView.layer.cornerCurve = .continuous
+        clippingView.layer.borderWidth = displaysCardStyle ? UX.borderWidth : 0
+    }
+}
+
 private final class ActivePresentationTransition {
     weak var selectedTabCard: TabOverviewCard?
     weak var selectedCollectionView: UICollectionView?
     weak var cardSnapshotView: UIView?
+    weak var closeButtonSnapshotView: UIView?
+    weak var pageSnapshotView: UIView?
     weak var chromeSnapshotView: UIView?
     let originalCollectionTransform: CGAffineTransform
     

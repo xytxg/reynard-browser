@@ -1,5 +1,5 @@
 diff --git a/xpfe/appshell/AppWindow.cpp b/xpfe/appshell/AppWindow.cpp
-index 8ce7a79d6f1d..eb993ff6074f 100644
+index 27536c5541ba..e1df796eccdb 100644
 --- a/xpfe/appshell/AppWindow.cpp
 +++ b/xpfe/appshell/AppWindow.cpp
 @@ -4,6 +4,7 @@
@@ -10,7 +10,7 @@ index 8ce7a79d6f1d..eb993ff6074f 100644
  
  // Local includes
  #include "AppWindow.h"
-@@ -218,7 +219,14 @@ nsresult AppWindow::Initialize(nsIAppWindow* aParent, nsIAppWindow* aOpener,
+@@ -217,7 +218,14 @@ nsresult AppWindow::Initialize(nsIAppWindow* aParent, nsIAppWindow* aOpener,
    LayoutDeviceIntRect r = mWindow->GetClientBounds();
    // Match the default background color of content. Previously important on
    // Windows, but no longer has any effect there.

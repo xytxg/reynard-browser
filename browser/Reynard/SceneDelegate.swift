@@ -18,7 +18,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let window = UIWindow(windowScene: windowScene)
         window.overrideUserInterfaceStyle = AppAppearanceController.userInterfaceStyle(for: Prefs.AppearanceSettings.appAppearance)
-        window.backgroundColor = .systemBackground
         window.rootViewController = browserViewController
         window.makeKeyAndVisible()
         self.window = window
@@ -33,13 +32,33 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidDisconnect(_ scene: UIScene) {}
     
     func sceneDidBecomeActive(_ scene: UIScene) {
-        (window?.rootViewController as? BrowserViewController)?
-            .sessionManager.applicationDidBecomeActive()
+        guard let browserViewController = window?.rootViewController as? BrowserViewController else {
+            return
+        }
+        
+        browserViewController.startScreenOrientationHandling()
+        browserViewController.sessionManager.applicationDidBecomeActive()
+        browserViewController.tabManager.applicationDidBecomeActive()
     }
     
     func sceneWillResignActive(_ scene: UIScene) {
+        guard let browserViewController = window?.rootViewController as? BrowserViewController else {
+            return
+        }
+        
+        browserViewController.stopScreenOrientationHandling()
+        browserViewController.tabManager.applicationWillResignActive()
+        browserViewController.sessionManager.applicationWillResignActive()
+    }
+    
+    func windowScene(
+        _ windowScene: UIWindowScene,
+        didUpdate previousCoordinateSpace: UICoordinateSpace,
+        interfaceOrientation previousInterfaceOrientation: UIInterfaceOrientation,
+        traitCollection previousTraitCollection: UITraitCollection
+    ) {
         (window?.rootViewController as? BrowserViewController)?
-            .sessionManager.applicationWillResignActive()
+            .screenOrientationChanged(to: windowScene.interfaceOrientation)
     }
     
     func sceneWillEnterForeground(_ scene: UIScene) {

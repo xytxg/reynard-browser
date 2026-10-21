@@ -1,81 +1,19 @@
 diff --git a/mobile/shared/actors/GeckoViewContentChild.sys.mjs b/mobile/shared/actors/GeckoViewContentChild.sys.mjs
-index 9ca6e15bed3e..53549f22f8d5 100644
+index 9ca6e15bed3e..8f2cc35ead7f 100644
 --- a/mobile/shared/actors/GeckoViewContentChild.sys.mjs
 +++ b/mobile/shared/actors/GeckoViewContentChild.sys.mjs
-@@ -67,6 +67,107 @@ export class GeckoViewContentChild extends GeckoViewActorChild {
+@@ -21,6 +21,7 @@ const SCREEN_ORIENTATION_LANDSCAPE = 1;
+ const lazy = {};
+ 
+ ChromeUtils.defineESModuleGetters(lazy, {
++  NetUtil: "resource://gre/modules/NetUtil.sys.mjs",
+   PrivacyFilter: "resource://gre/modules/sessionstore/PrivacyFilter.sys.mjs",
+ });
+ 
+@@ -67,6 +68,37 @@ export class GeckoViewContentChild extends GeckoViewActorChild {
      return windowUtils.SCROLL_MODE_SMOOTH;
    }
  
-+  isFocusedEditableElement(element) {
-+    if (!element) {
-+      return false;
-+    }
-+
-+    const win = element.ownerGlobal || element.documentGlobal;
-+    if (!win) {
-+      return false;
-+    }
-+
-+    return (
-+      (win.HTMLInputElement?.isInstance(element) &&
-+        element.mozIsTextField(false)) ||
-+      win.HTMLTextAreaElement?.isInstance(element) ||
-+      element.isContentEditable
-+    );
-+  }
-+
-+  getFocusedInputBounds(focusedElement, viewportHeight) {
-+    let bounds = focusedElement.getBoundingClientRect();
-+    let ancestor = focusedElement.parentElement;
-+
-+    while (ancestor) {
-+      const ancestorBounds = ancestor.getBoundingClientRect();
-+      if (
-+        ancestorBounds.top <= bounds.top &&
-+        ancestorBounds.bottom >= bounds.bottom &&
-+        ancestorBounds.height > bounds.height + 8 &&
-+        ancestorBounds.height <= viewportHeight * 0.4
-+      ) {
-+        bounds = ancestorBounds;
-+      }
-+      ancestor = ancestor.parentElement;
-+    }
-+
-+    return bounds;
-+  }
-+
-+  async getFocusedInputMetrics() {
-+    const { contentWindow } = this;
-+    if (contentWindow) {
-+      await new contentWindow.Promise(resolve => {
-+        contentWindow.requestAnimationFrame(() => {
-+          contentWindow.requestAnimationFrame(resolve);
-+        });
-+      });
-+    }
-+
-+    const focusedElement = Services.focus.focusedElement || contentWindow?.document?.activeElement;
-+    if (!this.isFocusedEditableElement(focusedElement)) {
-+      return null;
-+    }
-+
-+    const win = focusedElement.ownerGlobal || focusedElement.documentGlobal;
-+    if (!win) {
-+      return null;
-+    }
-+
-+    const viewportHeight =
-+      win.visualViewport?.height || win.innerHeight;
-+    if (!viewportHeight || viewportHeight <= 0) {
-+      return null;
-+    }
-+
-+    const bounds = this.getFocusedInputBounds(focusedElement, viewportHeight);
-+    return {
-+      bottomRatio: Math.max(0, Math.min(2, bounds.bottom / viewportHeight)),
-+    };
-+  }
-+
 +  collectSessionState() {
 +    const { docShell, contentWindow } = this;
 +    const history = lazy.SessionHistory.collect(docShell);
@@ -110,13 +48,147 @@ index 9ca6e15bed3e..53549f22f8d5 100644
    orientation() {
      const currentOrientationType = this.contentWindow?.screen.orientation.type;
      if (!currentOrientationType) {
-@@ -184,6 +285,9 @@ export class GeckoViewContentChild extends GeckoViewActorChild {
-       case "ContainsFormData": {
-         return this.containsFormData();
-       }
-+      case "GetFocusedInputMetrics": {
-+        return this.getFocusedInputMetrics();
-+      }
-     }
+@@ -84,6 +116,14 @@ export class GeckoViewContentChild extends GeckoViewActorChild {
+     const { name } = message;
+     debug`receiveMessage: ${name}`;
  
-     return null;
++    // New events (isn't Gecko's default)
++    switch (name) {
++      case "GetFocusedInputMetrics":
++        return this.getFocusedInputMetrics();
++      case "FetchImage":
++        return this.fetchImage(message.data.url);
++    }
++
+     switch (name) {
+       case "GeckoView:DOMFullscreenEntered": {
+         const windowUtils = this.contentWindow?.windowUtils;
+@@ -199,6 +239,128 @@ export class GeckoViewContentChild extends GeckoViewActorChild {
+     return false;
+   }
+ 
++  getFocusedInputBounds(focusedElement, viewportHeight) {
++    let bounds = focusedElement.getBoundingClientRect();
++    let ancestor = focusedElement.parentElement;
++
++    while (ancestor) {
++      const ancestorBounds = ancestor.getBoundingClientRect();
++      if (
++        ancestorBounds.top <= bounds.top &&
++        ancestorBounds.bottom >= bounds.bottom &&
++        ancestorBounds.height > bounds.height + 8 &&
++        ancestorBounds.height <= viewportHeight * 0.4
++      ) {
++        bounds = ancestorBounds;
++      }
++      ancestor = ancestor.parentElement;
++    }
++
++    return bounds;
++  }
++
++  async getFocusedInputMetrics() {
++    const { contentWindow } = this;
++    if (contentWindow) {
++      await new contentWindow.Promise(resolve => {
++        contentWindow.requestAnimationFrame(() => {
++          contentWindow.requestAnimationFrame(resolve);
++        });
++      });
++    }
++
++    const focusedElement = Services.focus.focusedElement || contentWindow?.document?.activeElement;
++    const win = focusedElement?.ownerGlobal || focusedElement?.documentGlobal;
++    if (
++      !win ||
++      !(
++        (win.HTMLInputElement?.isInstance(focusedElement) &&
++          focusedElement.mozIsTextField(false)) ||
++        win.HTMLTextAreaElement?.isInstance(focusedElement) ||
++        focusedElement.isContentEditable
++      )
++    ) {
++      return null;
++    }
++
++    const viewportHeight = win.visualViewport?.height || win.innerHeight;
++    if (!viewportHeight || viewportHeight <= 0) {
++      return null;
++    }
++
++    const bounds = this.getFocusedInputBounds(focusedElement, viewportHeight);
++    const { windowUtils } = win;
++    const metrics = {
++      bottomRatio: Math.max(0, Math.min(2, bounds.bottom / viewportHeight)),
++      caretTop: null,
++    };
++    const selection = windowUtils.sendQueryContentEvent(
++      windowUtils.QUERY_SELECTED_TEXT, 0, 0, 0, 0
++    );
++
++    if (!selection.succeeded || selection.notFound) {
++      return metrics;
++    }
++
++    const caret = windowUtils.sendQueryContentEvent(
++      windowUtils.QUERY_CARET_RECT,
++      selection.offset + selection.text.length,
++      0, 0, 0
++    );
++
++    if (caret.succeeded) {
++      metrics.caretTop = caret.top;
++    }
++
++    return metrics;
++  }
++
++  fetchImage(url) {
++    const channel = lazy.NetUtil.newChannel({
++      uri: url,
++      loadingNode: this.document,
++      securityFlags:
++        Ci.nsILoadInfo.SEC_ALLOW_CROSS_ORIGIN_SEC_CONTEXT_IS_NULL,
++      contentPolicyType: Ci.nsIContentPolicy.TYPE_IMAGE,
++    });
++
++    if (channel instanceof Ci.nsIHttpChannel) {
++      const referrer = Cc["@mozilla.org/referrer-info;1"].createInstance(
++        Ci.nsIReferrerInfo
++      );
++      referrer.initWithDocument(this.document);
++      channel.referrerInfo = referrer;
++    }
++
++    return new Promise((resolve, reject) => {
++      lazy.NetUtil.asyncFetch(channel, (stream, status, request) => {
++        try {
++          if (!Components.isSuccessCode(status)) {
++            throw new Error(`Image request failed: ${status}`);
++          }
++          if (
++            request instanceof Ci.nsIHttpChannel &&
++            !request.requestSucceeded
++          ) {
++            throw new Error(
++              `Image request returned HTTP ${request.responseStatus}`
++            );
++          }
++
++          const reader = Cc[
++            "@mozilla.org/binaryinputstream;1"
++          ].createInstance(Ci.nsIBinaryInputStream);
++          reader.setInputStream(stream);
++          resolve(btoa(reader.readBytes(reader.available())));
++        } catch (error) {
++          reject(error);
++        } finally {
++          stream.close();
++        }
++      });
++    });
++  }
++
+   // eslint-disable-next-line complexity
+   handleEvent(aEvent) {
+     debug`handleEvent: ${aEvent.type}`;

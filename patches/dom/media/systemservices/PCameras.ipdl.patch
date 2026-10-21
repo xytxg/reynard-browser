@@ -1,8 +1,47 @@
 diff --git a/dom/media/systemservices/PCameras.ipdl b/dom/media/systemservices/PCameras.ipdl
-index fb0875701900..bb12521230da 100644
+index 5e7a0add5260..9409962e06dd 100644
 --- a/dom/media/systemservices/PCameras.ipdl
 +++ b/dom/media/systemservices/PCameras.ipdl
-@@ -70,7 +70,8 @@ child:
+@@ -8,6 +8,7 @@ include protocol PBackground;
+ include PBackgroundSharedTypes;
+ 
+ include "mozilla/dom/MediaIPCUtils.h";
++include "mozilla/GfxMessageUtils.h";
+ 
+ using mozilla::camera::CaptureEngine from "mozilla/media/CamerasTypes.h";
+ using mozilla::dom::VideoResizeModeEnum from "mozilla/dom/MediaStreamTrackBinding.h";
+@@ -15,6 +16,11 @@ using mozilla::TimeStamp from "mozilla/TimeStamp.h";
+ using mozilla::VideoRotation from "MediaInfo.h";
+ using mozilla::media::TimeUnit from "TimeUnits.h";
+ using mozilla::NormalizedConstraints from "MediaTrackConstraints.h";
++using mozilla::gfx::IntRect from "mozilla/gfx/Rect.h";
++using mozilla::gfx::YUVColorSpace from "mozilla/gfx/Types.h";
++using mozilla::gfx::ColorSpace2 from "mozilla/gfx/Types.h";
++using mozilla::gfx::TransferFunction from "mozilla/gfx/Types.h";
++[MoveOnly] using mozilla::layers::IOSurfacePort from "mozilla/layers/IOSurfacePort.h";
+ using webrtc::VideoType from "mozilla/media/CamerasTypes.h";
+ 
+ namespace mozilla {
+@@ -25,6 +31,7 @@ struct VideoCaptureCapability
+ {
+   int width;
+   int height;
++  int minFPS;
+   int maxFPS;
+   VideoType videoType;
+   bool interlaced;
+@@ -72,12 +79,19 @@ child:
+   async CaptureEnded(int[] streamIds);
+   // transfers ownership of |buffer| from parent to child
+   async DeliverFrame(int captureId, int[] streamIds, Shmem buffer, VideoFrameProperties props);
++  async DeliverFrameIOSurface(int captureId, uint64_t frameId, int[] streamIds,
++                              IOSurfacePort surface, IntRect pictureRect,
++                              YUVColorSpace yUVColorSpace,
++                              ColorSpace2 colorPrimaries,
++                              TransferFunction transferFunction,
++                              VideoFrameProperties props);
+   async DeviceChange();
+   async ReplyNumberOfCaptureDevices(int deviceCount);
    async ReplyNumberOfCapabilities(int capabilityCount);
    async ReplyAllocateCapture(int streamId);
    async ReplyGetCaptureCapability(VideoCaptureCapability cap);
@@ -12,3 +51,11 @@ index fb0875701900..bb12521230da 100644
    async ReplyFailure();
    async ReplySuccess();
    async __delete__();
+@@ -102,6 +116,7 @@ parent:
+   async StopCapture(CaptureEngine engine, int streamId);
+   // transfers frame back
+   async ReleaseFrame(int captureId, Shmem s);
++  async ReleaseFrameIOSurface(int captureId, uint64_t frameId);
+ 
+   // setup camera engine
+   async EnsureInitialized(CaptureEngine engine);

@@ -103,11 +103,10 @@ final class TabOverviewCollection: NSObject {
         return nil
     }
     
-    func itemIndex(forTabAt index: Int, mode: TabOverview.Mode? = nil) -> Int? {
+    func itemIndex(forTabAt index: Int) -> Int? {
         guard let selectedMode = tabOverview?.dataSource?.selectedMode else { return nil }
-        let resolvedMode = mode ?? self.mode
-        guard selectedMode == resolvedMode.tabMode,
-              tabs(for: resolvedMode).indices.contains(index) else {
+        guard selectedMode == mode.tabMode,
+              tabs(for: mode).indices.contains(index) else {
             return nil
         }
         return index
@@ -128,6 +127,15 @@ final class TabOverviewCollection: NSObject {
         } else {
             animations()
         }
+    }
+    
+    func scrollToBottom(for mode: TabOverview.Mode) {
+        let collectionView = collectionView(for: mode)
+        collectionView.layoutIfNeeded()
+        let inset = collectionView.adjustedContentInset
+        let minimumY = -inset.top
+        let maximumY = max(minimumY, collectionView.contentSize.height - collectionView.bounds.height + inset.bottom)
+        collectionView.setContentOffset(CGPoint(x: collectionView.contentOffset.x, y: maximumY), animated: false)
     }
     
     func setPresentationVerticalOffset(_ offset: CGFloat) {
@@ -193,7 +201,14 @@ final class TabOverviewCollection: NSObject {
               let cell = collectionView(for: mode).cellForItem(at: IndexPath(item: index, section: 0)) as? TabOverviewCard else {
             return
         }
-        cell.configure(with: modeTabs[index])
+        configureTabCard(cell, with: modeTabs[index])
+    }
+    
+    func configureTabCard(_ card: TabOverviewCard, with tab: Tab) {
+        card.configure(
+            with: tab,
+            visiblePreviewCropRect: tabOverview?.visiblePreviewCropRect
+        )
     }
     
     func prepareInsertionPlaceholder(for mode: TabOverview.Mode, completion: @escaping () -> Void) {

@@ -58,12 +58,33 @@ extension TabManager {
         return tab
     }
     
+    var canGoBack: Bool {
+        return selectedTab?.state.navigationState.canGoBack == true || openerTab != nil
+    }
+    
+    var openerTab: Tab? {
+        guard let tab = selectedTab,
+              !tab.isPrivate,
+              let openerTabID = tab.state.openerTabID else {
+            return nil
+        }
+        return regularTabs.first { $0.id == openerTabID }
+    }
+    
     func reloadOrStopSelectedTab() {
         guard let selectedTab else {
             return
         }
         
         selectedTab.state.loadingState.isLoading ? selectedTab.session.stop() : selectedTab.session.reload()
+    }
+    
+    func hardReloadSelectedTab() {
+        guard let selectedTab else {
+            return
+        }
+        
+        selectedTab.session.reload(flags: GeckoSessionLoadFlags.bypassCache)
     }
     
     var activeTabs: [Tab] {

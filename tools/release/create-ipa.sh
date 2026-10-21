@@ -10,6 +10,22 @@ ARCHIVE_DIR="$ROOT_DIR/dist/Reynard.xcarchive"
 APP_DIR="$ARCHIVE_DIR/Products/Applications"
 WORK_DIR="$ROOT_DIR/dist/Reynard"
 
+BUILD_TYPE="${1:-normal}"
+case "$BUILD_TYPE" in
+	--trollstore)
+		OUTPUT_NAME="Reynard-TrollStore.tipa"
+		PTRACE_JIT_NAME="ts_ptrace_jit"
+		;;
+	--jailbroken)
+		OUTPUT_NAME="Reynard-Jailbroken.ipa"
+		PTRACE_JIT_NAME="jb_ptrace_jit"
+		;;
+	*)
+		BUILD_TYPE="normal"
+		OUTPUT_NAME="Reynard.ipa"
+		;;
+esac
+
 cd "$ROOT_DIR"
 
 if [ ! -d "$APP_DIR" ]; then
@@ -30,27 +46,37 @@ plutil -replace CFBundleIdentifier -string "com.minh-ton.Reynard" "$APP_PATH/Inf
 plutil -replace CFBundleIdentifier -string "com.minh-ton.Reynard.Helper" "$APP_PATH/PlugIns/Reynard Helper.appex/Info.plist"
 plutil -replace CFBundleIdentifier -string "com.minh-ton.Reynard.OpenIn" "$APP_PATH/PlugIns/OpenIn.appex/Info.plist"
 
-rm -rf "$WORK_DIR" "$ROOT_DIR/dist/Reynard.ipa" "$ROOT_DIR/dist/Reynard-TrollStore.ipa"
+rm -rf "$WORK_DIR" "$ROOT_DIR/dist/$OUTPUT_NAME"
 mkdir -p "$WORK_DIR/Payload"
 cp -R "$APP_PATH" "$WORK_DIR/Payload/"
 
 cd "$WORK_DIR"
-zip -r ../Reynard.ipa Payload -x "._*" -x ".DS_Store" -x "__MACOSX" # normal ipa
 
-PTRACE_JIT_SRC="$ROOT_DIR/browser/Reynard/JIT/Unsandboxed/ptrace_jit.c"
-PTRACE_JIT_OUT="Payload/Reynard.app/ptrace_jit"
+if [ "$BUILD_TYPE" != "normal" ]; then
+	PTRACE_JIT_SRC="$ROOT_DIR/browser/Reynard/JIT/Unsandboxed/ptrace_jit.c"
+	PTRACE_JIT_OUT="Payload/Reynard.app/$PTRACE_JIT_NAME"
 
-"$CLANG_PATH" \
-	-arch arm64 \
-	-isysroot "$SDK_PATH" \
-	-miphoneos-version-min=13.0 \
-	-Os \
-	"$PTRACE_JIT_SRC" \
-	-o "$PTRACE_JIT_OUT"
+	"$CLANG_PATH" \
+		-arch arm64 \
+		-isysroot "$SDK_PATH" \
+		-miphoneos-version-min=13.0 \
+		-Os \
+		"$PTRACE_JIT_SRC" \
+		-o "$PTRACE_JIT_OUT"
 
-chmod 0755 "$PTRACE_JIT_OUT"
-ldid -S"$ROOT_DIR/browser/Reynard/JIT/Unsandboxed/ptrace_jit.entitlements" "$PTRACE_JIT_OUT"
-ldid -S"$ROOT_DIR/browser/Reynard/Entitlements/Reynard.private.entitlements" "Payload/Reynard.app/Reynard"
-ldid -S"$ROOT_DIR/browser/Helper/Entitlements/Reynard-Helper.private.entitlements" "Payload/Reynard.app/PlugIns/Reynard Helper.appex/Reynard Helper"
-zip -r ../Reynard-TrollStore.tipa Payload -x "._*" -x ".DS_Store" -x "__MACOSX" # trollstore ipa
-cp ../Reynard-TrollStore.tipa ../Reynard-Jailbroken.ipa # for jailbroken users
+	chmod 0755 "$PTRACE_JIT_OUT"
+	ldid -S"$ROOT_DIR/browser/Reynard/JIT/Unsandboxed/ptrace_jit.entitlements" "$PTRACE_JIT_OUT"
+	ldid -S"$ROOT_DIR/browser/Reynard/Entitlements/Reynard.private.entitlements" "Payload/Reynard.app/Reynard"
+	ldid -S"$ROOT_DIR/browser/Helper/Entitlements/Reynard-Helper.private.entitlements" "Payload/Reynard.app/PlugIns/Reynard Helper.appex/Reynard Helper"
+fi
+
+if [ "$BUILD_TYPE" = "--jailbroken" ]; then
+	# Since releases are now built on GitHub Actions, and it does not have proper signing yet (i believe it
+	# requires a paid Apple developer account because of using the free one we would have to replace the
+	# provisioning profile once every 7 days?). So this is a workaround for the issue where libhooker-based
+	# jailbreaks just refuse to load the adhoc signed dylib and cause the app to crash.
+	curl --location --output "Reynard-0.10.0.ipa" "https://github.com/minh-ton/reynard-browser/releases/download/0.10.0/Reynard.ipa" # 0.10.0 is the last one that is properly signed
+	unzip -p "Reynard-0.10.0.ipa" "Payload/Reynard.app/Frameworks/libswift_Concurrency.dylib" > "Payload/Reynard.app/Frameworks/libswift_Concurrency.dylib"
+fi
+
+zip -r "../$OUTPUT_NAME" Payload -x "._*" -x ".DS_Store" -x "__MACOSX"

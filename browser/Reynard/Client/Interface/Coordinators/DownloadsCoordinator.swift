@@ -57,10 +57,12 @@ final class DownloadsCoordinator {
         }
     }
     
+    // MARK: - Download Confirmation
+    
     func enqueueConfirmation(_ pendingDownload: DownloadStore.PendingDownload) {
         queueConfirmation(pendingDownload) { shouldStart in
             if shouldStart {
-                DownloadStore.shared.start(pendingDownload)
+                DownloadStore.shared.startDownload(pendingDownload)
             }
         }
     }
@@ -69,9 +71,21 @@ final class DownloadsCoordinator {
         return await withCheckedContinuation { continuation in
             queueConfirmation(pendingDownload) { shouldStart in
                 if shouldStart {
-                    DownloadStore.shared.start(pendingDownload)
+                    DownloadStore.shared.startDownload(pendingDownload)
                 }
                 continuation.resume(returning: shouldStart)
+            }
+        }
+    }
+    
+    func confirmWebExtensionDownload(_ pendingDownload: DownloadStore.PendingDownload) async -> DownloadStore.WebExtensionDownloadItem? {
+        return await withCheckedContinuation { continuation in
+            queueConfirmation(pendingDownload) { shouldStart in
+                guard shouldStart else {
+                    continuation.resume(returning: nil)
+                    return
+                }
+                continuation.resume(returning: DownloadStore.shared.startDownload(pendingDownload))
             }
         }
     }

@@ -1,15 +1,26 @@
 diff --git a/gfx/thebes/IOSPlatformFontList.mm b/gfx/thebes/IOSPlatformFontList.mm
-index 6342e7e84c32..e716af563d6d 100644
+index b44b28d1d070..de426e34db0f 100644
 --- a/gfx/thebes/IOSPlatformFontList.mm
 +++ b/gfx/thebes/IOSPlatformFontList.mm
-@@ -3,16 +3,69 @@
-  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+@@ -4,15 +4,94 @@
  
+ #include "IOSPlatformFontList.h"
  #import <UIKit/UIKit.h>
 +#include "mozilla/FontPropertyTypes.h"
- #include "IOSPlatformFontList.h"
  
- IOSPlatformFontList::IOSPlatformFontList() : CoreTextFontList() {}
+-IOSPlatformFontList::IOSPlatformFontList() : CoreTextFontList() {}
++static const char kNewYorkFontFamilyName[] = "-apple-system-ui-serif";
++
++IOSPlatformFontList::IOSPlatformFontList() : CoreTextFontList() {
++  UIFontDescriptor* descriptor = [[UIFont systemFontOfSize:17.0].fontDescriptor
++      fontDescriptorWithDesign:UIFontDescriptorSystemDesignSerif];
++  if (descriptor) {
++    UIFont* font = [UIFont fontWithDescriptor:descriptor size:17.0];
++    mNewYorkFontFamily = new CTFontFamily(
++        nsDependentCString(kNewYorkFontFamilyName), (__bridge CTFontRef)font,
++        mozilla::gfx::UnscaledFont::DescriptorProvenance::SystemUISerif);
++  }
++}
  
  IOSPlatformFontList::~IOSPlatformFontList() {}
  
@@ -52,9 +63,9 @@ index 6342e7e84c32..e716af563d6d 100644
 +                          : mozilla::FontWeight::NORMAL;
 +
 +  float width = widthTrait ? widthTrait.floatValue : 0.0f;
-+  aFontStyle.stretch = width > 0.1f    ? mozilla::FontStretch::EXPANDED
-+                       : width < -0.1f ? mozilla::FontStretch::CONDENSED
-+                                       : mozilla::FontStretch::NORMAL;
++  aFontStyle.width = width > 0.1f    ? mozilla::FontWidth::EXPANDED
++                     : width < -0.1f ? mozilla::FontWidth::CONDENSED
++                                     : mozilla::FontWidth::NORMAL;
 +  aFontStyle.size = aFont.pointSize;
 +  aFontStyle.systemFont = true;
 +}
@@ -70,6 +81,21 @@ index 6342e7e84c32..e716af563d6d 100644
 +
 +  aSystemFontName.AssignASCII("-apple-system");
 +  FillStyleFromUIFont(font, aFontStyle);
++}
++
++bool IOSPlatformFontList::FindAndAddFamiliesLocked(
++    FontVisibilityProvider* aFontVisibilityProvider,
++    mozilla::StyleGenericFontFamily aGeneric, const nsACString& aFamily,
++    nsTArray<FamilyAndGeneric>* aOutput, FindFamiliesFlags aFlags,
++    gfxFontStyle* aStyle, nsAtom* aLanguage, gfxFloat aDevToCssSize) {
++  if (aFamily.EqualsLiteral(kNewYorkFontFamilyName) && mNewYorkFontFamily) {
++    aOutput->AppendElement(mNewYorkFontFamily);
++    return true;
++  }
++
++  return CoreTextFontList::FindAndAddFamiliesLocked(
++      aFontVisibilityProvider, aGeneric, aFamily, aOutput, aFlags, aStyle,
++      aLanguage, aDevToCssSize);
  }
  
  nsTArray<std::pair<const char**, uint32_t>>

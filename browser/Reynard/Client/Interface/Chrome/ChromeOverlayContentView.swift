@@ -20,6 +20,7 @@ final class ChromeOverlayContentView: UIView {
         static let backgroundAlpha: CGFloat = 0.28
         static let shadowOpacity: Float = 0.16
         static let shadowOffset = CGSize(width: 0, height: 8)
+        static let borderWidth: CGFloat = 0.5
     }
     
     enum Page: Hashable {
@@ -72,7 +73,13 @@ final class ChromeOverlayContentView: UIView {
     private var pageControllers: [Page: UIViewController] = [:]
     
     private let backgroundView: UIVisualEffectView = {
-        let view = UIVisualEffectView(effect: UIBlurEffect(style: .systemChromeMaterial))
+        let effect: UIVisualEffect
+        if #available(iOS 26.0, *) {
+            effect = UIGlassEffect.nonAdaptive(style: .regular)
+        } else {
+            effect = UIBlurEffect(style: .systemMaterial)
+        }
+        let view = UIVisualEffectView(effect: effect)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.contentView.backgroundColor = UIColor.systemBackground.withAlphaComponent(UX.backgroundAlpha)
         view.layer.cornerCurve = .continuous
@@ -120,7 +127,7 @@ final class ChromeOverlayContentView: UIView {
             return
         }
         
-        updateShadowColor()
+        updateBorderColor()
     }
     
     // MARK: - Configuration
@@ -132,7 +139,11 @@ final class ChromeOverlayContentView: UIView {
         layer.cornerCurve = .continuous
         layer.shadowOpacity = UX.shadowOpacity
         layer.shadowOffset = UX.shadowOffset
-        updateShadowColor()
+        layer.shadowColor = UIColor.black.cgColor
+        if #unavailable(iOS 26.0) {
+            layer.borderWidth = UX.borderWidth
+        }
+        updateBorderColor()
         
         if #available(iOS 26.0, *) {
             layer.cornerRadius = UX.modernCornerRadius
@@ -176,8 +187,12 @@ final class ChromeOverlayContentView: UIView {
         }
     }
     
-    private func updateShadowColor() {
-        layer.shadowColor = (traitCollection.userInterfaceStyle == .dark ? UIColor.white : .black).cgColor
+    private func updateBorderColor() {
+        if #available(iOS 26.0, *) {
+            layer.borderColor = UIColor.clear.cgColor
+        } else {
+            layer.borderColor = UIColor.separator.withAlphaComponent(0.2).cgColor
+        }
     }
     
     private var overlayCornerRadius: CGFloat {
