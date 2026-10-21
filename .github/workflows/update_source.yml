@@ -1,41 +1,17 @@
-name: Update Source
+name: Validate AltSource metadata (manual only)
 
+# The original upstream updater publishes to a hard-coded upstream release tag
+# using a token that this fork does not own. Do not run it on fork prereleases.
 on:
-  release:
-    types: [published]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
-  update-source:
+  validate:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install requests
-
-    - name: Update JSON source
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        python .github/update_source.py
-    
-    - name: Update apps.json in Release 1.0
-      uses: softprops/action-gh-release@v3
-      with:
-        tag_name: "0.0.1-a1"
-        files: |
-          .github/source.json
-        token: ${{ secrets.UPDATE_SOURCE_TOKEN }}
+      - uses: actions/checkout@v4
+      - name: Validate existing upstream-compatible source metadata
+        run: python3 -m json.tool .github/source.json > /dev/null

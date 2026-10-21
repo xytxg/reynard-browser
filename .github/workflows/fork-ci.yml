@@ -1,0 +1,74 @@
+name: Reynard Fork CI
+
+on:
+  push:
+    branches:
+      - main
+      - work/reynard-oss-2026-10-21
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: reynard-fork-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  localization:
+    name: Validate Chinese catalogs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Verify translations and format strings
+        run: python3 tools/tests/check_zh_hans.py
+      - name: Validate Python syntax
+        run: python3 -m py_compile tools/tests/check_zh_hans.py
+
+  build:
+    name: Build standard IPA and TrollStore TIPA
+    needs: localization
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' }}
+    uses: ./.github/workflows/build.yml
+    with:
+      checkout_ref: ${{ github.sha }}
+      build_normal_ipa: true
+      build_trollstore_tipa: true
+      build_jailbroken_ipa: false
+
+  preview:
+    name: Publish verified preview
+    needs: build
+    if: ${{ github.event_name == 'push' && github.ref_name == 'work/reynard-oss-2026-10-21' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download verified IPA artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Verify both packages exist
+        run: |
+          set -euo pipefail
+          test -s dist/Reynard.ipa
+          test -s dist/Reynard-TrollStore.tipa
+          sha256sum dist/Reynard.ipa dist/Reynard-TrollStore.tipa > dist/SHA256SUMS.txt
+      - name: Publish prerelease (only on success)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag="zh-preview-${GITHUB_RUN_NUMBER}"
+          gh release create "$tag" \
+            dist/Reynard.ipa \
+            dist/Reynard-TrollStore.tipa \
+            dist/SHA256SUMS.txt \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "Reynard Browser 中文预览版 · #${GITHUB_RUN_NUMBER}" \
+            --notes "Built from commit $GITHUB_SHA using the synchronized upstream Gecko/iOS source. Experimental preview; test on your device before daily use. The standard IPA needs compatible signing/sideloading, and the TIPA requires a supported TrollStore setup. Original browser: minh-ton/reynard-browser." \
+            --prerelease

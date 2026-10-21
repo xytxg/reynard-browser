@@ -204,6 +204,12 @@
             "state" : "translated",
             "value" : "%1$@ again to %2$@…"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ 再次前往 %2$@…"
+          }
         }
       }
     },
@@ -2417,8 +2423,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "1. 按照 %1$@ 中的说明安装 libimobiledevice。\n2. 使用 USB 将此设备连接到电脑，并在提示时点击“信任”。\n3. 在终端运行 iproxy %2$d:%3$d，并保持其运行。\n4. 在电脑的 Firefox 中打开 about:debugging，然后选择“设置”。\n5. 在“网络位置”中添加 localhost:%4$d，然后点击“连接”。"
           }
         },
         "zh-Hant" : {
@@ -9748,8 +9754,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "深色"
           }
         },
         "zh-Hant" : {
@@ -9942,8 +9948,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "缩小字体"
           }
         },
         "zh-Hant" : {
@@ -10713,8 +10719,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "开发者"
           }
         },
         "zh-Hant" : {
@@ -11292,8 +11298,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "完成"
           }
         },
         "zh-Hant" : {
@@ -13343,8 +13349,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "退出阅读模式"
           }
         },
         "zh-Hant" : {
@@ -13407,8 +13413,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "隐藏工具栏"
           }
         },
         "zh-Hant" : {
@@ -13983,8 +13989,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "放大字体"
           }
         },
         "zh-Hant" : {
@@ -15268,8 +15274,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "浅色"
           }
         },
         "zh-Hant" : {
@@ -15974,8 +15980,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "将其他标签页静音"
           }
         },
         "zh-Hant" : {
@@ -16038,8 +16044,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "将此标签页静音"
           }
         },
         "zh-Hant" : {
@@ -18483,8 +18489,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "在后台打开"
           }
         },
         "zh-Hant" : {
@@ -18931,8 +18937,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "在新标签页中打开链接"
           }
         },
         "zh-Hant" : {
@@ -19397,6 +19403,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Page Stopped Working"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "网页已停止运行"
           }
         }
       }
@@ -20224,8 +20236,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "正在准备打印网页…"
           }
         },
         "zh-Hant" : {
@@ -20545,8 +20557,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "打印"
           }
         },
         "zh-Hant" : {
@@ -20993,8 +21005,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "阅读模式"
           }
         },
         "zh-Hant" : {
@@ -21249,8 +21261,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "远程调试"
           }
         },
         "zh-Hant" : {
@@ -21313,8 +21325,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "远程调试端口"
           }
         },
         "zh-Hant" : {
@@ -21377,8 +21389,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "通过 USB 远程调试"
           }
         },
         "zh-Hant" : {
@@ -21846,6 +21858,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "report the problem"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "报告问题"
           }
         }
       }
@@ -22479,8 +22497,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "重置阅读模式设置"
           }
         },
         "zh-Hant" : {
@@ -22929,8 +22947,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "无衬线字体"
           }
         },
         "zh-Hant" : {
@@ -24146,8 +24164,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "复古棕色"
           }
         },
         "zh-Hant" : {
@@ -24211,8 +24229,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "衬线字体"
           }
         },
         "zh-Hant" : {
@@ -25364,8 +25382,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "显示或隐藏阅读模式"
           }
         },
         "zh-Hant" : {
@@ -25492,8 +25510,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "显示阅读模式"
           }
         },
         "zh-Hant" : {
@@ -26453,8 +26471,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "立即切换标签页"
           }
         },
         "zh-Hant" : {
@@ -26646,8 +26664,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "播放声音的标签页"
           }
         },
         "zh-Hant" : {
@@ -26921,6 +26939,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The page stopped working unexpectedly.\n\nTry reloading the page. If this keeps happening, please %@."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "网页意外停止运行。\n\n请尝试重新加载。如果问题持续出现，请%@。"
           }
         }
       }
@@ -28155,6 +28179,12 @@
             "state" : "translated",
             "value" : "Unable to Open Page"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法打开网页"
+          }
         }
       }
     },
@@ -28338,8 +28368,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "取消此标签页静音"
           }
         },
         "zh-Hant" : {
@@ -29491,8 +29521,8 @@
         },
         "zh-Hans" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : ""
+            "state" : "translated",
+            "value" : "自动使用阅读模式"
           }
         },
         "zh-Hant" : {
