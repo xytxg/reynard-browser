@@ -1,9 +1,9 @@
 diff --git a/widget/uikit/nsClipboard.mm b/widget/uikit/nsClipboard.mm
 new file mode 100644
-index 000000000000..8a1c46feb4f0
+index 000000000000..db35e4638780
 --- /dev/null
 +++ b/widget/uikit/nsClipboard.mm
-@@ -0,0 +1,300 @@
+@@ -0,0 +1,433 @@
 +/* This Source Code Form is subject to the terms of the Mozilla Public
 + * License, v. 2.0. If a copy of the MPL was not distributed with this
 + * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -13,12 +13,18 @@ index 000000000000..8a1c46feb4f0
 +
 +#import <UIKit/UIKit.h>
 +
++#include <algorithm>
++
 +#include "nsClipboard.h"
 +
++#include "imgIContainer.h"
++#include "imgITools.h"
 +#include "nsCOMPtr.h"
 +#include "nsComponentManagerUtils.h"
++#include "nsIInputStream.h"
 +#include "nsISupportsPrimitives.h"
 +#include "nsPrimitiveHelpers.h"
++#include "nsStringStream.h"
 +
 +using namespace mozilla;
 +
@@ -27,6 +33,7 @@ index 000000000000..8a1c46feb4f0
 +static NSString* const kUIKitClipboardPlainTextType = @"public.utf8-plain-text";
 +static NSString* const kUIKitClipboardTextType = @"public.text";
 +static NSString* const kUIKitClipboardHTMLType = @"public.html";
++static NSString* const kUIKitClipboardPNGType = @"public.png";
 +
 +static void AssignNSStringTo(nsAString& aDestination, NSString* aSource) {
 +  if (!aSource) {
@@ -123,6 +130,66 @@ index 000000000000..8a1c46feb4f0
 +  return NS_OK;
 +}
 +
++static bool HasTransferableImage(nsITransferable* aTransferable) {
++  nsTArray<nsCString> flavors;
++  if (NS_FAILED(aTransferable->FlavorsTransferableCanExport(flavors))) {
++    return false;
++  }
++
++  return std::any_of(flavors.begin(), flavors.end(),
++                     [](const nsCString& flavor) {
++                       return flavor.EqualsLiteral(kNativeImageMime);
++                     });
++}
++
++static NSData* ReadInputStream(nsIInputStream* aInputStream) {
++  NSMutableData* data = [NSMutableData data];
++  char buffer[8192];
++
++  while (true) {
++    uint32_t bytesRead = 0;
++    nsresult rv = aInputStream->Read(buffer, sizeof(buffer), &bytesRead);
++    if (NS_FAILED(rv)) {
++      return nil;
++    }
++    if (!bytesRead) {
++      break;
++    }
++    [data appendBytes:buffer length:bytesRead];
++  }
++
++  return data;
++}
++
++static NSData* EncodeTransferableImage(nsITransferable* aTransferable) {
++  nsCOMPtr<nsISupports> supports;
++  nsresult rv = aTransferable->GetTransferData(kNativeImageMime,
++                                               getter_AddRefs(supports));
++  if (NS_FAILED(rv)) {
++    return nil;
++  }
++
++  nsCOMPtr<imgIContainer> image(do_QueryInterface(supports));
++  if (!image) {
++    return nil;
++  }
++
++  nsCOMPtr<imgITools> imageTools =
++      do_CreateInstance("@mozilla.org/image/tools;1");
++  if (!imageTools) {
++    return nil;
++  }
++
++  nsCOMPtr<nsIInputStream> inputStream;
++  rv = imageTools->EncodeImage(image, "image/png"_ns, u""_ns,
++                               getter_AddRefs(inputStream));
++  if (NS_FAILED(rv) || !inputStream) {
++    return nil;
++  }
++
++  return ReadInputStream(inputStream);
++}
++
 +static mozilla::Result<nsCOMPtr<nsISupports>, nsresult> PrimitiveFromNSString(
 +    const nsACString& aFlavor, NSString* aString) {
 +  if (!aString || ![aString length]) {
@@ -182,6 +249,12 @@ index 000000000000..8a1c46feb4f0
 +    return rv;
 +  }
 +
++  const bool hasImage = HasTransferableImage(aTransferable);
++  NSData* imageData = hasImage ? EncodeTransferableImage(aTransferable) : nil;
++  if (hasImage && !imageData) {
++    return NS_ERROR_FAILURE;
++  }
++
 +  NSMutableDictionary* item = [NSMutableDictionary dictionary];
 +  if (!text.IsEmpty()) {
 +    NSString* textValue = ToNSString(text);
@@ -194,6 +267,9 @@ index 000000000000..8a1c46feb4f0
 +    if (htmlData) {
 +      item[kUIKitClipboardHTMLType] = htmlData;
 +    }
++  }
++  if (imageData) {
++    item[kUIKitClipboardPNGType] = imageData;
 +  }
 +  if (![item count]) {
 +    return NS_OK;
@@ -242,8 +318,59 @@ index 000000000000..8a1c46feb4f0
 +  }
 +
 +  if (aFlavor.EqualsLiteral(kHTMLMime)) {
-+    return PrimitiveFromNSString(
-+        aFlavor, GetStringValue(pasteboard, kUIKitClipboardHTMLType));
++    NSString* html = GetStringValue(pasteboard, kUIKitClipboardHTMLType);
++    if (!html && pasteboard.hasImages) {
++      NSData* png = UIImagePNGRepresentation(pasteboard.image);
++      if (!png) {
++        return nsCOMPtr<nsISupports>{};
++      }
++
++      CGSize size = CGSizeZero;
++      for (NSItemProvider* provider in pasteboard.itemProviders) {
++        if ([provider canLoadObjectOfClass:UIImage.class]) {
++          size = provider.preferredPresentationSize;
++          break;
++        }
++      }
++
++      // Stickers have a display size separate from their pixel size.
++      NSString* dimensions = @"";
++      if (size.width > 0 && size.height > 0) {
++        dimensions = [NSString stringWithFormat:@" width=\"%g\" height=\"%g\"",
++                                                size.width, size.height];
++      }
++      html = [NSString
++          stringWithFormat:@"<img src=\"data:image/png;base64,%@\"%@>",
++                           [png base64EncodedStringWithOptions:0], dimensions];
++    }
++
++    if (aThreshold && html.length * 2 > aThreshold) {
++      return Err(NS_ERROR_CLIPBOARD_TOO_BIG);
++    }
++    return PrimitiveFromNSString(aFlavor, html);
++  }
++
++  if (aFlavor.EqualsLiteral(kPNGImageMime)) {
++    NSData* png = [pasteboard dataForPasteboardType:kUIKitClipboardPNGType];
++    if (!png && pasteboard.hasImages) {
++      png = UIImagePNGRepresentation(pasteboard.image);
++    }
++    if (!png) {
++      return nsCOMPtr<nsISupports>{};
++    }
++    if (aThreshold && png.length > aThreshold) {
++      return Err(NS_ERROR_CLIPBOARD_TOO_BIG);
++    }
++
++    nsCOMPtr<nsIInputStream> stream;
++    nsresult rv = NS_NewByteInputStream(
++        getter_AddRefs(stream),
++        Span(static_cast<const char*>(png.bytes), [png length]),
++        NS_ASSIGNMENT_COPY);
++    if (NS_FAILED(rv)) {
++      return Err(rv);
++    }
++    return nsCOMPtr<nsISupports>(std::move(stream));
 +  }
 +
 +  return nsCOMPtr<nsISupports>{};
@@ -296,8 +423,14 @@ index 000000000000..8a1c46feb4f0
 +      continue;
 +    }
 +
-+    if (flavor.EqualsLiteral(kHTMLMime) &&
-+        GetStringValue(pasteboard, kUIKitClipboardHTMLType)) {
++    if (flavor.EqualsLiteral(kHTMLMime)) {
++      if (GetStringValue(pasteboard, kUIKitClipboardHTMLType) ||
++          pasteboard.hasImages) {
++        return true;
++      }
++    }
++
++    if (flavor.EqualsLiteral(kPNGImageMime) && pasteboard.hasImages) {
 +      return true;
 +    }
 +  }

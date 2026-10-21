@@ -25,7 +25,8 @@ extension BrowserViewController: AddressBarDelegate, AddressBarGestureDelegate {
             displayText?.isEmpty == false ? displayText : selectedURL,
             locationText: selectedURL,
             locationTitle: selectedTab?.title,
-            showsBarMenu: displayText?.isEmpty != false && selectedURL?.isEmpty == false
+            showsBarMenu: displayText?.isEmpty != false && selectedURL?.isEmpty == false,
+            isErrorPage: selectedTab?.state.loadError != nil
         )
         browserChrome.setAddressBarLoadingProgress(
             selectedTab?.state.loadingState.progress ?? 0,
@@ -39,14 +40,80 @@ extension BrowserViewController: AddressBarDelegate, AddressBarGestureDelegate {
         }
         browserChrome.updateAddressBarMenu(
             url: selectedURL,
-            usesDesktopWebsite: usesDesktopWebsite
+            usesDesktopWebsite: usesDesktopWebsite,
+            readerMode: selectedTab?.state.readerMode ?? ReaderModeState()
         )
+        
+        refreshAddressBarAudioButton()
+    }
+    
+    func refreshAddressBarAudioButton() {
+        let selectedTab = tabManager.selectedTab
+        let playingTabs = tabsPlayingAudio
+        browserChrome.updateAddressBarAudioButton(
+            isVisible: !playingTabs.isEmpty,
+            isMuted: selectedTab?.isMuted == true ||
+            (!playingTabs.isEmpty && playingTabs.allSatisfy(\.isMuted))
+        )
+    }
+    
+    private var tabsPlayingAudio: [Tab] {
+        return tabManager.activeTabs.filter { $0.state.isPlayingAudio }
     }
     
     // MARK: - AddressBarDelegate
     
+    func addressBarAudioMenuState(_ addressBar: AddressBar) -> AddressBarMenu.AudioState? {
+        let playingTabs = tabsPlayingAudio
+        guard !playingTabs.isEmpty else {
+            return nil
+        }
+        let selectedTab = tabManager.selectedTab
+        return AddressBarMenu.AudioState(
+            playingTabs: playingTabs.map { tab in
+                let title = tab.title.trimmingCharacters(in: .whitespacesAndNewlines)
+                return AddressBarMenu.AudioTabItem(
+                    id: tab.id,
+                    title: title.isEmpty ? tab.url ?? NSLocalizedString("Untitled", comment: "") : title,
+                    favicon: tab.favicon,
+                    isMuted: tab.isMuted
+                )
+            },
+            selectedTabID: selectedTab?.id,
+            isSelectedTabMuted: selectedTab?.isMuted ?? false
+        )
+    }
+    
     func addressBarDidRequestReloadOrStop(_ addressBar: AddressBar) {
+        if tabManager.selectedTab?.session.isOpen() == false {
+            reloadTerminatedTab()
+            return
+        }
+        
         tabManager.reloadOrStopSelectedTab()
+    }
+    
+    func addressBarDidRequestHardReload(_ addressBar: AddressBar) {
+        if tabManager.selectedTab?.session.isOpen() == false {
+            reloadTerminatedTab()
+            return
+        }
+        
+        tabManager.hardReloadSelectedTab()
+    }
+    
+    func addressBar(_ addressBar: AddressBar, didSelectAudioAction action: AddressBarMenu.AudioAction) {
+        switch action {
+        case let .selectTab(tabID):
+            guard let index = tabManager.activeTabs.firstIndex(where: { $0.id == tabID }) else {
+                return
+            }
+            tabManager.selectTab(at: index, mode: tabManager.selectedTabMode)
+        case let .setMuted(tabID, muted):
+            tabManager.setMuted(muted, for: tabID)
+        case let .muteOtherTabs(excluding: tabID):
+            tabManager.muteOtherPlayingTabs(excluding: tabID)
+        }
     }
     
     func addressBarAddonItems(_ addressBar: AddressBar) -> [AddressBarMenu.AddonItem] {
@@ -60,6 +127,51 @@ extension BrowserViewController: AddressBarDelegate, AddressBarGestureDelegate {
     
     func addressBar(_ addressBar: AddressBar, didSelectAddon item: AddonMenuItem) {
         addonCoordinator.activateMenuItem(item)
+    }
+    
+    func addressBarDidRequestFindInPage(_ addressBar: AddressBar) {
+        guard tabManager.selectedTab != nil else {
+            return
+        }
+        
+        browserChrome.showActionBar(.findInPage(), animated: true)
+    }
+    
+    func addressBarDidRequestReader(_ addressBar: AddressBar) {
+        guard let tab = tabManager.selectedTab else { return }
+        guard tab.state.readerMode.isActive else {
+            _ = tabManager.readerMode.enter(in: tab)
+            return
+        }
+        
+        let controller = ReaderSettingsViewController(
+            tabID: tab.id,
+            tabManager: tabManager,
+            readerMode: tabManager.readerMode
+        )
+        controller.onFindInPage = { [weak self] in
+            guard let self, self.tabManager.selectedTab === tab else { return }
+            self.browserChrome.showActionBar(.findInPage(), animated: true)
+        }
+        controller.configurePresentation(asPopover: browserLayout.chromeMode == .pad)
+        if controller.modalPresentationStyle == .pageSheet {
+            controller.onVisibilityChanged = { [weak self] visible in
+                guard let self else { return }
+                if visible {
+                    self.toolbarController.collapseBottomToolbar()
+                } else if !self.browserChrome.isShowingFindInPage {
+                    self.toolbarController.restoreBottomToolbar()
+                }
+            }
+        }
+        if let popover = controller.popoverPresentationController {
+            let sourceButton = browserChrome.addressBarButton
+            popover.sourceView = sourceButton
+            popover.sourceRect = sourceButton.bounds
+            popover.permittedArrowDirections = [.up, .down]
+            popover.delegate = controller
+        }
+        present(controller, animated: true)
     }
     
     func addressBarDidRequestPageZoom(_ addressBar: AddressBar) {
@@ -79,6 +191,10 @@ extension BrowserViewController: AddressBarDelegate, AddressBarGestureDelegate {
         refreshAddressBar()
     }
     
+    func addressBarDidRequestHideToolbar(_ addressBar: AddressBar) {
+        toolbarController.collapseUntilReset()
+    }
+    
     func addressBarDidRequestWebsiteSettings(_ addressBar: AddressBar) {
         presentWebsiteSettings()
     }
@@ -93,6 +209,29 @@ extension BrowserViewController: AddressBarDelegate, AddressBarGestureDelegate {
         }
         
         return tabManager.shareableURL(for: selectedTab)
+    }
+    
+    func addressBarTabCount(_ addressBar: AddressBar) -> Int {
+        return tabManager.activeTabs.count
+    }
+    
+    func addressBarDidRequestCloseThisTab(_ addressBar: AddressBar) {
+        closeTab()
+    }
+    
+    func addressBarDidRequestCloseAllTabs(_ addressBar: AddressBar) {
+        closeAllTabs()
+    }
+    
+    func addressBar(
+        _ addressBar: AddressBar,
+        didRequestShareLink url: URL
+    ) {
+        presentShareSheet(
+            items: [url],
+            sourceView: addressBar,
+            sourceRect: addressBar.bounds
+        )
     }
     
     // MARK: - AddressBarGestureDelegate
@@ -133,6 +272,10 @@ extension BrowserViewController: AddressBarDelegate, AddressBarGestureDelegate {
         return tabManager.activeTabs
     }
     
+    func pageBackgroundColor(for tab: Tab) -> UIColor {
+        return sessionManager.pageBackgroundColor(for: tab.session)
+    }
+    
     func selectTabFromGesture(at index: Int, mode: TabMode) {
         tabManager.selectTab(at: index, mode: mode)
     }
@@ -149,7 +292,7 @@ extension BrowserViewController: AddressBarDelegate, AddressBarGestureDelegate {
         }
         
         if let tab = tabManager.activeTabs[safe: index],
-           let previewImage = homepageOverlayCoordinator.previewImage(for: tab, size: contentView.bounds.size) {
+           let previewImage = homepageOverlayCoordinator.previewImage(for: tab) {
             tabManager.updateThumbnail(previewImage, forTabAt: index, mode: mode)
         }
         
@@ -164,15 +307,23 @@ extension BrowserViewController: AddressBarDelegate, AddressBarGestureDelegate {
         setTabOverviewVisible(true, animated: animated)
     }
     
-    func addressBarGestureWillBegin() {
+    func addressBarTransitionWillBegin(prepareForGesture: Bool) {
+        toolbarController.lock(for: .addressBarTransition)
+        guard prepareForGesture else {
+            return
+        }
         browserChrome.dismissActionBar(animated: false)
         captureTabThumbnailIfNeeded()
     }
     
+    func addressBarTransitionDidEnd() {
+        toolbarController.unlock(for: .addressBarTransition)
+    }
+    
     private func captureTabThumbnailIfNeeded() {
         if let tab = tabManager.activeTabs[safe: tabManager.selectedTabIndex],
-           homepageOverlayCoordinator.needsHomepageThumbnail(for: tab) {
-            if let thumbnail = homepageOverlayCoordinator.previewImage(for: tab, size: contentView.bounds.size) {
+           homepageOverlayCoordinator.isHomepageTab(tab) {
+            if let thumbnail = homepageOverlayCoordinator.previewImage(for: tab) {
                 tabManager.updateThumbnail(thumbnail, forTabAt: tabManager.selectedTabIndex, mode: tabManager.selectedTabMode)
             }
             return
@@ -182,7 +333,7 @@ extension BrowserViewController: AddressBarDelegate, AddressBarGestureDelegate {
     }
     
     func storedContentPreview(from tab: Tab) -> UIImage? {
-        guard homepageOverlayCoordinator.needsHomepageThumbnail(for: tab) else {
+        guard homepageOverlayCoordinator.isHomepageTab(tab) else {
             return nil
         }
         
@@ -223,12 +374,10 @@ extension BrowserViewController: AddressBarDelegate, AddressBarGestureDelegate {
             return
         }
         
-        let navigationController = UINavigationController(rootViewController: settingsController)
-        navigationController.modalPresentationStyle = .pageSheet
-        present(navigationController, animated: true)
+        presentContentModal(settingsController)
     }
     
-    private func presentBookmarkEditor(addToFavorites: Bool) {
+    func presentBookmarkEditor(addToFavorites: Bool) {
         guard let selectedTab = tabManager.selectedTab,
               let urlString = selectedTab.url?.trimmingCharacters(in: .whitespacesAndNewlines),
               let url = URL(string: urlString) else {
@@ -249,8 +398,6 @@ extension BrowserViewController: AddressBarDelegate, AddressBarGestureDelegate {
             bookmarkController = EditBookmarkViewController(title: title, url: url)
         }
         
-        let navigationController = UINavigationController(rootViewController: bookmarkController)
-        navigationController.modalPresentationStyle = .pageSheet
-        present(navigationController, animated: true)
+        presentContentModal(bookmarkController)
     }
 }

@@ -10,16 +10,36 @@ import UIKit
 public struct WebsiteModeSetting: Equatable {
     public static let mobile = WebsiteModeSetting(
         userAgentOverride: nil,
+        platformOverride: nil,
+        appVersionOverride: nil,
+        oscpuOverride: nil,
+        buildIDOverride: nil,
         userAgentMode: 0,
         viewportMode: 0
     )
     
     public let userAgentOverride: String?
+    public let platformOverride: String?
+    public let appVersionOverride: String?
+    public let oscpuOverride: String?
+    public let buildIDOverride: String?
     public let userAgentMode: Int
     public let viewportMode: Int
     
-    public init(userAgentOverride: String?, userAgentMode: Int, viewportMode: Int) {
+    public init(
+        userAgentOverride: String?,
+        platformOverride: String?,
+        appVersionOverride: String?,
+        oscpuOverride: String?,
+        buildIDOverride: String?,
+        userAgentMode: Int,
+        viewportMode: Int
+    ) {
         self.userAgentOverride = userAgentOverride
+        self.platformOverride = platformOverride
+        self.appVersionOverride = appVersionOverride
+        self.oscpuOverride = oscpuOverride
+        self.buildIDOverride = buildIDOverride
         self.userAgentMode = userAgentMode
         self.viewportMode = viewportMode
     }

@@ -73,6 +73,9 @@ final class ToolbarButton: UIButton {
     init(buttonType: ButtonType, target: AnyObject, action: Selector) {
         toolbarButtonType = buttonType
         super.init(frame: .zero)
+        if #available(iOS 13.4, *) {
+            isPointerInteractionEnabled = true
+        }
         configureAppearance()
         configureImage()
         configureTarget(target, action: action)

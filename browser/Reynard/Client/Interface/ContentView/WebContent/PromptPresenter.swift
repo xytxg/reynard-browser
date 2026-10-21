@@ -48,6 +48,9 @@ final class PromptPresenter: PromptPresenting {
             
         case .choice(let request):
             return await presentSelectPicker(session: session, request: request)
+            
+        case .share(let request):
+            return await presentShare(session: session, request: request)
         }
     }
     
@@ -79,14 +82,15 @@ final class PromptPresenter: PromptPresenting {
         }
         
         await withCheckedContinuation { continuation in
-            let alert = UIAlertController(
+            let alert = PromptAlertController(
                 title: request.title.isEmpty ? nil : request.title,
                 message: request.message.isEmpty ? nil : request.message,
                 preferredStyle: .alert
             )
-            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default) { _ in
+            alert.onDismissed = {
                 continuation.resume()
-            })
+            }
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default))
             presenter.present(alert, animated: true)
         }
     }
@@ -97,11 +101,15 @@ final class PromptPresenter: PromptPresenting {
         }
         
         return await withCheckedContinuation { continuation in
-            let alert = UIAlertController(
+            var response: PromptResponse?
+            let alert = PromptAlertController(
                 title: request.title.isEmpty ? nil : request.title,
                 message: request.message.isEmpty ? nil : request.message,
                 preferredStyle: .alert
             )
+            alert.onDismissed = {
+                continuation.resume(returning: response)
+            }
             
             for index in 0..<3 {
                 let title = buttonTitle(at: index, request: request)
@@ -114,13 +122,13 @@ final class PromptPresenter: PromptPresenting {
                     title: title,
                     style: isCancel ? .cancel : .default
                 ) { _ in
-                    continuation.resume(returning: .button(index))
+                    response = .button(index)
                 })
             }
             
             if alert.actions.isEmpty {
                 alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default) { _ in
-                    continuation.resume(returning: .button(0))
+                    response = .button(0)
                 })
             }
             
@@ -134,19 +142,21 @@ final class PromptPresenter: PromptPresenting {
         }
         
         return await withCheckedContinuation { continuation in
-            let alert = UIAlertController(
+            var response: PromptResponse?
+            let alert = PromptAlertController(
                 title: request.title.isEmpty ? nil : request.title,
                 message: request.message.isEmpty ? nil : request.message,
                 preferredStyle: .alert
             )
+            alert.onDismissed = {
+                continuation.resume(returning: response)
+            }
             alert.addTextField { textField in
                 textField.text = request.value
             }
-            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel) { _ in
-                continuation.resume(returning: nil)
-            })
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel))
             alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default) { _ in
-                continuation.resume(returning: .text(alert.textFields?.first?.text ?? ""))
+                response = .text(alert.textFields?.first?.text ?? "")
             })
             presenter.present(alert, animated: true)
         }
@@ -167,11 +177,15 @@ final class PromptPresenter: PromptPresenting {
         let passwordOnly = request.mode == "password"
         
         return await withCheckedContinuation { continuation in
-            let alert = UIAlertController(
+            var response: PromptResponse?
+            let alert = PromptAlertController(
                 title: title.isEmpty ? NSLocalizedString("Sign In", comment: "") : title,
                 message: message,
                 preferredStyle: .alert
             )
+            alert.onDismissed = {
+                continuation.resume(returning: response)
+            }
             
             if !passwordOnly {
                 alert.addTextField { textField in
@@ -190,13 +204,11 @@ final class PromptPresenter: PromptPresenting {
                 textField.isSecureTextEntry = true
             }
             
-            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel) { _ in
-                continuation.resume(returning: nil)
-            })
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel))
             alert.addAction(UIAlertAction(title: NSLocalizedString("Sign In", comment: ""), style: .default) { _ in
                 let username = passwordOnly ? request.username : alert.textFields?.first?.text ?? ""
                 let password = alert.textFields?.last?.text ?? ""
-                continuation.resume(returning: .auth(username: username, password: password))
+                response = .auth(username: username, password: password)
             })
             presenter.present(alert, animated: true)
         }
@@ -212,16 +224,20 @@ final class PromptPresenter: PromptPresenting {
         : NSLocalizedString("Are you sure you want to upload all files from \"\(request.directoryName)\"? Only do this if you trust the site.", comment: "")
         
         return await withCheckedContinuation { continuation in
-            let alert = UIAlertController(
+            var response: PromptResponse?
+            let alert = PromptAlertController(
                 title: NSLocalizedString("Confirm Upload", comment: ""),
                 message: message,
                 preferredStyle: .alert
             )
+            alert.onDismissed = {
+                continuation.resume(returning: response)
+            }
             alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel) { _ in
-                continuation.resume(returning: .folderUpload(allowed: false))
+                response = .folderUpload(allowed: false)
             })
             alert.addAction(UIAlertAction(title: NSLocalizedString("Upload", comment: ""), style: .default) { _ in
-                continuation.resume(returning: .folderUpload(allowed: true))
+                response = .folderUpload(allowed: true)
             })
             presenter.present(alert, animated: true)
         }
@@ -321,6 +337,43 @@ final class PromptPresenter: PromptPresenting {
         return result.map(PromptResponse.choices)
     }
     
+    private func presentShare(
+        session: GeckoSession,
+        request: SharePromptRequest
+    ) async -> PromptResponse? {
+        guard let presenter = UIApplication.shared.topViewController() as? BrowserViewController,
+              let sourceView = session.engineView else {
+            return nil
+        }
+        
+        let itemSource = WebShareActivityItemSource(
+            title: request.title,
+            text: request.text,
+            url: request.url
+        )
+        return await withCheckedContinuation { continuation in
+            let sourcePoint = CGPoint(
+                x: sourceView.bounds.midX,
+                y: sourceView.bounds.midY
+            )
+            presenter.presentShareSheet(
+                items: [itemSource],
+                sourceView: sourceView,
+                sourceRect: CGRect(origin: sourcePoint, size: .zero)
+            ) { completed, error in
+                let result: SharePromptResult
+                if error != nil {
+                    result = .failure
+                } else if completed {
+                    result = .success
+                } else {
+                    result = .aborted
+                }
+                continuation.resume(returning: .share(result))
+            }
+        }
+    }
+    
     private func promptAnchor(
         for anchor: PromptAnchor,
         session: GeckoSession
@@ -361,5 +414,48 @@ final class PromptPresenter: PromptPresenting {
         default:
             return ""
         }
+    }
+}
+
+private final class WebShareActivityItemSource: NSObject, UIActivityItemSource {
+    private let item: Any
+    private let title: String
+    
+    init(title: String, text: String, url: String?) {
+        self.title = title
+        let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedURL = url?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let shareURL = trimmedURL.flatMap(URL.init(string:))
+        
+        if !trimmedText.isEmpty, let trimmedURL, !trimmedURL.isEmpty {
+            item = "\(trimmedText)\n\(trimmedURL)"
+        } else if !trimmedText.isEmpty {
+            item = trimmedText
+        } else if let shareURL {
+            item = shareURL
+        } else if let trimmedURL, !trimmedURL.isEmpty {
+            item = trimmedURL
+        } else {
+            item = title
+        }
+        super.init()
+    }
+    
+    func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
+        return item
+    }
+    
+    func activityViewController(
+        _ activityViewController: UIActivityViewController,
+        itemForActivityType activityType: UIActivity.ActivityType?
+    ) -> Any? {
+        return item
+    }
+    
+    func activityViewController(
+        _ activityViewController: UIActivityViewController,
+        subjectForActivityType activityType: UIActivity.ActivityType?
+    ) -> String {
+        return title
     }
 }

@@ -82,7 +82,7 @@ final class AboutSettingsSection {
         }
         
         if let url = url(for: row) {
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            LibrarySharedUtils.openLinkInBrowser(url.absoluteString, from: viewController)
         }
     }
     
@@ -100,17 +100,18 @@ final class AboutSettingsSection {
     }
     
     private func valueCell(title: String, value: String) -> UITableViewCell {
-        let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
+        let cell = SettingsTableViewCell(style: .value1, reuseIdentifier: nil)
         cell.textLabel?.text = title
         cell.detailTextLabel?.text = value
         cell.detailTextLabel?.textColor = .secondaryLabel
         cell.selectionStyle = .none
         cell.accessoryType = .none
+        cell.configureDetailTextCopying()
         return cell
     }
     
     private func linkCell(title: String) -> UITableViewCell {
-        let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
+        let cell = SettingsTableViewCell(style: .value1, reuseIdentifier: nil)
         cell.textLabel?.text = title
         cell.textLabel?.textColor = .systemBlue
         cell.accessoryType = .disclosureIndicator

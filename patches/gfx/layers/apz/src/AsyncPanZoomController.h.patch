@@ -1,0 +1,57 @@
+diff --git a/gfx/layers/apz/src/AsyncPanZoomController.h b/gfx/layers/apz/src/AsyncPanZoomController.h
+index da535461efb0..fdea48b6b0f2 100644
+--- a/gfx/layers/apz/src/AsyncPanZoomController.h
++++ b/gfx/layers/apz/src/AsyncPanZoomController.h
+@@ -40,6 +40,8 @@
+ 
+ namespace mozilla {
+ 
++struct NativeTextInputScrollUpdate;
++
+ namespace ipc {
+ 
+ class SharedMemory;
+@@ -1349,6 +1351,10 @@ class AsyncPanZoomController {
+     return Metrics().GetLayoutScrollOffset();
+   }
+ 
++#ifdef MOZ_WIDGET_UIKIT
++  NativeTextInputScrollUpdate GetNativeTextInputScrollUpdate() const;
++#endif
++
+   // Returns the delta for the given InputData.
+   ParentLayerPoint GetDeltaForEvent(const InputData& aEvent) const;
+ 
+@@ -1593,7 +1599,6 @@ class AsyncPanZoomController {
+   /**
+    * Internal helpers for checking general state of this apzc.
+    */
+-  bool IsInTransformingState() const;
+   static bool IsTransformingState(PanZoomState aState);
+ 
+   /* ===================================================================
+@@ -1921,6 +1926,7 @@ class AsyncPanZoomController {
+ 
+  public:
+   bool IsInPanningState() const;
++  bool IsInTransformingState() const;
+ 
+   // Returns whether being in the middle of a gesture. E.g., this APZC has
+   // started handling a pan gesture but hasn't yet received pan-end, etc.
+@@ -1963,11 +1969,15 @@ class AsyncPanZoomController {
+     return mState == PINCHING || mState == ANIMATING_ZOOM;
+   }
+ 
+-  void SetFixedLayerMargins(const ScreenMargin& aMargins);
++  void SetFixedLayerMargins(const ScreenMargin& aMargins,
++                            ScreenCoord aTopInset = 0,
++                            ScreenCoord aBottomInset = 0,
++                            ScreenCoord aObscuredTopInset = 0);
+ 
+  private:
+   // The timestamp of the latest touch start event.
+   TimeStamp mTouchStartTime;
++  Maybe<TimeStamp> mPanGestureMayStartTime;
+   // The start time of the latest autoscroll animation.
+   TimeStamp mAutoscrollStartTime;
+   // Used for interpolating touch events that cross the touch-start

@@ -5,7 +5,7 @@
 //  Created by Minh Ton on 11/6/26.
 //
 
-final class SidebarMenuViewController: UIViewController, UICollectionViewDelegate, UINavigationControllerDelegate {
+final class SidebarMenuViewController: UIViewController, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate {
     private enum UX {
         static let topContentInset: CGFloat = 32
         static let legacyItemHeight: CGFloat = 48
@@ -15,6 +15,7 @@ final class SidebarMenuViewController: UIViewController, UICollectionViewDelegat
     private let mainSection = "main"
     private let cellReuseIdentifier = "SidebarActionCell"
     private let childSidebarButtonTag = 9101
+    private(set) var shownSection: LibrarySection?
     private var dataSource: UICollectionViewDiffableDataSource<String, LibrarySection>!
     
     private lazy var sidebarButton: UIButton = {
@@ -32,7 +33,6 @@ final class SidebarMenuViewController: UIViewController, UICollectionViewDelegat
             layout = UICollectionViewCompositionalLayout.list(using: configuration)
         } else {
             let flowLayout = UICollectionViewFlowLayout()
-            flowLayout.itemSize = CGSize(width: 1, height: UX.legacyItemHeight)
             flowLayout.minimumLineSpacing = 0
             flowLayout.sectionInset = .zero
             layout = flowLayout
@@ -85,6 +85,9 @@ final class SidebarMenuViewController: UIViewController, UICollectionViewDelegat
     }
     
     func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        if viewController === self {
+            shownSection = nil
+        }
         refreshSidebarButton(for: viewController)
     }
     
@@ -98,29 +101,48 @@ final class SidebarMenuViewController: UIViewController, UICollectionViewDelegat
         showSection(section, animated: true)
     }
     
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        return CGSize(width: collectionView.bounds.width, height: UX.legacyItemHeight)
+    }
+    
     // MARK: - Sections
     
-    func showSection(_ section: LibrarySection, animated: Bool) {
+    func showSection(
+        _ section: LibrarySection,
+        animated: Bool,
+        startsEditingBookmarks: Bool = false
+    ) {
         loadViewIfNeeded()
+        shownSection = section
         
         let indexPath = dataSource.indexPath(for: section)
         if let indexPath {
             collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
         }
         
-        let viewController = makeSectionViewController(for: section)
+        let viewController = makeSectionViewController(
+            for: section,
+            startsEditingBookmarks: startsEditingBookmarks
+        )
         navigationController?.setViewControllers([self, viewController], animated: animated)
         if let indexPath {
             collectionView.deselectItem(at: indexPath, animated: animated)
         }
     }
     
-    private func makeSectionViewController(for section: LibrarySection) -> UIViewController {
+    private func makeSectionViewController(
+        for section: LibrarySection,
+        startsEditingBookmarks: Bool
+    ) -> UIViewController {
         let contentViewController: UIViewController
         
         switch section {
         case .bookmarks:
-            contentViewController = BookmarksViewController()
+            contentViewController = BookmarksViewController(startsEditing: startsEditingBookmarks)
         case .history:
             contentViewController = HistoryViewController()
         case .downloads:

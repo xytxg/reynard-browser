@@ -21,11 +21,15 @@ struct PermissionPromptPresenter: PermissionPromptPresenting {
         }
         
         return await withCheckedContinuation { continuation in
-            let alert = UIAlertController(
+            var allowed = false
+            let alert = PromptAlertController(
                 title: title,
                 message: message,
                 preferredStyle: .alert
             )
+            alert.onDismissed = {
+                continuation.resume(returning: allowed)
+            }
             alert.setValue(
                 NSAttributedString(
                     string: title,
@@ -33,11 +37,9 @@ struct PermissionPromptPresenter: PermissionPromptPresenting {
                 ),
                 forKey: "attributedTitle"
             )
-            alert.addAction(UIAlertAction(title: cancelTitle, style: .cancel) { _ in
-                continuation.resume(returning: false)
-            })
+            alert.addAction(UIAlertAction(title: cancelTitle, style: .cancel))
             alert.addAction(UIAlertAction(title: NSLocalizedString("Allow", comment: ""), style: .default) { _ in
-                continuation.resume(returning: true)
+                allowed = true
             })
             presenter.present(alert, animated: true)
         }

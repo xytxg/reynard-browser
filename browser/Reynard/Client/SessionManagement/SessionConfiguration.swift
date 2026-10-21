@@ -19,7 +19,9 @@ struct SessionDelegates {
     var history: HistoryDelegate?
     var permission: PermissionEmbedderDelegate?
     var progress: ProgressDelegate?
+    var scroll: ScrollDelegate?
     var prompt: PromptDelegate?
+    var print: PrintDelegate?
     var selectionAction: SelectionActionDelegate?
     var mediaSession: MediaSessionDelegate?
     
@@ -29,7 +31,9 @@ struct SessionDelegates {
         history: HistoryDelegate? = nil,
         permission: PermissionEmbedderDelegate? = nil,
         progress: ProgressDelegate? = nil,
+        scroll: ScrollDelegate? = nil,
         prompt: PromptDelegate? = nil,
+        print: PrintDelegate? = nil,
         selectionAction: SelectionActionDelegate? = nil,
         mediaSession: MediaSessionDelegate? = nil
     ) {
@@ -38,7 +42,9 @@ struct SessionDelegates {
         self.history = history
         self.permission = permission
         self.progress = progress
+        self.scroll = scroll
         self.prompt = prompt
+        self.print = print
         self.selectionAction = selectionAction
         self.mediaSession = mediaSession
     }

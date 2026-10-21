@@ -1,16 +1,11 @@
 diff --git a/layout/style/res/ua.css b/layout/style/res/ua.css
-index 037c5e20b464..8b4f4dd733a5 100644
+index f7f0ad7c1759..240e4ea5a28b 100644
 --- a/layout/style/res/ua.css
 +++ b/layout/style/res/ua.css
-@@ -9,6 +9,17 @@
+@@ -9,6 +9,12 @@
              them
  */
  
-+/* Hide caret since we have UIKit's own caret implementation. */
-+:root {  
-+  caret-color: transparent;  
-+}
-+
 +/* And do not let websites override selection colors. */
 +*|*::selection {
 +  color: HighlightText !important;

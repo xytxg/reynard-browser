@@ -19,6 +19,7 @@ final class TabOverviewTopToolbar: UIView {
     }
     
     var onClearTabs: (() -> Void)?
+    var onClearTabsOlderThan: ((TabOverviewClearTabsMenu.Age) -> Void)?
     var onAddTab: (() -> Void)?
     var onDone: (() -> Void)?
     var onTabModeChange: ((TabOverview.Mode) -> Void)?
@@ -46,13 +47,20 @@ final class TabOverviewTopToolbar: UIView {
         tabModeControl.selectedSegmentIndex = mode.rawValue
     }
     
-    func apply(tabCount: Int, hasVisibleTab: Bool) {
+    func apply(tabCount: Int, visibleTabCount: Int, hasVisibleTab: Bool) {
         tabModeControl.setTitle(
             String.localizedStringWithFormat(NSLocalizedString("%d Tabs", comment: "Tab count"), tabCount),
             forSegmentAt: TabOverview.Mode.regularTabs.rawValue
         )
+        let clearTabsMenu = TabOverviewClearTabsMenu.make(
+            tabCount: visibleTabCount,
+            onClearTabs: { [weak self] in self?.onClearTabs?() },
+            onClearTabsOlderThan: { [weak self] age in self?.onClearTabsOlderThan?(age) }
+        )
+        clearTabsButton.installMenu(clearTabsMenu)
         doneButton.setActionEnabled(hasVisibleTab)
         if #available(iOS 26.0, *) {
+            liquidGlassActionToolbar.items?.first?.menu = clearTabsMenu
             liquidGlassActionToolbar.items?.last?.isEnabled = hasVisibleTab
         }
     }
@@ -100,7 +108,6 @@ final class TabOverviewTopToolbar: UIView {
     }
     
     private func configureActions() {
-        clearTabsButton.addTarget(self, action: #selector(clearTabsButtonTapped), for: .touchUpInside)
         addTabButton.addTarget(self, action: #selector(addTabButtonTapped), for: .touchUpInside)
         doneButton.addTarget(self, action: #selector(doneTapped), for: .touchUpInside)
         tabModeControl.addTarget(self, action: #selector(tabModeControlChanged), for: .valueChanged)
@@ -109,7 +116,7 @@ final class TabOverviewTopToolbar: UIView {
     private func makeLiquidGlassActionToolbar() -> UIToolbar {
         let toolbar = UIToolbar()
         toolbar.translatesAutoresizingMaskIntoConstraints = false
-        let clearTabsItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(clearTabsButtonTapped))
+        let clearTabsItem = UIBarButtonItem(barButtonSystemItem: .trash, target: nil, action: nil)
         let addTabItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTabButtonTapped))
         let doneItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
         clearTabsItem.tintColor = .label
@@ -125,7 +132,6 @@ final class TabOverviewTopToolbar: UIView {
         return toolbar
     }
     
-    @objc private func clearTabsButtonTapped() { onClearTabs?() }
     @objc private func addTabButtonTapped() { onAddTab?() }
     @objc private func doneTapped() { onDone?() }
     @objc private func tabModeControlChanged() {

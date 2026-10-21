@@ -19,10 +19,12 @@ protocol AddressBarGestureDelegate: AnyObject {
     var activeTabs: [Tab] { get }
     
     func selectTabFromGesture(at index: Int, mode: TabMode)
+    func pageBackgroundColor(for tab: Tab) -> UIColor
     func createTabForSwipe() -> Int
     func setPendingTabExpansion(at index: Int?)
     func presentTabOverviewFromGesture(animated: Bool)
-    func addressBarGestureWillBegin()
+    func addressBarTransitionWillBegin(prepareForGesture: Bool)
+    func addressBarTransitionDidEnd()
     func storedContentPreview(from tab: Tab) -> UIImage?
 }
 
@@ -33,9 +35,10 @@ final class AddressBarGestures: NSObject {
         static let addressBarTabSwitchCancellationDuration: TimeInterval = 0.22
         static let addressBarAutomaticNewTabTranslationRatio: CGFloat = 0.34
         static let addressBarPreviewOutsidePadding: CGFloat = 24
-        static let addressBarPreviewCornerRadius: CGFloat = 16
-        static let addressBarPreviewShadowOpacity: Float = 0.12
-        static let addressBarPreviewShadowRadius: CGFloat = 10
+        static let addressBarPreviewCornerRadius: CGFloat = 22
+        static let addressBarPreviewBorderWidth: CGFloat = 0.5
+        static let addressBarPreviewShadowOpacity: Float = 0.18
+        static let addressBarPreviewShadowRadius: CGFloat = 14
         static let addressBarPreviewShadowOffset = CGSize(width: 0, height: 2)
         static let addressBarPreviewHorizontalInset: CGFloat = 12
         static let addressBarPreviewButtonSpacing: CGFloat = 8
@@ -95,7 +98,7 @@ final class AddressBarGestures: NSObject {
     
     // MARK: - Transition Lifecycle
     
-    func resetHorizontalTransition() {
+    func resetHorizontalTransition(preservingLock: Bool = false) {
         horizontalTransitionGeneration += 1
         delegate?.transitionContentView.setTransitionTransform(.identity)
         delegate?.transitionContentView.setTransitionHidden(false)
@@ -113,6 +116,9 @@ final class AddressBarGestures: NSObject {
         horizontalTargetBarView = nil
         horizontalTargetIndex = nil
         horizontalDirection = 0
+        if !preservingLock {
+            delegate?.addressBarTransitionDidEnd()
+        }
     }
     
     func performAfterTransition(_ completion: @escaping () -> Void) -> Bool {
@@ -157,6 +163,7 @@ final class AddressBarGestures: NSObject {
         
         searchPanMode = .blocked
         resetHorizontalTransition()
+        delegate.addressBarTransitionWillBegin(prepareForGesture: false)
         
         let transitionGeneration = horizontalTransitionGeneration
         UIView.animate(withDuration: UX.addressBarAutomaticNewTabTransitionDuration, delay: 0, options: [.curveEaseOut]) {
@@ -174,24 +181,25 @@ final class AddressBarGestures: NSObject {
             completion()
         }
     }
-
+    
     private func setupSourceContentPreview(delegate: AddressBarGestureDelegate) {
         guard horizontalSourceContentView == nil,
               delegate.transitionContentView.transform.isIdentity,
               let sourceTab = delegate.activeTabs[safe: delegate.selectedTabIndex],
-              let previewImage = delegate.storedContentPreview(from: sourceTab) else {
+              let previewImage = delegate.storedContentPreview(from: sourceTab),
+              let captureGeometry = delegate.transitionContentView.thumbnailCaptureGeometry else {
             return
         }
-
-        let sourceContent = createContentPreview(image: previewImage)
-        sourceContent.frame = delegate.transitionContentView.frame
-        sourceContent.isUserInteractionEnabled = false
-        delegate.transitionContainerView.insertSubview(sourceContent, aboveSubview: delegate.transitionContentView)
-        horizontalSourceContentView = sourceContent
+        
+        let sourcePreview = createContentPreview(image: previewImage, captureGeometry: captureGeometry)
+        sourcePreview.frame = delegate.transitionContentView.frame
+        sourcePreview.isUserInteractionEnabled = false
+        delegate.transitionContainerView.insertSubview(sourcePreview, aboveSubview: delegate.transitionContentView)
+        horizontalSourceContentView = sourcePreview
         delegate.transitionContentView.setTransitionTransform(.identity)
         delegate.transitionContentView.setTransitionHidden(true)
     }
-
+    
     private func applySourceContentTransform(_ transform: CGAffineTransform, delegate: AddressBarGestureDelegate) {
         if let horizontalSourceContentView {
             horizontalSourceContentView.transform = transform
@@ -200,7 +208,7 @@ final class AddressBarGestures: NSObject {
         }
     }
     
-    func animateAutomaticNewTabTransition(to tab: Tab, completion: @escaping () -> Void) {
+    func animateAutomaticTabTransition(to tab: Tab, returning: Bool = false, completion: @escaping () -> Void) {
         guard let delegate,
               delegate.chromeMode == .phone,
               !delegate.isTabOverviewPresented,
@@ -217,13 +225,15 @@ final class AddressBarGestures: NSObject {
         
         searchPanMode = .blocked
         resetHorizontalTransition()
-        horizontalDirection = 1
-        prepareHorizontalTarget(for: tab, direction: 1, pageWidth: width, delegate: delegate)
+        delegate.addressBarTransitionWillBegin(prepareForGesture: false)
+        let direction = returning ? -1 : 1
+        horizontalDirection = direction
+        prepareHorizontalTarget(for: tab, direction: direction, pageWidth: width, delegate: delegate)
         
         let transitionGeneration = horizontalTransitionGeneration
         UIView.animate(withDuration: UX.addressBarTabSwitchTransitionDuration, delay: 0, options: [.curveEaseOut]) {
-            let contentTransform = CGAffineTransform(translationX: -width, y: 0)
-            let barTransform = CGAffineTransform(translationX: -self.horizontalBarTravelWidth(), y: 0)
+            let contentTransform = CGAffineTransform(translationX: -CGFloat(direction) * width, y: 0)
+            let barTransform = CGAffineTransform(translationX: -CGFloat(direction) * self.horizontalBarTravelWidth(), y: 0)
             self.applySourceContentTransform(contentTransform, delegate: delegate)
             self.applySourceAddressBarTransform(barTransform)
             self.horizontalTargetContentView?.transform = contentTransform
@@ -246,6 +256,8 @@ final class AddressBarGestures: NSObject {
         }
         container.layer.cornerRadius = UX.addressBarPreviewCornerRadius
         container.layer.cornerCurve = .continuous
+        container.layer.borderWidth = UX.addressBarPreviewBorderWidth
+        container.layer.borderColor = UIColor.separator.withAlphaComponent(0.2).cgColor
         container.layer.shadowColor = UIColor.black.cgColor
         container.layer.shadowOpacity = UX.addressBarPreviewShadowOpacity
         container.layer.shadowRadius = UX.addressBarPreviewShadowRadius
@@ -343,20 +355,44 @@ final class AddressBarGestures: NSObject {
         )
     }
     
-    private func createContentPreview(image: UIImage?) -> UIView {
+    private func createContentPreview(
+        image: UIImage?,
+        captureGeometry: ContentView.ThumbnailCaptureGeometry
+    ) -> UIView {
         let preview = UIView()
-        preview.backgroundColor = .systemBackground
         
         if let image {
             let imageView = UIImageView(image: image)
-            imageView.frame = preview.bounds
-            imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            imageView.contentMode = .scaleAspectFill
-            imageView.clipsToBounds = true
+            imageView.frame = CGRect(
+                x: -captureGeometry.visibleRect.minX,
+                y: -captureGeometry.visibleRect.minY,
+                width: captureGeometry.size.width,
+                height: captureGeometry.size.height
+            )
+            imageView.contentMode = .scaleToFill
             preview.addSubview(imageView)
         }
         
         return preview
+    }
+    
+    private func createBackgroundPreview(color: UIColor) -> UIView {
+        let preview = UIView()
+        preview.backgroundColor = color
+        preview.isUserInteractionEnabled = false
+        return preview
+    }
+    
+    private func expandedPreviewFrame(
+        _ previewFrame: CGRect,
+        captureGeometry: ContentView.ThumbnailCaptureGeometry
+    ) -> CGRect {
+        return CGRect(
+            x: previewFrame.minX - captureGeometry.visibleRect.minX,
+            y: previewFrame.minY - captureGeometry.visibleRect.minY,
+            width: captureGeometry.size.width,
+            height: captureGeometry.size.height
+        )
     }
     
     // MARK: - Interactive Tab Switching
@@ -370,10 +406,10 @@ final class AddressBarGestures: NSObject {
         let direction = translationX < 0 ? 1 : -1
         
         if horizontalDirection != direction {
-            resetHorizontalTransition()
+            resetHorizontalTransition(preservingLock: true)
             horizontalDirection = direction
         }
-
+        
         setupSourceContentPreview(delegate: delegate)
         
         if horizontalTargetIndex == nil {
@@ -414,7 +450,7 @@ final class AddressBarGestures: NSObject {
         let contentTransform = CGAffineTransform(translationX: contentTranslation, y: 0)
         applySourceContentTransform(contentTransform, delegate: delegate)
         horizontalTargetContentView?.transform = contentTransform
-
+        
         let barTranslation = clampedHorizontalTranslation(
             translationX,
             travelWidth: horizontalBarTravelWidth(),
@@ -435,10 +471,11 @@ final class AddressBarGestures: NSObject {
         let passedDistanceThreshold = abs(translationX) > width * UX.addressBarTabSwitchCompletionDistanceRatio
         let shouldSwitch = horizontalTargetIndex != nil && (passedDistanceThreshold || abs(velocityX) > UX.addressBarTabSwitchVelocityThreshold)
         let shouldCreateNewTab = delegate.chromeMode == .phone
-            && horizontalTargetIndex == nil
-            && delegate.selectedTabIndex == delegate.activeTabs.count - 1
-            && horizontalDirection == 1
-            && (passedDistanceThreshold || velocityX < -UX.addressBarTabSwitchVelocityThreshold)
+        && horizontalTargetIndex == nil
+        && delegate.selectedTabIndex == delegate.activeTabs.count - 1
+        && delegate.activeTabs[safe: delegate.selectedTabIndex]?.url != nil
+        && horizontalDirection == 1
+        && (passedDistanceThreshold || velocityX < -UX.addressBarTabSwitchVelocityThreshold)
         
         if shouldSwitch, let targetIndex = horizontalTargetIndex {
             finishHorizontalTabSwitch(to: targetIndex, mode: delegate.selectedTabMode)
@@ -466,64 +503,103 @@ final class AddressBarGestures: NSObject {
             resetHorizontalTransition()
             return
         }
-
-        let sourceContent = horizontalSourceContentView
-        let storedPreview = sourceContent == nil
-            ? delegate.activeTabs[safe: delegate.selectedTabIndex]
-                .flatMap(delegate.storedContentPreview(from:))
-                .map(createContentPreview(image:))
-            : nil
-        guard let outgoingContent = sourceContent
-            ?? storedPreview
-            ?? delegate.transitionContentView.snapshotView(afterScreenUpdates: false) else {
+        
+        let sourcePreview = horizontalSourceContentView
+        let storedContentPreview: UIView?
+        if sourcePreview == nil,
+           let sourceTab = delegate.activeTabs[safe: delegate.selectedTabIndex],
+           let previewImage = delegate.storedContentPreview(from: sourceTab),
+           let captureGeometry = delegate.transitionContentView.thumbnailCaptureGeometry {
+            storedContentPreview = createContentPreview(
+                image: previewImage,
+                captureGeometry: captureGeometry
+            )
+        } else {
+            storedContentPreview = nil
+        }
+        guard let outgoingPreview = sourcePreview
+                ?? storedContentPreview
+                ?? delegate.transitionContentView.snapshotView(afterScreenUpdates: false) else {
             resetHorizontalTransition()
             delegate.selectTabFromGesture(at: targetIndex, mode: mode)
             return
         }
         
-        let width = delegate.transitionContentView.bounds.width
-        let direction = horizontalDirection == 0
-            ? (targetIndex >= delegate.selectedTabIndex ? 1 : -1)
-            : horizontalDirection
-        let contentContainer = delegate.transitionContainerView
-        let sourceContentFrameView = sourceContent ?? delegate.transitionContentView
-        let targetContent = horizontalTargetContentView
+        let contentWidth = delegate.transitionContentView.bounds.width
+        let swipeDirection = horizontalDirection == 0
+        ? (targetIndex >= delegate.selectedTabIndex ? 1 : -1)
+        : horizontalDirection
+        let transitionContainer = delegate.transitionContainerView
+        let sourcePreviewView = sourcePreview ?? delegate.transitionContentView
+        let targetPreview = horizontalTargetContentView
         let targetBar = horizontalTargetBarView
         let sourceBar = horizontalSourceBarView
         let outgoingBar = sourceBar ?? addressBar.snapshotView(afterScreenUpdates: false)
         let barHost = addressBar.superview
-        let clipView = transitionClipView(for: delegate.transitionContentView, in: contentContainer)
-        let finalTranslation = CGFloat(-direction) * width
-        let outgoingFinalFrame = clipView.bounds.offsetBy(dx: finalTranslation, dy: 0)
+        let transitionClip = transitionClipView(for: delegate.transitionContentView, in: transitionContainer)
+        let outgoingTranslation = CGFloat(-swipeDirection) * contentWidth
+        let outgoingPreviewFinalFrame = transitionClip.bounds.offsetBy(dx: outgoingTranslation, dy: 0)
+        let targetPreviewFinalFrame = transitionClip.bounds
+        let captureGeometry = delegate.transitionContentView.thumbnailCaptureGeometry
+        let sourceBackgroundColor = delegate.activeTabs[safe: delegate.selectedTabIndex]
+            .map { delegate.pageBackgroundColor(for: $0) }
+        ?? .systemBackground
+        let targetBackgroundColor = delegate.activeTabs[safe: targetIndex]
+            .map { delegate.pageBackgroundColor(for: $0) }
+        ?? .systemBackground
+        var outgoingBackground: UIView?
+        var targetBackground: UIView?
         var outgoingBarFinalFrame: CGRect?
         
-        let outgoingContentFrame = clipView.convert(
-            presentationFrame(of: sourceContentFrameView, in: contentContainer),
-            from: contentContainer
+        transitionContainer.insertSubview(transitionClip, aboveSubview: delegate.transitionContentView)
+        horizontalFinishingViews.append(transitionClip)
+        
+        let outgoingPreviewFrame = transitionClip.convert(
+            presentationFrame(of: sourcePreviewView, in: transitionContainer),
+            from: transitionContainer
         )
-        outgoingContent.transform = .identity
-        outgoingContent.frame = outgoingContentFrame
-        outgoingContent.isUserInteractionEnabled = false
-        clipView.addSubview(outgoingContent)
-
-        if let targetContent {
-            let targetContentFrame = clipView.convert(
-                presentationFrame(of: targetContent, in: contentContainer),
-                from: contentContainer
+        outgoingPreview.transform = .identity
+        outgoingPreview.frame = outgoingPreviewFrame
+        outgoingPreview.isUserInteractionEnabled = false
+        
+        if let targetPreview {
+            let targetPreviewFrame = transitionClip.convert(
+                presentationFrame(of: targetPreview, in: transitionContainer),
+                from: transitionContainer
             )
-            targetContent.transform = .identity
-            targetContent.frame = targetContentFrame
-            targetContent.isUserInteractionEnabled = false
-            clipView.addSubview(targetContent)
+            targetPreview.transform = .identity
+            targetPreview.frame = targetPreviewFrame
+            targetPreview.isUserInteractionEnabled = false
         }
-
-        contentContainer.addSubview(clipView)
-        horizontalFinishingViews.append(clipView)
+        if let captureGeometry {
+            outgoingBackground = createBackgroundPreview(color: sourceBackgroundColor)
+            outgoingBackground?.frame = expandedPreviewFrame(
+                outgoingPreview.frame,
+                captureGeometry: captureGeometry
+            )
+            targetBackground = createBackgroundPreview(color: targetBackgroundColor)
+            targetBackground?.frame = expandedPreviewFrame(
+                targetPreview?.frame ?? targetPreviewFinalFrame,
+                captureGeometry: captureGeometry
+            )
+        }
+        if let outgoingBackground {
+            transitionClip.addSubview(outgoingBackground)
+            horizontalFinishingViews.append(outgoingBackground)
+        }
+        if let targetBackground {
+            transitionClip.addSubview(targetBackground)
+            horizontalFinishingViews.append(targetBackground)
+        }
+        transitionClip.addSubview(outgoingPreview)
+        if let targetPreview {
+            transitionClip.addSubview(targetPreview)
+        }
         
         if let outgoingBar, let barHost {
             let outgoingBarFrame = presentationPositionFrame(of: sourceBar ?? addressBar, in: barHost)
             let outgoingBarRestingFrame = restingFrame(of: sourceBar ?? addressBar, in: barHost)
-            let finalBarTranslation = CGFloat(-direction) * horizontalBarTravelWidth(in: barHost)
+            let finalBarTranslation = CGFloat(-swipeDirection) * horizontalBarTravelWidth(in: barHost)
             outgoingBar.transform = .identity
             outgoingBar.frame = outgoingBarFrame
             outgoingBar.isUserInteractionEnabled = false
@@ -542,7 +618,7 @@ final class AddressBarGestures: NSObject {
             barHost.bringSubviewToFront(targetBar)
             horizontalFinishingViews.append(targetBar)
         }
-
+        
         horizontalTargetContentView = nil
         horizontalSourceContentView = nil
         horizontalSourceBarView = nil
@@ -559,8 +635,18 @@ final class AddressBarGestures: NSObject {
         
         let transitionGeneration = horizontalTransitionGeneration
         UIView.animate(withDuration: UX.addressBarTabSwitchTransitionDuration, delay: 0, options: [.curveEaseOut]) {
-            outgoingContent.frame = outgoingFinalFrame
-            targetContent?.frame = clipView.bounds
+            outgoingPreview.frame = outgoingPreviewFinalFrame
+            targetPreview?.frame = targetPreviewFinalFrame
+            if let captureGeometry {
+                outgoingBackground?.frame = self.expandedPreviewFrame(
+                    outgoingPreviewFinalFrame,
+                    captureGeometry: captureGeometry
+                )
+                targetBackground?.frame = self.expandedPreviewFrame(
+                    targetPreviewFinalFrame,
+                    captureGeometry: captureGeometry
+                )
+            }
             if let outgoingBarFinalFrame {
                 outgoingBar?.frame = outgoingBarFinalFrame
             }
@@ -568,17 +654,22 @@ final class AddressBarGestures: NSObject {
                 targetBar?.frame = targetBarFinalFrame
             }
         } completion: { _ in
-            clipView.removeFromSuperview()
+            transitionClip.removeFromSuperview()
             outgoingBar?.removeFromSuperview()
             targetBar?.removeFromSuperview()
             self.horizontalFinishingViews.removeAll { view in
-                view === clipView || view === outgoingBar || view === targetBar
+                view === transitionClip
+                || view === outgoingBackground
+                || view === targetBackground
+                || view === outgoingBar
+                || view === targetBar
             }
             guard transitionGeneration == self.horizontalTransitionGeneration else {
                 return
             }
             delegate.transitionContentView.setTransitionHidden(false)
             self.addressBar.isHidden = false
+            self.delegate?.addressBarTransitionDidEnd()
             self.runTransitionCompletion()
         }
     }
@@ -613,29 +704,36 @@ final class AddressBarGestures: NSObject {
             resetHorizontalTransition()
             return
         }
-
+        
         horizontalTargetIndex = createdIndex
         horizontalDirection = 1
-
+        
         let targetTab = delegate.activeTabs[createdIndex]
         prepareHorizontalTarget(for: targetTab, direction: 1, pageWidth: width, delegate: delegate)
         applySourceAddressBarTransform(CGAffineTransform(translationX: barPresentationTranslation, y: 0))
-
+        
         finishHorizontalTabSwitch(to: createdIndex, mode: mode)
     }
-
+    
     private func prepareHorizontalTarget(for tab: Tab, direction: Int, pageWidth: CGFloat, delegate: AddressBarGestureDelegate) {
-        let targetContent = createContentPreview(image: tab.thumbnail)
-        targetContent.frame = delegate.transitionContentView.frame.offsetBy(dx: CGFloat(direction) * pageWidth, dy: 0)
-        delegate.transitionContainerView.insertSubview(targetContent, belowSubview: delegate.transitionContentView)
-        horizontalTargetContentView = targetContent
-
+        guard let captureGeometry = delegate.transitionContentView.thumbnailCaptureGeometry else {
+            return
+        }
+        
+        let targetPreview = createContentPreview(
+            image: tab.thumbnail,
+            captureGeometry: captureGeometry
+        )
+        targetPreview.frame = delegate.transitionContentView.frame.offsetBy(dx: CGFloat(direction) * pageWidth, dy: 0)
+        delegate.transitionContainerView.insertSubview(targetPreview, belowSubview: delegate.transitionContentView)
+        horizontalTargetContentView = targetPreview
+        
         guard let barHost = addressBar.superview else {
             return
         }
-
+        
         let barFrame = restingFrame(of: addressBar, in: barHost)
-
+        
         if horizontalSourceBarView == nil,
            let sourceTab = delegate.activeTabs[safe: delegate.selectedTabIndex] {
             let sourceBar = createAddressBarPreview(for: sourceTab)
@@ -647,7 +745,7 @@ final class AddressBarGestures: NSObject {
             horizontalSourceBarView = sourceBar
             addressBar.isHidden = true
         }
-
+        
         let targetBar = createAddressBarPreview(for: tab)
         targetBar.frame = barFrame.offsetBy(
             dx: CGFloat(direction) * horizontalBarTravelWidth(in: barHost, fallbackWidth: pageWidth),
@@ -657,7 +755,7 @@ final class AddressBarGestures: NSObject {
         barHost.addSubview(targetBar)
         horizontalTargetBarView = targetBar
     }
-
+    
     private func applySourceAddressBarTransform(_ transform: CGAffineTransform) {
         if let horizontalSourceBarView {
             horizontalSourceBarView.transform = transform
@@ -665,32 +763,32 @@ final class AddressBarGestures: NSObject {
             addressBar.transform = transform
         }
     }
-
+    
     private func horizontalBarTravelWidth() -> CGFloat {
         guard let barHost = addressBar.superview else {
             return addressBar.bounds.width
         }
-
+        
         return horizontalBarTravelWidth(in: barHost)
     }
-
+    
     private func horizontalBarTravelWidth(in barHost: UIView, fallbackWidth: CGFloat? = nil) -> CGFloat {
         if barHost.bounds.width > 1 {
             return barHost.bounds.width
         }
-
+        
         if let fallbackWidth, fallbackWidth > 1 {
             return fallbackWidth
         }
-
+        
         return max(addressBar.bounds.width, 1)
     }
-
+    
     private func clampedHorizontalTranslation(_ translationX: CGFloat, travelWidth: CGFloat, direction: Int) -> CGFloat {
         guard travelWidth > 1 else {
             return translationX
         }
-
+        
         switch direction {
         case let direction where direction > 0:
             return min(0, max(-travelWidth, translationX))
@@ -700,11 +798,11 @@ final class AddressBarGestures: NSObject {
             return max(-travelWidth, min(travelWidth, translationX))
         }
     }
-
+    
     private func transitionClipView(for view: UIView, in targetView: UIView) -> UIView {
         let clipView = UIView(frame: restingFrame(of: view, in: targetView))
         clipView.backgroundColor = .clear
-        clipView.clipsToBounds = true
+        clipView.clipsToBounds = false
         clipView.isUserInteractionEnabled = false
         return clipView
     }
@@ -725,7 +823,7 @@ final class AddressBarGestures: NSObject {
         frame.origin.y = presentationFrame.midY - (frame.height / 2)
         return frame
     }
-
+    
     private func restingFrame(of view: UIView, in targetView: UIView) -> CGRect {
         guard let superview = view.superview else {
             return view.convert(view.bounds, to: targetView)
@@ -767,7 +865,7 @@ final class AddressBarGestures: NSObject {
             searchPanMode = .undecided
             clearHorizontalFinishingViews()
             resetHorizontalTransition()
-            delegate.addressBarGestureWillBegin()
+            delegate.addressBarTransitionWillBegin(prepareForGesture: true)
             Haptics.prepareRigid()
             
         case .changed:
@@ -778,7 +876,11 @@ final class AddressBarGestures: NSObject {
                 }
                 
                 if abs(translation.x) > abs(translation.y) {
-                    let newMode: SearchPanMode = (!delegate.isTabOverviewPresented && !delegate.isSearchFocused) ? .horizontalTabs : .blocked
+                    let newMode: SearchPanMode = (
+                        !delegate.isTabOverviewPresented &&
+                        !delegate.isSearchFocused &&
+                        Prefs.AppearanceSettings.swipeAddressBarSidewaysEnabled
+                    ) ? .horizontalTabs : .blocked
                     searchPanMode = newMode
                     if newMode == .horizontalTabs {
                         Haptics.rigid()
@@ -811,12 +913,14 @@ final class AddressBarGestures: NSObject {
               delegate.chromeMode == .phone,
               !delegate.isSearchFocused,
               !delegate.isTabOverviewPresented,
-              !delegate.isTabOverviewTransitionRunning else {
+              !delegate.isTabOverviewTransitionRunning,
+              Prefs.AppearanceSettings.swipeAddressBarUpEnabled else {
             return
         }
         
-        delegate.addressBarGestureWillBegin()
+        delegate.addressBarTransitionWillBegin(prepareForGesture: false)
         delegate.presentTabOverviewFromGesture(animated: true)
+        delegate.addressBarTransitionDidEnd()
     }
 }
 
@@ -826,6 +930,14 @@ extension AddressBarGestures: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         guard !(touch.view is UIButton) else {
             return false
+        }
+        
+        var view: UIView? = addressBar
+        while let currentView = view {
+            guard !currentView.isHidden, currentView.alpha > 0.01 else {
+                return false
+            }
+            view = currentView.superview
         }
         
         guard gestureRecognizer.view !== addressBar,

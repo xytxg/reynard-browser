@@ -15,7 +15,7 @@ struct GeckoHandlerError: Error {
     }
 }
 
-protocol GeckoEventListenerInternal {
+protocol GeckoEventListenerInternal: AnyObject {
     @MainActor
     func handleMessage(type: String, message: [String: Any?]?) async throws -> Any?
 }
@@ -69,6 +69,19 @@ public class GeckoEventDispatcherWrapper: NSObject, SwiftEventDispatcher {
         listeners[type, default: []] += [listener]
     }
     
+    func removeListener(type: String, listener: GeckoEventListenerInternal) {
+        listeners[type]?.removeAll { $0 === listener }
+        if listeners[type]?.isEmpty == true {
+            listeners.removeValue(forKey: type)
+        }
+    }
+    
+    static func removeDispatcher(named name: String, matching dispatcher: GeckoEventDispatcherWrapper) {
+        if dispatchers[name] === dispatcher {
+            dispatchers.removeValue(forKey: name)
+        }
+    }
+    
     public func dispatch(
         type: String, message: [String: Any?]? = nil, callback: EventCallback? = nil
     ) {
@@ -112,7 +125,7 @@ public class GeckoEventDispatcherWrapper: NSObject, SwiftEventDispatcher {
         gecko = dispatcher
     }
     
-    public func dispatch(toSwift type: String!, message: Any!, callback: EventCallback?) {
+    public func dispatch(toSwift type: String, message: Any?, callback: EventCallback?) {
         let message = message as! [String: Any?]?
         if let registeredListeners = listeners[type] {
             for listener in registeredListeners {
@@ -130,7 +143,7 @@ public class GeckoEventDispatcherWrapper: NSObject, SwiftEventDispatcher {
         }
     }
     
-    public func hasListener(_ type: String!) -> Bool {
+    public func hasListener(_ type: String) -> Bool {
         listeners.keys.contains(type)
     }
 }

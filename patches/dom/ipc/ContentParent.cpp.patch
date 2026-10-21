@@ -1,8 +1,31 @@
 diff --git a/dom/ipc/ContentParent.cpp b/dom/ipc/ContentParent.cpp
-index 2ee13e7e51c7..b918e3c11cd9 100644
+index 202f922d9773..455a749cfa74 100644
 --- a/dom/ipc/ContentParent.cpp
 +++ b/dom/ipc/ContentParent.cpp
-@@ -3007,14 +3007,15 @@ bool ContentParent::InitInternal(ProcessPriority aInitialPriority) {
+@@ -1639,6 +1639,10 @@ bool ContentParent::ShutDownProcess(ShutDownMethod aMethod) {
+         // If we did not earlier, let's signal the shutdown to JS now.
+         SignalImpendingShutdownToContentJS();
+ 
++#ifdef XP_IOS
++        SetProcessBackground(false);
++#endif
++
+         // Adjust the QoS priorities for shutdown, if they exist.
+         if (StaticPrefs::threads_use_low_power_enabled() &&
+             StaticPrefs::
+@@ -2533,6 +2537,11 @@ bool ContentParent::LaunchSubprocessResolve(bool aIsSync,
+ 
+   mHangMonitorActor = ProcessHangMonitor::AddProcess(this);
+ 
++#ifdef XP_IOS
++  SetProcessBackground(aPriority == PROCESS_PRIORITY_BACKGROUND ||
++                       aPriority == PROCESS_PRIORITY_PREALLOC);
++#endif
++
+   SetReplyTimeoutMs(StaticPrefs::dom_ipc_reply_timeout());
+ 
+   nsCOMPtr<nsIObserverService> obs = mozilla::services::GetObserverService();
+@@ -2944,14 +2953,15 @@ bool ContentParent::InitInternal(ProcessPriority aInitialPriority) {
    Endpoint<PVRManagerChild> vrBridge;
    Endpoint<PRemoteMediaManagerChild> videoManager;
    AutoTArray<uint32_t, 4> namespaces;
@@ -20,7 +43,7 @@ index 2ee13e7e51c7..b918e3c11cd9 100644
    } else {
      // This can fail if we've already started shutting down the compositor
      // thread. See Bug 1562763 comment 8. On Android this can fail we are are
-@@ -3193,16 +3194,17 @@ void ContentParent::OnCompositorUnexpectedShutdown() {
+@@ -3123,16 +3133,17 @@ void ContentParent::OnCompositorUnexpectedShutdown() {
    Endpoint<PVRManagerChild> vrBridge;
    Endpoint<PRemoteMediaManagerChild> videoManager;
    AutoTArray<uint32_t, 4> namespaces;
@@ -40,7 +63,42 @@ index 2ee13e7e51c7..b918e3c11cd9 100644
  }
  
  void ContentParent::OnCompositorDeviceReset() {
-@@ -7985,6 +7987,17 @@ IPCResult ContentParent::RecvKillGPUProcess() {
+@@ -3888,9 +3899,16 @@ ContentParent::Observe(nsISupports* aSubject, const char* aTopic,
+ 
+   // listening for memory pressure event
+   if (!strcmp(aTopic, "memory-pressure")) {
++    // Each content process handles native memory pressure independently.
++    // The parent forwards only explicit heap-minimize requests.
++    if (!aData || !nsDependentString(aData).EqualsLiteral("heap-minimize")) {
++      return NS_OK;
++    }
+     (void)SendMemoryPressure(nsDependentString(aData));
+   } else if (!strcmp(aTopic, "memory-pressure-stop")) {
+-    (void)SendMemoryPressureStop();
++    // Each content process clears its memory pressure state independently.
++    return NS_OK;
++    // (void)SendMemoryPressureStop();
+   } else if (!strcmp(aTopic, "application-background")) {
+     (void)SendApplicationBackground();
+   } else if (!strcmp(aTopic, "application-foreground")) {
+@@ -5985,6 +6003,16 @@ void ContentParent::CancelContentJSExecutionIfRunning(
+       aCancelContentJSOptions);
+ }
+ 
++#ifdef XP_IOS
++void ContentParent::SetProcessBackground(bool aIsBackground) {
++  if (!mHangMonitorActor) {
++    return;
++  }
++
++  ProcessHangMonitor::SetProcessBackground(mHangMonitorActor, aIsBackground);
++}
++#endif
++
+ void ContentParent::SetMainThreadQoSPriority(
+     nsIThread::QoSPriority aQoSPriority) {
+   if (!mHangMonitorActor) {
+@@ -8161,6 +8189,17 @@ IPCResult ContentParent::RecvKillGPUProcess() {
  }
  #endif
  
@@ -55,6 +113,6 @@ index 2ee13e7e51c7..b918e3c11cd9 100644
 +  return IPC_OK();
 +}
 +
- nsCString ThreadsafeContentParentHandle::GetRemoteType() {
-   RecursiveMutexAutoLock lock(mMutex);
-   return mRemoteType;
+ RemoteType ThreadsafeContentParentHandle::GetRemoteType() {
+   return mLoadedOrigins->GetRemoteType();
+ }

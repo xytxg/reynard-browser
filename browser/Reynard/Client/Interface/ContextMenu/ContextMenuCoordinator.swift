@@ -9,7 +9,6 @@ import GeckoView
 import UIKit
 
 protocol ContextMenuCoordinatorHost: AnyObject {
-    var contextMenuPresenter: UIViewController { get }
     var contextMenuSourceView: ContentView { get }
     var contextMenuTabActions: ContextMenuTabActions { get }
     var contextMenuSelectedTabIsPrivate: Bool { get }
@@ -17,13 +16,24 @@ protocol ContextMenuCoordinatorHost: AnyObject {
     
     func captureSourceTabThumbnail(completion: @escaping () -> Void)
     func contextMenuOpenLink(_ url: URL, disposition: TabOpenDisposition)
-    func contextMenuShareLink(_ url: URL)
+    func contextMenuPresentShareSheet(items: [Any], sourceView: UIView, sourceRect: CGRect)
     func contextMenuRestoreInteraction(for session: GeckoSession)
 }
 
 final class ContextMenuCoordinator: NSObject {
     private enum UX {
         static let targetedPreviewSideLength: CGFloat = 1
+    }
+    
+    private final class MenuInteraction: UIContextMenuInteraction {
+        @available(iOS 14.0, *)
+        override var menuAppearance: UIContextMenuInteraction.appearance {
+            if (delegate as? ContextMenuCoordinator)?.pendingContext?.allowsPreview == false {
+                return .compact
+            }
+            
+            return super.menuAppearance
+        }
     }
     
     private weak var host: ContextMenuCoordinatorHost?
@@ -46,17 +56,24 @@ final class ContextMenuCoordinator: NSObject {
             return
         }
         
-        let interaction = UIContextMenuInteraction(delegate: self)
+        let interaction = MenuInteraction(delegate: self)
         host.contextMenuSourceView.addWebViewInteraction(interaction)
         self.interaction = interaction
     }
     
-    func present(at point: CGPoint, target: ContextMenuContext.Target) {
-        guard let interaction else {
+    func present(at point: CGPoint, target: ContextMenuContext.Target, allowsPreview: Bool) {
+        guard let interaction,
+              let interactionView = interaction.view,
+              let host,
+              let window = interactionView.window else {
             return
         }
         
-        let context = ContextMenuContext(target: target, point: point)
+        let sourceView = host.contextMenuSourceView
+        let sourcePoint = allowsPreview
+        ? sourceView.convert(point, from: window.screen.coordinateSpace)
+        : interaction.location(in: sourceView)
+        let context = ContextMenuContext(target: target, point: sourcePoint, allowsPreview: allowsPreview)
         closePreview()
         pendingContext = context
         isCommitting = false
@@ -70,7 +87,12 @@ final class ContextMenuCoordinator: NSObject {
         }
         
         Haptics.rigid()
-        _ = interaction.perform(selector, with: NSValue(cgPoint: context.point))
+        
+        let location = interactionView.convert(context.point, from: sourceView)
+        let implementation = interaction.method(for: selector)
+        typealias PresentMenu = @convention(c) (AnyObject, Selector, CGPoint) -> Void
+        let presentMenu = unsafeBitCast(implementation, to: PresentMenu.self)
+        presentMenu(interaction, selector, location)
     }
     
     private func openLinkPreview(disposition: TabOpenDisposition) {
@@ -78,7 +100,7 @@ final class ContextMenuCoordinator: NSObject {
             return
         }
         
-        if !Prefs.BrowsingSettings.showLinkPreviews {
+        if pendingContext?.allowsPreview != true || !Prefs.BrowsingSettings.showLinkPreviews {
             guard case .link(let url) = pendingContext?.target else {
                 return
             }
@@ -96,9 +118,20 @@ final class ContextMenuCoordinator: NSObject {
         host.captureSourceTabThumbnail { [weak self] in
             guard let self,
                   let host = self.host,
-                  let preview = self.linkPreview,
-                  let session = preview.releaseSession() else {
+                  let preview = self.linkPreview else {
                 self?.isCommitting = false
+                return
+            }
+            if preview.navigationHistoryState != nil && !preview.hasCommittedPage {
+                preview.closeSession()
+                host.contextMenuOpenLink(preview.targetURL, disposition: disposition)
+                self.linkPreview = nil
+                return
+            }
+            guard let session = preview.releaseSession(
+                purgingHistory: disposition == .newTab || disposition == .backgroundTab
+            ) else {
+                self.isCommitting = false
                 return
             }
             
@@ -165,6 +198,30 @@ final class ContextMenuCoordinator: NSObject {
 }
 
 extension ContextMenuCoordinator: UIContextMenuInteractionDelegate {
+    @objc(_contextMenuInteraction:styleForMenuWithConfiguration:)
+    func contextMenuInteraction(
+        _ interaction: UIContextMenuInteraction,
+        styleForMenuWithConfiguration configuration: UIContextMenuConfiguration
+    ) -> _UIContextMenuStyle? {
+        guard interaction === self.interaction,
+              let context = pendingContext,
+              !context.allowsPreview,
+              let sourceView = host?.contextMenuSourceView else {
+            return nil
+        }
+        
+        let alignment: UIRectEdge = context.point.x > sourceView.bounds.midX ? .right : .left
+        let style = _UIContextMenuStyle.default()
+        style._preferredAnchor = ContextMenuAnchor(
+            attachment: .bottom,
+            alignment: alignment,
+            attachmentOffset: 0,
+            alignmentOffset: 0,
+            gravity: 0
+        )
+        return style
+    }
+    
     func contextMenuInteraction(
         _ interaction: UIContextMenuInteraction,
         configurationForMenuAtLocation location: CGPoint
@@ -176,32 +233,60 @@ extension ContextMenuCoordinator: UIContextMenuInteractionDelegate {
             return nil
         }
         isPresenting = false
+        let newTabDisposition = Prefs.BrowsingSettings.openLinksInNewTabsBehavior == .openInBackground
+        ? TabOpenDisposition.backgroundTab
+        : .newTab
         
-        if let imageConfiguration = ImagePreviewMenu.configuration(
+        if case let .image(url, _) = context.target,
+           let session = host.contextMenuSelectedSession,
+           let imageConfiguration = ImagePreviewMenu.configuration(
             for: context,
-            showsPreview: Prefs.BrowsingSettings.showImagePreviews,
-            presentingController: host.contextMenuPresenter,
-            sourceView: host.contextMenuSourceView
-        ) {
+            session: session,
+            showsPreview: context.allowsPreview && Prefs.BrowsingSettings.showImagePreviews,
+            isPrivate: host.contextMenuSelectedTabIsPrivate,
+            sourceView: host.contextMenuSourceView,
+            shareImage: { [weak host] image, sourceView, sourceRect in
+                host?.contextMenuPresentShareSheet(
+                    items: [image],
+                    sourceView: sourceView,
+                    sourceRect: sourceRect
+                )
+            },
+            openLinkInNewTab: { [weak host] url in
+                host?.contextMenuOpenLink(url, disposition: newTabDisposition)
+            },
+            openLinkInNewPrivateTab: { [weak host] url in
+                host?.contextMenuOpenLink(url, disposition: .newPrivateTab)
+            },
+            openImageInNewTab: { [weak host] in
+                host?.contextMenuOpenLink(url, disposition: .newTab)
+            }
+           ) {
             return imageConfiguration
         }
         
         return LinkPreviewMenu.configuration(
             for: context,
-            showsPreview: Prefs.BrowsingSettings.showLinkPreviews,
+            showsPreview: context.allowsPreview && Prefs.BrowsingSettings.showLinkPreviews,
             isPrivate: host.contextMenuSelectedTabIsPrivate,
             sessionManager: sessionManager,
+            sourceSessionState: host.contextMenuSelectedSession?.currentSessionState,
+            sourceView: host.contextMenuSourceView,
             onPreviewCreated: { [weak self] preview in
                 self?.linkPreview = preview
             },
             openInNewTab: { [weak self] in
-                self?.openLinkPreview(disposition: .newTab)
+                self?.openLinkPreview(disposition: newTabDisposition)
             },
             openInNewPrivateTab: { [weak self] in
                 self?.openLinkPreview(disposition: .newPrivateTab)
             },
-            shareLink: { [weak host] url in
-                host?.contextMenuShareLink(url)
+            shareLink: { [weak host] url, sourceView, sourceRect in
+                host?.contextMenuPresentShareSheet(
+                    items: [url],
+                    sourceView: sourceView,
+                    sourceRect: sourceRect
+                )
             }
         )
     }
@@ -214,18 +299,24 @@ extension ContextMenuCoordinator: UIContextMenuInteractionDelegate {
         animator.preferredCommitStyle = .pop
         guard interaction === self.interaction,
               let host,
-              let preview = animator.previewViewController as? LinkPreviewViewController,
-              let session = preview.releaseSession() else {
+              let preview = animator.previewViewController as? LinkPreviewViewController else {
             return
         }
         
         isCommitting = true
-        host.contextMenuTabActions.openPreviewSession(
-            session,
-            url: preview.pageURL,
-            title: preview.pageTitle,
-            disposition: .currentTab
-        )
+        if preview.navigationHistoryState != nil,
+           preview.hasCommittedPage,
+           let session = preview.releaseSession(purgingHistory: false) {
+            host.contextMenuTabActions.openPreviewSession(
+                session,
+                url: preview.pageURL,
+                title: preview.pageTitle,
+                disposition: .currentTab
+            )
+        } else {
+            preview.closeSession()
+            host.contextMenuOpenLink(preview.targetURL, disposition: .currentTab)
+        }
         linkPreview = nil
         
         animator.addCompletion { [weak self] in

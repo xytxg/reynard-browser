@@ -1,0 +1,14 @@
+diff --git a/layout/generic/ScrollContainerFrame.cpp b/layout/generic/ScrollContainerFrame.cpp
+index 676c882127d9..962300222cb3 100644
+--- a/layout/generic/ScrollContainerFrame.cpp
++++ b/layout/generic/ScrollContainerFrame.cpp
+@@ -3379,6 +3379,9 @@ void ScrollContainerFrame::ScrollToImpl(
+   }
+ 
+   if (nsCOMPtr<nsIDocShell> docShell = presContext->GetDocShell()) {
++#ifdef MOZ_WIDGET_UIKIT
++    NotifyNativeTextInputPositionChanged(*presContext->Document());
++#endif
+     docShell->NotifyScrollObservers();
+   }
+ }

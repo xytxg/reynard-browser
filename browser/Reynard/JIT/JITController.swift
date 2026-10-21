@@ -29,12 +29,24 @@ final class JITController {
         getEntitlementValue("com.apple.private.security.no-sandbox")
     }
     
-    func start() {
-        guard usePtraceJIT() || !isDDIMissing() else {
-            hasHandledFailure = true
-            presentMissingDDIFailureScreen()
+    func startBackgroundAudioIfNeeded() {
+        guard !usePtraceJIT(),
+              Prefs.JITSettings.isJITEnabled,
+              hasTXMSupport(),
+              !hasHandledFailure else {
             return
         }
+        
+        BackgroundAudioManager.shared.start()
+    }
+    
+    func start() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleApplicationDidBecomeActive),
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
         
         NotificationCenter.default.addObserver(
             self,
@@ -48,12 +60,12 @@ final class JITController {
             name: .jitEndpointMonitorDidFail,
             object: nil
         )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(handleApplicationDidBecomeActive),
-            name: UIApplication.didBecomeActiveNotification,
-            object: nil
-        )
+        
+        guard usePtraceJIT() || !isDDIMissing() else {
+            hasHandledFailure = true
+            presentMissingDDIFailureScreen()
+            return
+        }
     }
     
     private func isDDIMissing() -> Bool {
@@ -212,6 +224,7 @@ final class JITController {
                 return
             }
             self.hasHandledFailure = true
+            BackgroundAudioManager.shared.stop()
             self.presentEnablementFailureScreen(
                 error: error,
                 showsErrorDetails: error.code != Int(ETIMEDOUT)
@@ -315,6 +328,7 @@ final class JITController {
         }
         
         isJITLessModeActive = true
+        BackgroundAudioManager.shared.stop()
         attachQueue.async {
             self.cancelAllPreflightWatchdogs()
             self.attachedPIDs.removeAll()
@@ -369,6 +383,7 @@ final class JITController {
             }
             
             self.hasHandledFailure = true
+            BackgroundAudioManager.shared.stop()
             self.presentEnablementFailureScreen(error: NSError(domain: "Reynard.JIT", code: Int(ETIMEDOUT), userInfo: nil), showsErrorDetails: false)
         }
     }

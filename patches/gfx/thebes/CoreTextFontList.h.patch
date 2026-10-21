@@ -1,8 +1,8 @@
 diff --git a/gfx/thebes/CoreTextFontList.h b/gfx/thebes/CoreTextFontList.h
-index 6a2489dc12b3..3598a4f737de 100644
+index 780964a8755e..06b3a4c818c8 100644
 --- a/gfx/thebes/CoreTextFontList.h
 +++ b/gfx/thebes/CoreTextFontList.h
-@@ -32,6 +32,11 @@ class CTFontEntry final : public gfxFontEntry {
+@@ -35,6 +35,11 @@ class CTFontEntry final : public gfxFontEntry {
    CTFontEntry(const nsACString& aPostscriptName, WeightRange aWeight,
                bool aIsStandardFace = false, double aSizeHint = 0.0);
  
@@ -13,8 +13,8 @@ index 6a2489dc12b3..3598a4f737de 100644
 +
    // for use with data fonts
    CTFontEntry(const nsACString& aPostscriptName, CGFontRef aFontRef,
-               WeightRange aWeight, StretchRange aStretch,
-@@ -82,10 +87,22 @@ class CTFontEntry final : public gfxFontEntry {
+               WeightRange aWeight, WidthRange aWidth, SlantStyleRange aStyle,
+@@ -77,7 +82,17 @@ class CTFontEntry final : public gfxFontEntry {
  
   protected:
    // Protected destructor, to discourage deletion outside of Release():
@@ -33,12 +33,14 @@ index 6a2489dc12b3..3598a4f737de 100644
  
    gfxFont* CreateFontInstance(const gfxFontStyle* aFontStyle) override;
  
+@@ -89,11 +104,18 @@ class CTFontEntry final : public gfxFontEntry {
+ 
+   bool HasFontTableInternal(uint32_t aTableTag) override;
+ 
 +  bool TestCharacterMap(uint32_t aCh) override;
 +
-   bool HasFontTable(uint32_t aTableTag) override;
- 
    static void DestroyBlobFunc(void* aUserData);
-@@ -93,6 +110,11 @@ class CTFontEntry final : public gfxFontEntry {
+ 
    FontTableCache* GetFontTableCache(bool aCreate) override { return nullptr; }
  
    CGFontRef mFontRef MOZ_GUARDED_BY(mLock);  // owning reference

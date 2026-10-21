@@ -1,6 +1,1196 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "All Cookies" : {
+      "localizations" : {
+        "am" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ሁሉም ኩኪዎች"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "كل ملفات تعريف الارتباط"
+          }
+        },
+        "ast" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toles cookies"
+          }
+        },
+        "az" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bütün çərəzləri"
+          }
+        },
+        "be" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Усе кукі"
+          }
+        },
+        "bg" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Всички бисквитки"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "সমস্ত কুকিস"
+          }
+        },
+        "br" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An holl doupinoù"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Svi kolačići"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Totes les galetes"
+          }
+        },
+        "ckb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هەموو شەکرۆکەکان"
+          }
+        },
+        "co" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tutti i canistrelli"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Všechny cookies"
+          }
+        },
+        "cy" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pob cwci"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle cookies"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Cookies"
+          }
+        },
+        "dsb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wšykne cookieje"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Όλα τα cookie"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Cookies"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Cookies"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Cookies"
+          }
+        },
+        "eo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ĉiuj kuketoj"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas las cookies"
+          }
+        },
+        "es-AR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas las cookies"
+          }
+        },
+        "es-CL" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas las cookies"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas las cookies"
+          }
+        },
+        "es-MX" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas las cookies"
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kõik küpsised"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cookie guztiak"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تمام کلوچک‌ها"
+          }
+        },
+        "ff" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuukiiji ɗii kala"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaikki evästeet"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lahat ng mga cookie"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tous les cookies"
+          }
+        },
+        "fur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ducj i cookies"
+          }
+        },
+        "fy-NL" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle cookies"
+          }
+        },
+        "gd" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Briosgaid sam bith"
+          }
+        },
+        "gl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas as cookies"
+          }
+        },
+        "gn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opaite kookie"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "כל העוגיות"
+          }
+        },
+        "hi-IN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सभी कुकीज़"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Svi kolačići"
+          }
+        },
+        "hsb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wšě placki"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Összes süti"
+          }
+        },
+        "hy-AM" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Բոլոր cookie-ները"
+          }
+        },
+        "ia" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tote le cookies"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Semua kuki"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allar vefkökur"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tutti i cookie"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべてのCookie"
+          }
+        },
+        "ka" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ყველა ფუნთუშა"
+          }
+        },
+        "kab" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akk inagan n tuqqna"
+          }
+        },
+        "kk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Барлық cookies файлдары"
+          }
+        },
+        "kn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ಎಲ್ಲಾ ಕುಕೀಗಳು"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모든 쿠키"
+          }
+        },
+        "ku" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hemû çerez"
+          }
+        },
+        "lij" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tutti i cookie"
+          }
+        },
+        "lo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ຄຸກກີ້ທັງຫມົດ"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visi slapukai"
+          }
+        },
+        "ml" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "എല്ലാ കുക്കികളും"
+          }
+        },
+        "mr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सर्व कुकीज"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ကွတ်ကီးအားလုံး"
+          }
+        },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle infokapsler"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle cookies"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle infokapslar"
+          }
+        },
+        "oc" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Totes los cookies"
+          }
+        },
+        "pa-Arab-PK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سارے کوکیاں"
+          }
+        },
+        "pa-Guru-IN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਸਾਰੇ ਕੂਕੀਜ਼"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wszystkie ciasteczka"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todos os cookies"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todos os cookies"
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tut ils cookies"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toate cookie-urile"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Все куки"
+          }
+        },
+        "sat" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ᱠᱷᱚᱛᱚ ᱠᱩᱩᱠᱤ ᱠᱚ"
+          }
+        },
+        "sc" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Totu is testimòngios"
+          }
+        },
+        "scn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tutti i viscotta"
+          }
+        },
+        "si" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "සමස්ත දත්තකඩ"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Všetky cookies"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vse piškotke"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Krejt cookie-t"
+          }
+        },
+        "sr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сви колачићи"
+          }
+        },
+        "su" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sakabéh réréméh"
+          }
+        },
+        "sv-SE" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alla kakor"
+          }
+        },
+        "szl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wszyskie cookies"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "அனைத்து நினைவிகளும்"
+          }
+        },
+        "te" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "కుకీలన్నీ"
+          }
+        },
+        "tg" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ҳамаи кукиҳо"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คุกกี้ทั้งหมด"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tüm çerezler"
+          }
+        },
+        "ug" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بارلىق Cookies"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Усі файли cookie"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تمام کوکیز"
+          }
+        },
+        "uz" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barcha cookie fayllar"
+          }
+        },
+        "vec" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tutti i cookie"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tất cả cookie"
+          }
+        },
+        "yo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gbogbo kúkíìsì"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有 Cookie"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有 Cookie"
+          }
+        }
+      }
+    },
+    "All Third-Party Cookies" : {
+      "localizations" : {
+        "am" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ሁሉም የሶስተኛ ወገን ኩኪዎች"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "كل ملفات تعريف الارتباط للطرف الثالث"
+          }
+        },
+        "ast" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toles cookies de terceros"
+          }
+        },
+        "az" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bütün üçüncü-tərəf çərəzlər"
+          }
+        },
+        "be" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Усе кукі трэцяга боку"
+          }
+        },
+        "bg" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Всички бисквитки от трети страни"
+          }
+        },
+        "br" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Holl doupinoù an tredeoù"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Svi kolačići treće strane"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Totes les galetes de tercers"
+          }
+        },
+        "ckb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هەموو شەکرۆکەکانی لایەنی سێهەم"
+          }
+        },
+        "co" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tutti i canistrelli terzi"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Všechny cookies třetích stran"
+          }
+        },
+        "cy" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pob cwci trydydd parti"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle tredjeparts-cookies"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Cookies von Drittanbietern"
+          }
+        },
+        "dsb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wšykne cookieje tśeśich"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Όλα τα τρίτα cookie"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Third-Party Cookies"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Third-Party Cookies"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Third-Party Cookies"
+          }
+        },
+        "eo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ĉiuj nerektaj kuketoj"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas las cookies de terceros"
+          }
+        },
+        "es-AR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas las cookies de terceros"
+          }
+        },
+        "es-CL" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas las cookies de terceros"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas las cookies de terceros"
+          }
+        },
+        "es-MX" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas las cookies de terceros"
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kõik kolmanda osapoole küpsised"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hirugarrenen cookie guztiak"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تمام کلوچک‌های متفرقه"
+          }
+        },
+        "ff" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuukiiji goɗɗi ɗii kala"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaikki 3. osapuolen evästeet"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lahat ng mga third-party na cookie"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tous les cookies tiers"
+          }
+        },
+        "fur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ducj i cookies di tiercis parts"
+          }
+        },
+        "fy-NL" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle cookies fan tredden"
+          }
+        },
+        "gd" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gach briosgaid le treas-phàrtaidh"
+          }
+        },
+        "gl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas as cookies de terceiros"
+          }
+        },
+        "gn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umi kookie mbohapyháva"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "כל העוגיות צד־שלישי"
+          }
+        },
+        "hi-IN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सभी तृतीय-पक्ष कुकीज़"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Svi kolačići trećih strana"
+          }
+        },
+        "hsb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wšě placki třećich"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Összes harmadik féltől származó süti"
+          }
+        },
+        "hy-AM" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Բոլոր երրորդ կողմերի cookie-ները"
+          }
+        },
+        "ia" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tote le cookies de tertie-partes"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Semua kuki pihak ketiga"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allar vefkökur frá þriðja aðila"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tutti i cookie di terze parti"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべてのサードパーティCookie"
+          }
+        },
+        "ka" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ყველა გარეშე ფუნთუშა"
+          }
+        },
+        "kab" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akk inagan n tuqqna n wis kraḍ"
+          }
+        },
+        "kk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Барлық үшінші жақты cookies файлдары"
+          }
+        },
+        "kn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ಎಲ್ಲಾ ಮೂರನೇ ವ್ಯಕ್ತಿಯ ಕುಕೀಗಳು"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모든 제3자 쿠키"
+          }
+        },
+        "ku" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hemû çerezên partiya sêyemîn"
+          }
+        },
+        "lij" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tutti i cookie de terse parte"
+          }
+        },
+        "lo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ຄຸກກີ້ນອກທັງໝົດ"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visi trečiųjų šalių slapukai"
+          }
+        },
+        "ml" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "എല്ലാ മൂന്നാം കക്ഷി കുക്കികളും"
+          }
+        },
+        "mr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सर्व तृतीय-पक्षीय कुकीज"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "အခြားပြင်ပကွတ်ကီးအားလုံး"
+          }
+        },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle tredjeparts-infokapsler"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle cookies van derden"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle tredjeparts-infokapslar"
+          }
+        },
+        "oc" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Totes los cookies tèrces"
+          }
+        },
+        "pa-Arab-PK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سارے تیجی دھر کوکیاں"
+          }
+        },
+        "pa-Guru-IN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਸਾਰੇ ਤੀਜੀ-ਧਿਰ ਕੂਕੀਜ਼"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wszystkie ciasteczka zewnętrznych witryn"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todos os cookies de terceiros"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todos os cookies de terceiros"
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tut ils cookies da terzas partidas"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toate cookie-urile de la terți"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Все сторонние куки"
+          }
+        },
+        "sat" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ᱡᱷᱚᱛᱚ ᱯᱮᱼᱯᱟᱨᱴᱭ ᱠᱩᱩᱠᱤ ᱠᱚ"
+          }
+        },
+        "sc" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Totu is testimòngios de àteras partes"
+          }
+        },
+        "scn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tutti i viscotta terzi"
+          }
+        },
+        "si" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "සමස්ත තෙවන පාර්ශ්ව දත්තකඩ"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Všetky cookies tretích strán"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vse piškotke tretjih strani"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Krejt cookie-t nga palë të treta"
+          }
+        },
+        "sr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сви колачићи трећих страна"
+          }
+        },
+        "su" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sakabéh réréméh pihak katilu"
+          }
+        },
+        "sv-SE" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alla tredjepartskakor"
+          }
+        },
+        "szl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wszyske śledzōnce elymynta z inkszych firmōw"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "அனைத்து மூன்றாம் தரப்பு நினைவிகளும்"
+          }
+        },
+        "te" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "మూడవ-పక్ష కుకీలన్నీ"
+          }
+        },
+        "tg" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ҳамаи кукиҳои тарафҳои сеюм"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คุกกี้จากบุคคลที่สามทั้งหมด"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tüm üçüncü taraf çerezleri"
+          }
+        },
+        "ug" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بارلىق ئۈچىنچى تەرەپ Cookies"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Усі сторонні файли cookie"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تمام تیسری تنظیم کے کوکیز"
+          }
+        },
+        "uz" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barcha uchinchi tomon cookie fayllar"
+          }
+        },
+        "vec" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tuti cuanti i cookie de terse parti"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tất cả cookie của bên thứ ba"
+          }
+        },
+        "yo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gbogbo kúkíìsì ẹni kẹta"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有第三方 Cookie"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有第三方 Cookie"
+          }
+        }
+      }
+    },
     "Automatically attempts to connect to websites using HTTPS encryption protocol for increased security." : {
       "localizations" : {
         "am" : {
@@ -270,7 +1460,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "セキュリティ強化のため、自動的に HTTPS 暗号化プロトコルを使用してサイトへの接続を試行します。"
+            "value" : "セキュリティ向上のため、自動的にHTTPS暗号化接続を試みます。"
           }
         },
         "ka" : {
@@ -348,7 +1538,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Automatycznie próbuje łączyć się ze stronami za pomocą protokołu szyfrowania HTTPS w\\u00a0celu zwiększenia bezpieczeństwa."
+            "value" : "Automatycznie próbuje łączyć się ze stronami za pomocą protokołu szyfrowania HTTPS w celu zwiększenia bezpieczeństwa."
           }
         },
         "pt-BR" : {
@@ -504,7 +1694,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "自動嘗試使用加密過的 HTTPS 通訊協定連線到網站，以增加安全性。"
+            "value" : "自動嘗試透過 HTTPS 加密通訊協定連線至網站，以提高安全性。"
           }
         }
       }
@@ -898,7 +2088,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wybierz, które elementy śledzące i\\u00a0skrypty blokować."
+            "value" : "Wybierz, które elementy śledzące i skrypty blokować."
           }
         },
         "pt-BR" : {
@@ -1352,7 +2542,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "既知のトラッキングウェブサイトへのリダイレクトにより設定された Cookie を消去します。"
+            "value" : "既知のトラッキングサイトへのリダイレクトで設定されたCookieを消去します。"
           }
         },
         "ka" : {
@@ -1592,13 +2782,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "清除通过重定向设置到已知跟踪网站的 Cookie。"
+            "value" : "清除在重定向至已知跟踪网站时设置的 Cookie。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "清除已知網站在重新導向時所設定的 Cookie。"
+            "value" : "清除重新導向至已知追蹤網站時所設定的 Cookie。"
           }
         }
       }
@@ -2386,7 +3576,7 @@
         "et" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "küpsised külastamata saitidelt"
+            "value" : "Küpsised külastamata saitidelt"
           }
         },
         "eu" : {
@@ -2518,7 +3708,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "未訪問のサイトの Cookie"
+            "value" : "未訪問のWebサイトからのCookie"
           }
         },
         "ka" : {
@@ -2632,7 +3822,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ciasteczka z\\u00a0nieodwiedzonych witryn"
+            "value" : "Ciasteczka z nieodwiedzonych witryn"
           }
         },
         "pt-BR" : {
@@ -2819,592 +4009,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "來自未造訪過網站的 Cookie"
-          }
-        }
-      }
-    },
-    "Cross-Site and Social Media Trackers" : {
-      "localizations" : {
-        "am" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ድረ-ገፅ ተሻጋሪ እና የማህበራዊ ሚዲያ መከታተያዎች"
-          }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "المتعقّبات الاجتماعية ومتعقّبات بين المواقع"
-          }
-        },
-        "ast" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rastrexadores ente sitios y de redes sociales"
-          }
-        },
-        "be" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Трэкеры міжсайтавыя і сацыяльных сетак"
-          }
-        },
-        "bg" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Проследяване в различни сайтове и социални медии"
-          }
-        },
-        "br" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Heulierien etre-lec’hienn ha kevredadel"
-          }
-        },
-        "bs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cross-site i social media trackeri"
-          }
-        },
-        "ca" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Elements de seguiment de xarxes socials i entre llocs"
-          }
-        },
-        "ckb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "چاودێریکەری ناو ماڵپەڕ و تۆڕی کۆمەڵایەتی"
-          }
-        },
-        "co" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Perseguitatori intersiti è di rete suciale"
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sledovací cookies, např. sociálních sítí"
-          }
-        },
-        "cy" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tracwyr traws-gwefan a chyfryngau cymdeithasol"
-          }
-        },
-        "da" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sporings-teknologier på tværs af websteder og sociale medier"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zur seitenübergreifenden Aktivitätenverfolgung und von sozialen Netzwerken"
-          }
-        },
-        "dsb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pśeslědowaki mjazy sedłami a socialnych medijow"
-          }
-        },
-        "el" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ιχνηλάτες μεταξύ ιστοτόπων και κοινωνικών δικτύων"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cross-Site and Social Media Trackers"
-          }
-        },
-        "en-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cross-Site and Social Media Trackers"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cross-Site and Social Media Trackers"
-          }
-        },
-        "eo" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Interretejaj kaj sociretaj spuriloj"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rastreadores de sitios y redes sociales"
-          }
-        },
-        "es-AR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rastreadores de sitios y redes sociales"
-          }
-        },
-        "es-CL" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rastreadores de sitios cruzados y redes sociales"
-          }
-        },
-        "es-ES" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rastreadores de sitios y redes sociales"
-          }
-        },
-        "es-MX" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rastreadores de sitios y redes sociales"
-          }
-        },
-        "et" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "saitideülesed ja sotsiaalmeedia jälitajad"
-          }
-        },
-        "eu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Guneen arteko eta sare sozialetako jarraipen-elementuak"
-          }
-        },
-        "fa" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ردیاب‌های میان‌پایگاهی و رسانه‌های اجتماعی"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sivustorajat ylittävät ja sosiaalisen median seuraimet"
-          }
-        },
-        "fil" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mga cross-site at social media tracker"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Traqueurs intersites et de réseaux sociaux"
-          }
-        },
-        "fur" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Spiis (trackers) inter-sît e di social media"
-          }
-        },
-        "fy-NL" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cross-site- en sosjale-mediatrackers"
-          }
-        },
-        "gd" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tracaichean thar làraichean is tracaichean nam meadhanan sòisealta"
-          }
-        },
-        "gl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rastreadores entre sitios e de redes sociais"
-          }
-        },
-        "gn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tenda ha ava ñandutieta rapykuehoha"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "עוקבים חוצי אתרים ורשתות חברתיות"
-          }
-        },
-        "hi-IN" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "क्रॉस-साइट और सोशल मीडिया ट्रैकर्स"
-          }
-        },
-        "hr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Programi za međustranično praćenje i programi za praćenje od društvenih mreža"
-          }
-        },
-        "hsb" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Přesćěhowaki mjez sydłami a socialnych medijow"
-          }
-        },
-        "hu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Webhelyek közötti és közösségi média követők"
-          }
-        },
-        "hy-AM" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Խաչաձև կայքի և սոցիալական մեդիայի հետագծչներ"
-          }
-        },
-        "ia" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Traciatores inter sitos e de retes social"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pelacak lintas situs dan media sosial"
-          }
-        },
-        "is" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Milli vefsvæða- og samfélagmiðlararekjarar"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Traccianti intersito e dei social media"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "クロスサイトトラッカーとソーシャルメディアトラッカー"
-          }
-        },
-        "ka" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "საიტთაშორისი და სოციალური ქსელის მეთვალყურეები"
-          }
-        },
-        "kab" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ineḍfaṛen gar yismal akked yizeḍwa inmettiyen"
-          }
-        },
-        "kk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Сайтаралық және әлеуметтік желілер трекерлері"
-          }
-        },
-        "kn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ಕ್ರಾಸ್ ಸೈಟ್ ಮತ್ತು ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮ ಟ್ರ್ಯಾಕರ್ಗಳು"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "교차 사이트 및 소셜 미디어 추적기"
-          }
-        },
-        "ku" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Şopînerên nav-malperî û şopînerên medyaya civakî"
-          }
-        },
-        "lij" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Traciatoî inter-scito e di social media"
-          }
-        },
-        "lo" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ຕົວຕິດຕາມຂ້າມເວັບໄຊທ ແລະ ສືອອນລາຍ"
-          }
-        },
-        "lt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tarp svetainių veikiantys ir socialinių tinklų stebėjimo elementai"
-          }
-        },
-        "ml" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ക്രോസ്-സൈറ്റ്, പൊതുമാധ്യമ പിന്തുടൎച്ചയന്ത്രങ്ങൾ"
-          }
-        },
-        "mr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "क्रॉस-साइट आणि सोशल मीडिया ट्रॅकर"
-          }
-        },
-        "my" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ဆိုက်များကူးခြင်းနှင့်လူမှုမီဒီယာခြေရာခံ"
-          }
-        },
-        "nb-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sporing på tvers av nettsteder og sporing via sosiale medier"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cross-site- en sociale-mediatrackers"
-          }
-        },
-        "nn-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sporing på tvers av nettstadar og sporing via sosiale medium"
-          }
-        },
-        "oc" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Traçadors intersites e de malhums socials"
-          }
-        },
-        "pa-Arab-PK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "انتر سائیٹ تے سماجک میڈیا ٹریکر"
-          }
-        },
-        "pa-Guru-IN" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ਅੰਤਰ-ਸਾਈਟ ਅਤੇ ਸਮਾਜਿਕ ਮੀਡਿਆ ਟਰੈਕਰ"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Śledzące między witrynami i\\u00a0serwisów społecznościowych"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rastreadores entre sites e de mídias sociais"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rastreadores entre sites e de redes sociais"
-          }
-        },
-        "rm" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fastizaders tranter websites e fastizaders da raits socialas"
-          }
-        },
-        "ro" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Elemente de urmărire ale rețelelor sociale și inter-site-uri"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Межсайтовые и социальные трекеры"
-          }
-        },
-        "sat" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ᱠᱨᱚᱥᱼᱥᱟᱭᱤᱴ ᱟᱨ ᱥᱳᱥᱤᱭᱟᱞ ᱢᱤᱰᱤᱭᱟ ᱯᱟᱧᱡᱟ ᱫᱟᱱᱟᱲ ᱠᱚ"
-          }
-        },
-        "sc" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sighidores intre sitos e de retes sotziales"
-          }
-        },
-        "scn" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Trazzatura ntirsitu e dî riti suciali"
-          }
-        },
-        "si" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "හරස් අඩවි සහ සමාජ මාධ්‍ය ලුහුබැඳීම්"
-          }
-        },
-        "sk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sledovacie prvky sociálnych sietí"
-          }
-        },
-        "sl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Spletne sledilce in sledilce družbenih omrežij"
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gjurmues nga sajte në sajte dhe mediash shoqërore"
-          }
-        },
-        "sr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Колачићи с унакрсних страница и друштвених мрежа"
-          }
-        },
-        "su" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Palacak meuntas loka jeung média sosial"
-          }
-        },
-        "sv-SE" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Globala och sociala medie-spårare"
-          }
-        },
-        "szl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Elymynta śledzōnce miyndzy strōnami i ôd społecznościowych serwisōw"
-          }
-        },
-        "ta" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "பிற தள மற்றும் சமூக ஊடக கண்காணிப்பாளர்கள்"
-          }
-        },
-        "te" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "క్రాస్-సైటు, సామాజిక మాధ్యమాల ట్రాకర్లు"
-          }
-        },
-        "tg" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Васоити пайгирии шабакаҳои иҷтимоӣ ва байни сомонаҳо"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ตัวติดตามข้ามไซต์และสื่อสังคมออนไลน์"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Siteler arası takip kodlrı ve sosyal medya takip kodları"
-          }
-        },
-        "tt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Сайт-ара һәм социаль челтәр күзәтүчеләре"
-          }
-        },
-        "ug" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "بېكەت ھالقىپ ۋە ئىجتىمائىي تاراتقۇ ئىزلىغۇچ"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Елементи стеження між сайтами та соціальні мережі"
-          }
-        },
-        "ur" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "کراس سائٹ اور سوشل میڈیا ٹریکرز"
-          }
-        },
-        "uz" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Saytlararo va ijtimoiy tarmoqlarning kuzatuvchilari"
-          }
-        },
-        "vec" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tracianti intersito e de i social media"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Trình theo dõi chéo và truyền thông xã hội"
-          }
-        },
-        "yo" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kírọ́sì-sáìtì àti olùtọpasẹ̀ ayélujára"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "跨站和社交媒体跟踪器"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "跨網站與社交媒體追蹤器"
           }
         }
       }
@@ -3672,7 +4276,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "クロスサイト Cookie"
+            "value" : "クロスサイトCookie"
           }
         },
         "ka" : {
@@ -4222,7 +4826,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "クロスサイトトラッキング Cookie"
+            "value" : "クロスサイトトラッキングCookie"
           }
         },
         "ka" : {
@@ -4523,6 +5127,592 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "跨網站追蹤 Cookie"
+          }
+        }
+      }
+    },
+    "Cross-Site and Social Media Trackers" : {
+      "localizations" : {
+        "am" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ድረ-ገፅ ተሻጋሪ እና የማህበራዊ ሚዲያ መከታተያዎች"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المتعقّبات الاجتماعية ومتعقّبات بين المواقع"
+          }
+        },
+        "ast" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rastrexadores ente sitios y de redes sociales"
+          }
+        },
+        "be" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Трэкеры міжсайтавыя і сацыяльных сетак"
+          }
+        },
+        "bg" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проследяване в различни сайтове и социални медии"
+          }
+        },
+        "br" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heulierien etre-lec’hienn ha kevredadel"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cross-site i social media trackeri"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elements de seguiment de xarxes socials i entre llocs"
+          }
+        },
+        "ckb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "چاودێریکەری ناو ماڵپەڕ و تۆڕی کۆمەڵایەتی"
+          }
+        },
+        "co" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perseguitatori intersiti è di rete suciale"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sledovací cookies, např. sociálních sítí"
+          }
+        },
+        "cy" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tracwyr traws-gwefan a chyfryngau cymdeithasol"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sporings-teknologier på tværs af websteder og sociale medier"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zur seitenübergreifenden Aktivitätenverfolgung und von sozialen Netzwerken"
+          }
+        },
+        "dsb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pśeslědowaki mjazy sedłami a socialnych medijow"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ιχνηλάτες μεταξύ ιστοτόπων και κοινωνικών δικτύων"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cross-Site and Social Media Trackers"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cross-Site and Social Media Trackers"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cross-Site and Social Media Trackers"
+          }
+        },
+        "eo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interretejaj kaj sociretaj spuriloj"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rastreadores de sitios y redes sociales"
+          }
+        },
+        "es-AR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rastreadores de sitios y redes sociales"
+          }
+        },
+        "es-CL" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rastreadores de sitios cruzados y redes sociales"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rastreadores de sitios y redes sociales"
+          }
+        },
+        "es-MX" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rastreadores de sitios y redes sociales"
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saitideülesed ja sotsiaalmeedia jälitajad"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guneen arteko eta sare sozialetako jarraipen-elementuak"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ردیاب‌های میان‌پایگاهی و رسانه‌های اجتماعی"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sivustorajat ylittävät ja sosiaalisen median seuraimet"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mga cross-site at social media tracker"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Traqueurs intersites et de réseaux sociaux"
+          }
+        },
+        "fur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spiis (trackers) inter-sît e di social media"
+          }
+        },
+        "fy-NL" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cross-site- en sosjale-mediatrackers"
+          }
+        },
+        "gd" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tracaichean thar làraichean is tracaichean nam meadhanan sòisealta"
+          }
+        },
+        "gl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rastreadores entre sitios e de redes sociais"
+          }
+        },
+        "gn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tenda ha ava ñandutieta rapykuehoha"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "עוקבים חוצי אתרים ורשתות חברתיות"
+          }
+        },
+        "hi-IN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "क्रॉस-साइट और सोशल मीडिया ट्रैकर्स"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Programi za međustranično praćenje i programi za praćenje od društvenih mreža"
+          }
+        },
+        "hsb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přesćěhowaki mjez sydłami a socialnych medijow"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Webhelyek közötti és közösségi média követők"
+          }
+        },
+        "hy-AM" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Խաչաձև կայքի և սոցիալական մեդիայի հետագծչներ"
+          }
+        },
+        "ia" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Traciatores inter sitos e de retes social"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pelacak lintas situs dan media sosial"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Milli vefsvæða- og samfélagmiðlararekjarar"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Traccianti intersito e dei social media"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "クロスサイトおよびSNSトラッカー"
+          }
+        },
+        "ka" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "საიტთაშორისი და სოციალური ქსელის მეთვალყურეები"
+          }
+        },
+        "kab" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ineḍfaṛen gar yismal akked yizeḍwa inmettiyen"
+          }
+        },
+        "kk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сайтаралық және әлеуметтік желілер трекерлері"
+          }
+        },
+        "kn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ಕ್ರಾಸ್ ಸೈಟ್ ಮತ್ತು ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮ ಟ್ರ್ಯಾಕರ್ಗಳು"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "교차 사이트 및 소셜 미디어 추적기"
+          }
+        },
+        "ku" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şopînerên nav-malperî û şopînerên medyaya civakî"
+          }
+        },
+        "lij" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Traciatoî inter-scito e di social media"
+          }
+        },
+        "lo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ຕົວຕິດຕາມຂ້າມເວັບໄຊທ ແລະ ສືອອນລາຍ"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tarp svetainių veikiantys ir socialinių tinklų stebėjimo elementai"
+          }
+        },
+        "ml" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ക്രോസ്-സൈറ്റ്, പൊതുമാധ്യമ പിന്തുടൎച്ചയന്ത്രങ്ങൾ"
+          }
+        },
+        "mr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "क्रॉस-साइट आणि सोशल मीडिया ट्रॅकर"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ဆိုက်များကူးခြင်းနှင့်လူမှုမီဒီယာခြေရာခံ"
+          }
+        },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sporing på tvers av nettsteder og sporing via sosiale medier"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cross-site- en sociale-mediatrackers"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sporing på tvers av nettstadar og sporing via sosiale medium"
+          }
+        },
+        "oc" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Traçadors intersites e de malhums socials"
+          }
+        },
+        "pa-Arab-PK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "انتر سائیٹ تے سماجک میڈیا ٹریکر"
+          }
+        },
+        "pa-Guru-IN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਅੰਤਰ-ਸਾਈਟ ਅਤੇ ਸਮਾਜਿਕ ਮੀਡਿਆ ਟਰੈਕਰ"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Śledzące między witrynami i serwisów społecznościowych"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rastreadores entre sites e de mídias sociais"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rastreadores entre sites e de redes sociais"
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fastizaders tranter websites e fastizaders da raits socialas"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elemente de urmărire ale rețelelor sociale și inter-site-uri"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Межсайтовые и социальные трекеры"
+          }
+        },
+        "sat" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ᱠᱨᱚᱥᱼᱥᱟᱭᱤᱴ ᱟᱨ ᱥᱳᱥᱤᱭᱟᱞ ᱢᱤᱰᱤᱭᱟ ᱯᱟᱧᱡᱟ ᱫᱟᱱᱟᱲ ᱠᱚ"
+          }
+        },
+        "sc" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sighidores intre sitos e de retes sotziales"
+          }
+        },
+        "scn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trazzatura ntirsitu e dî riti suciali"
+          }
+        },
+        "si" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "හරස් අඩවි සහ සමාජ මාධ්‍ය ලුහුබැඳීම්"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sledovacie prvky sociálnych sietí"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spletne sledilce in sledilce družbenih omrežij"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gjurmues nga sajte në sajte dhe mediash shoqërore"
+          }
+        },
+        "sr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Колачићи с унакрсних страница и друштвених мрежа"
+          }
+        },
+        "su" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palacak meuntas loka jeung média sosial"
+          }
+        },
+        "sv-SE" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Globala och sociala medie-spårare"
+          }
+        },
+        "szl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elymynta śledzōnce miyndzy strōnami i ôd społecznościowych serwisōw"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "பிற தள மற்றும் சமூக ஊடக கண்காணிப்பாளர்கள்"
+          }
+        },
+        "te" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "క్రాస్-సైటు, సామాజిక మాధ్యమాల ట్రాకర్లు"
+          }
+        },
+        "tg" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Васоити пайгирии шабакаҳои иҷтимоӣ ва байни сомонаҳо"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ตัวติดตามข้ามไซต์และสื่อสังคมออนไลน์"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siteler arası takip kodlrı ve sosyal medya takip kodları"
+          }
+        },
+        "tt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сайт-ара һәм социаль челтәр күзәтүчеләре"
+          }
+        },
+        "ug" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بېكەت ھالقىپ ۋە ئىجتىمائىي تاراتقۇ ئىزلىغۇچ"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Елементи стеження між сайтами та соціальні мережі"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "کراس سائٹ اور سوشل میڈیا ٹریکرز"
+          }
+        },
+        "uz" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saytlararo va ijtimoiy tarmoqlarning kuzatuvchilari"
+          }
+        },
+        "vec" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tracianti intersito e de i social media"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trình theo dõi chéo và truyền thông xã hội"
+          }
+        },
+        "yo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kírọ́sì-sáìtì àti olùtọpasẹ̀ ayélujára"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "跨站和社交媒体跟踪器"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "跨網站與社交媒體追蹤器"
           }
         }
       }
@@ -5735,540 +6925,946 @@
         }
       }
     },
-    "Enable in All Tabs" : {
+    "DNS over HTTPS" : {
       "localizations" : {
         "am" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "በሁሉም ትሮች ውስጥ አንቃ"
+            "value" : "DNS በ HTTPS ላይ"
           }
         },
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "فعّله في كل التبويبات"
-          }
-        },
-        "ast" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activar en toles llingüetes"
+            "value" : "DNS عبر HTTPS"
           }
         },
         "be" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Уключыць ва ўсіх картках"
+            "value" : "DNS праз HTTPS"
           }
         },
         "bg" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Активиране във всички раздели"
+            "value" : "DNS през HTTPS"
+          }
+        },
+        "bqi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "دی ان اس ری HTTPS"
           }
         },
         "br" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gweredekaat en holl ivinelloù"
+            "value" : "DNS a-raok HTTPS"
           }
         },
         "bs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Omogući u svim tabovima"
+            "value" : "DNS preko HTTPS-a"
           }
         },
         "ca" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activa’l en totes les pestanyes"
+            "value" : "DNS sobre HTTPS"
+          }
+        },
+        "cak" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS chi rij HTTPS"
           }
         },
         "co" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Attivà in tutte l’unghjette"
+            "value" : "DNS sopra HTTPS"
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zapnout ve všech panelech"
+            "value" : "DNS over HTTPS"
           }
         },
         "cy" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Galluogi ym mhob tab"
+            "value" : "DNS Dros HTTPS"
           }
         },
         "da" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aktiver i alle faneblade"
+            "value" : "DNS via HTTPS"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "In allen Tabs aktivieren"
+            "value" : "DNS Over HTTPS"
           }
         },
         "dsb" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "We wšych rejtarikach zmóžniś"
+            "value" : "DNS pśez HTTPS"
           }
         },
         "el" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ενεργοποίηση σε όλες τις καρτέλες"
+            "value" : "DNS μέσω HTTPS"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enable in All Tabs"
+            "value" : "DNS over HTTPS"
           }
         },
         "en-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enable in All Tabs"
+            "value" : "DNS over HTTPS"
           }
         },
         "en-GB" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enable in All Tabs"
+            "value" : "DNS over HTTPS"
           }
         },
         "eo" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aktivigi en ĉiuj langetoj"
+            "value" : "DNS per HTTPS"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activar en todas las pestañas"
+            "value" : "DNS sobre HTTPS"
           }
         },
         "es-AR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Habilitar en todas las pestañas"
+            "value" : "DNS sobre HTTPS"
           }
         },
         "es-CL" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Habilitar en todas las pestañas"
+            "value" : "DNS sobre HTTPS"
           }
         },
         "es-ES" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activar en todas las pestañas"
+            "value" : "DNS sobre HTTPS"
           }
         },
         "es-MX" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Habilitar en todas las pestañas"
+            "value" : "DNS sobre HTTPS"
           }
         },
         "et" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lubatakse kõigil kaartidel"
+            "value" : "DNS üle HTTPS-i"
           }
         },
         "eu" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gaitu fitxa guztietan"
+            "value" : "HTTPS gaineko DNSa"
           }
         },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "به کار انداختن در تمام زبانه‌ها"
+            "value" : "ساناد روی HTTPS"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Käytä kaikissa välilehdissä"
+            "value" : "DNS HTTPS:n kautta"
           }
         },
         "fil" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "I-enable sa lahat ng mga tab"
+            "value" : "DNS Over HTTPS"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activer dans tous les onglets"
+            "value" : "DNS via HTTPS"
           }
         },
         "fur" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ative in dutis lis schedis"
+            "value" : "DNS sore HTTPS"
           }
         },
         "fy-NL" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Yn alle ljepblêden ynskeakelje"
+            "value" : "DNS oer HTTPS"
           }
         },
         "gd" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cuir an comas air gach taba"
+            "value" : "DNS thar HTTPS"
           }
         },
         "gl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activar en todas as lapelas"
+            "value" : "DNS sobre HTTPS"
           }
         },
         "gn" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Embojuruja opaite tendayképe"
+            "value" : "DNS HTTPS rehegua"
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "הפעלה בכל הלשוניות"
+            "value" : "DNS על גבי HTTPS"
           }
         },
         "hr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Omogući u svim karticama"
+            "value" : "DNS preko HTTPS-a"
           }
         },
         "hsb" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "We wšěch rajtarkach zmóžnić"
+            "value" : "DNS přez HTTPS"
           }
         },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Engedélyezés az összes lapon"
+            "value" : "HTTPS feletti DNS"
           }
         },
         "hy-AM" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Միացնել բոլոր ներդիրներում"
+            "value" : "DNS-ը HTTPS-ի միջով"
           }
         },
         "ia" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activar in tote le schedas"
+            "value" : "DNS Super HTTPS"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aktifkan di semua tab"
+            "value" : "DNS Di Atas HTTPS"
           }
         },
         "is" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Virkja í öllum flipum"
+            "value" : "DNS yfir HTTPS"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Attiva in tutte le schede"
+            "value" : "DNS su HTTPS"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "すべてのタブで有効にする"
+            "value" : "DNS over HTTPS"
           }
         },
         "ka" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ჩართვა ყველა ჩანართში"
+            "value" : "DNS-მოთხოვნა HTTPS-ით"
           }
         },
         "kab" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rmed deg meṛṛa accaren"
+            "value" : "DNS nnig n HTTPS"
           }
         },
         "kk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Барлық беттерде іске қосу"
-          }
-        },
-        "km" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "បើក​ដំណើរការក្នុង​ផ្ទាំង​ទាំងអស់"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "모든 탭에서 사용"
+            "value" : "HTTPS арқылы DNS"
           }
         },
         "ku" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Di hemû hilpekînan de çalak bike"
+            "value" : "DNS li ser HTTPS"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS Over HTTPS"
           }
         },
         "lo" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ເປີດໃຊ້ໃນທຸກແຖບ"
+            "value" : "DNS ຜ່ານ HTTPS"
           }
         },
         "ml" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "എല്ലാ ടാബുകളിലും സജ്ജമാക്കുക"
+            "value" : "HTTPS മീതെ DNS"
           }
         },
         "nb-NO" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aktiver i alle faner"
+            "value" : "DNS-over-HTTPS"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "In alle tabbladen inschakelen"
+            "value" : "DNS over HTTPS"
           }
         },
         "nn-NO" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aktiver i alle faner"
+            "value" : "DNS-over-HTTPS"
           }
         },
         "oc" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activar per totes los onglets"
-          }
-        },
-        "pa-Arab-PK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ساریاں ٹیباں وچ چالو کرو"
+            "value" : "DNS via HTTPS"
           }
         },
         "pa-Guru-IN" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ਸਾਰੀਆਂ ਟੈਬਾਂ ਵਿੱਚ ਸਮਰੱਥ ਕਰੋ"
+            "value" : "HTTPS ਉੱਤੇ DNS"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Włącz we wszystkich kartach"
+            "value" : "DNS poprzez HTTPS"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ativar em todas as abas"
+            "value" : "DNS sobre HTTPS"
           }
         },
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ativar em todos os separadores"
+            "value" : "DNS sobre HTTPS"
           }
         },
         "rm" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activar en tut ils tabs"
+            "value" : "DNS via HTTPS"
           }
         },
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activează în toate filele"
+            "value" : "DNS prin HTTPS"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Включить во всех вкладках"
+            "value" : "DNS через HTTPS"
           }
         },
         "sat" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ᱡᱷᱚᱛᱚ ᱴᱮᱵᱽ ᱠᱚᱨᱮ ᱮᱢ ᱪᱷᱚᱭ ᱢᱮ"
+            "value" : "HTTPS ᱪᱮᱛᱟᱱ ᱨᱮ DNS"
           }
         },
         "sc" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Permite in totu is ischedas"
+            "value" : "DNS pro mèdiu de HTTPS"
           }
         },
         "scn" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Abbìlita pi tutti i schedi"
-          }
-        },
-        "si" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "සියළු පටිති සඳහා යොදන්න"
+            "value" : "DNS ncapu a HTTPS"
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Povoliť na všetkých kartách"
+            "value" : "DNS cez HTTPS"
           }
         },
         "sl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Omogoči v vseh zavihkih"
+            "value" : "DNS prek HTTPS"
           }
         },
         "sq" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aktivizoje në krejt skedat"
+            "value" : "DNS Përmes HTTPS-je"
           }
         },
         "sr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Омогући у свим језичцима"
-          }
-        },
-        "su" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aktipkeun dina sadaya tab"
+            "value" : "DNS преко HTTPS-а"
           }
         },
         "sv-SE" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aktivera i alla flikar"
-          }
-        },
-        "szl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Załōncz we wszyskich kartach"
-          }
-        },
-        "te" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "అన్ని ట్యాబులలోనూ చేతనించు"
+            "value" : "DNS över HTTPS"
           }
         },
         "tg" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Фаъол кардан дар ҳамаи варақаҳо"
+            "value" : "«DNS» тавассути «HTTPS»"
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "เปิดใช้งานในทุกแท็บ"
-          }
-        },
-        "tok" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "o ken"
+            "value" : "DNS Over HTTPS"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tüm sekmelerde etkinleştir"
-          }
-        },
-        "tt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Барлык табларда да кабызу"
+            "value" : "HTTPS üzerinden DNS"
           }
         },
         "ug" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "بارلىق بەتكۈچتە قوزغات"
+            "value" : "HTTPS ئاساسىدىكى DNS"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Увімкнути у всіх вкладках"
-          }
-        },
-        "uz" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Barcha varaqlarda yoqish"
+            "value" : "DNS через HTTPS"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bật trong tất cả các thẻ"
-          }
-        },
-        "yo" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gbàáláyè nínú gbogbo àwọn táàbù"
+            "value" : "DNS qua HTTPS"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "对所有标签页启用"
+            "value" : "基于 HTTPS 的 DNS"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "對所有分頁都開啟"
+            "value" : "DNS over HTTPS"
+          }
+        }
+      }
+    },
+    "Domain Name System (DNS) over HTTPS sends your request for a domain name through an encrypted connection, providing a secure DNS and making it harder for others to see which website you're about to access." : {
+      "localizations" : {
+        "am" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "የጎራ ስም ስርዓት (DNS) በ HTTPS ላይ የእርስዎን ጥያቄ የጎራ ስም በተመሳጠረ ግንኙነት ይልካል፣ ደህንነቱ የተጠበቀ DNS ያቀርባል እና የትኛውን ድህረ ገጽ መድረስ እንዳለብዎ ለሌሎች ለማየት አስቸጋሪ ያደርገዋል።"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يقوم نظام أسماء النطاقات (DNS) عبر HTTPS بإرسال طلبك لاسم النطاق من خلال اتصال مشفر، مما يوفر نظام DNS آمنًا ويجعل من الصعب على الآخرين معرفة الموقع الإلكتروني الذي أنت على وشك زيارته."
+          }
+        },
+        "bg" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Системата за имена на домейни (DNS) през HTTPS изпраща вашата заявка за име на домейн чрез шифрована връзка, осигурявайки сигурен DNS и правейки по-трудно за другите да видят до кой сайт сте на достъп."
+          }
+        },
+        "bqi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سامانه نوم دامنه یا (DNS) ری HTTPS درخاستا ایسا سی ی نوم دامنه ن ز بارت ی ارتبات رزم ناهاڌه بیڌه افشنه ک ای کار ایمنی DNS ن قلوه اکونه وو نؽله ک دیرووݩ ترسته بۊن بفهمن چ وبگهی ن اخۊین بنیرین، چیناکه ای کار سیسووݩ سخت تر ابۊ."
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistem imena domena (DNS) preko HTTPS-a šalje vaš zahtjev za ime domene putem šifrovane veze, pružajući siguran DNS i otežavajući drugima da vide kojoj web stranici ćete pristupiti."
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El sistema de noms de domini (DNS) sobre HTTPS envia la vostra sol·licitud d’un nom de domini mitjançant una connexió xifrada, proporcionant un DNS segur i dificultant que els altres vegin a quin lloc web esteu a punt d’accedir."
+          }
+        },
+        "cak" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ri ruq'inoj kib'i' dominio (DNS) rik'in ri HTTP yerutäq taq ruk'utuj jun rub'i' dominio rik'in jun ewan rusik'ixik okem, akuchi' nuya' jun jikïl DNS chuqa' nub'än chi ch'aqa' chik k'ayew nikitz'ët achike ajk'am ruxaq nrajo' nok."
+          }
+        },
+        "co" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "U sistema di nome di duminiu (DNS) sopra HTTPS manda a vostra richiesta di nome di duminiu attraversu una cunnessione cifrata, pruvidendu un DNS sicuru per rende più difficiule a scuperta di quellu situ web chì vo state per accede."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systém DNS (Domain Name System) přes HTTPS odesílá váš požadavek na název domény prostřednictvím šifrovaného připojení, čímž zajišťuje bezpečný systém DNS a znemožňuje ostatním zjistit, na kterou webovou stránku se chystáte vstoupit."
+          }
+        },
+        "cy" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mae System Enw Parth (DNS) dros HTTPS yn anfon eich cais am enw parth trwy gysylltiad wedi'i amgryptio, gan ddarparu DNS diogel a'i gwneud hi'n anoddach i eraill weld pa wefan rydych chi ar fin ei chyrchu."
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domain Name System (DNS) via HTTPS sender din forespørgsel efter et domænenavn over en krypteret forbindelse for at sikre DNS og gøre det sværere for andre at se, hvilket websted du skal til at besøge."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domain Name System (DNS) über HTTPS sendet Ihre Anfrage für einen Domainnamen über eine verschlüsselte Verbindung, wodurch ein sicheres DNS bereitgestellt wird. Dies erschwert es anderen, zu sehen, welche Website Sie gerade besuchen."
+          }
+        },
+        "dsb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System domenowych mjenjow (DNS) pśez HTTPS waše napšašowanje za domenowym mjenim pśez skoděrowane zwisk sćelo, staja wěsty DNS k dispoziciji a póśěžujo drugim wósobam wiźeś, ku kótarym websedłam se wóglědujośo."
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Το DNS (Domain Name System) μέσω HTTPS στέλνει το αίτημά σας για όνομα τομέα μέσω κρυπτογραφημένης σύνδεσης, παρέχοντας ένα ασφαλές DNS και δυσκολεύοντας τους άλλους να δουν σε ποιον ιστότοπο πρόκειται να αποκτήσετε πρόσβαση."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domain Name System (DNS) over HTTPS sends your request for a domain name through an encrypted connection, providing a secure DNS and making it harder for others to see which website you’re about to access."
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domain Name System (DNS) over HTTPS sends your request for a domain name through an encrypted connection, providing a secure DNS and making it harder for others to see which website you’re about to access."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domain Name System (DNS) over HTTPS sends your request for a domain name through an encrypted connection, providing a secure DNS and making it harder for others to see which web site you’re about to access."
+          }
+        },
+        "eo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nomregna sistemo (DNS) tra HTTPS sendas vian peton por nomregna nomo tra ĉifrita konekto, kio provizas pli sekuran DNS kaj malhelpas al aliaj vidi, kiun retejon vi pretas aliri."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El sistema de nombres de dominio (DNS) a través de HTTPS envía la solicitud de un nombre de dominio a través de una conexión cifrada, lo que proporciona un DNS seguro y dificulta que otros vean a qué sitio web estás a punto de acceder."
+          }
+        },
+        "es-AR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El sistema de nombres de dominio (DNS) sobre HTTPS envía los pedidos de un nombre de dominio a través de una conexión cifrada, proporcionando un DNS seguro y haciendo más difícil que otros vean que sitio web está tratando de acceder."
+          }
+        },
+        "es-CL" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El Sistema de nombres de dominio (DNS) a través de HTTPS envía tu solicitud de un nombre de dominio a través de una conexión cifrada, lo que entrega un DNS seguro y dificulta que otros vean a qué sitio web estás a punto de acceder."
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El sistema de nombres de dominio (DNS) a través de HTTPS envía la solicitud de un nombre de dominio a través de una conexión cifrada, lo que proporciona un DNS seguro y dificulta que otros vean a qué sitio web estás a punto de acceder."
+          }
+        },
+        "es-MX" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El sistema de nombres de dominio (DNS) a través de HTTPS envía las solicitudes de nombres de dominio mediante una conexión cifrada; esto proporciona un DNS seguro y dificulta que terceros vean qué sitios web se visitarán."
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domeeninimesüsteem (DNS) üle HTTPS-i saadab domeeninime päringu krüpteeritud ühenduse kaudu, pakkudes turvalist DNS-i ja raskendades teistel nägemast, millisele veebisaidile minna proovid."
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HTTPS gaineko DNSak domeinu-izenerako zure eskaera zifratutako konexio bidez bidaltzen du, DNS segurua hornituz eta zailagoa eginez beste inork jakitea zein den bisitatu behar duzun webgunea."
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سامانهٔ نام دامنه یا ساناد (DNS) روی HTTPS درخواست‌های شما برای یک نام دامنه را از طریق یک ارتباط رمزنگاری‌شده ارسال می‌کند که این کار باعث افزایش ایمنی ساناد شده و این امکان را که دیگران بتوانند بفهمند چه وبگاهی را می‌خواهید ببینید دشوارتر می‌کند."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS (Domain Name System eli nimipalvelujärjestelmä) HTTPS:n kautta lähettää verkkotunnuksen nimeä koskevan pyyntösi salatun yhteyden kautta, tarjoten suojatun DNS:n ja vaikeuttaen muiden nähdä, mihin verkkosivustoon olet siirtymässä."
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ipinapadala ng Domain Name System (DNS) over HTTPS ang iyong request para sa domain name sa isang encrypted na koneksyon, na nagbibigay ng secure DNS at ginagawang mas mahirap sa iba para makita kung ano ang website na ia-access mo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le système de nom de domaine (DNS) via HTTPS envoie votre demande de résolution d’un nom de domaine à travers une connexion chiffrée, procurant un DNS sécurisé pour compliquer la tâche de tiers qui tenteraient de découvrir le site web sur lequel vous allez vous rendre."
+          }
+        },
+        "fur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il sisteme di risoluzion dai nons di domini (DNS) sore HTTPS al invie lis richiestis pai nons di domini a traviers di une conession cifrade, furnint un DNS sigûr e fasint in mût che al sedi plui dificil scuvierzi i sîts web che tu stâs par visitâ."
+          }
+        },
+        "fy-NL" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domain Name System (DNS) oer HTTPS ferstjoert jo oanfraach foar in domeinnamme fia in fersifere ferbining, wêrtroch in feilige DNS jûn wurdt en it foar oaren dreger wurdt om te sjen hokker website jo besykje gean."
+          }
+        },
+        "gd" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuiridh Domain Name System (DNS) thar HTTPS d’ iarrtas airson ainm àrainn air ceangal crioptaichte, a’ solarachadh DNS tèarainte agus bidh e nas dorra do dhaoine eile na làraichean-lìn a tha thu ag inntrigeadh fhaicinn."
+          }
+        },
+        "gl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O sistema de nomes de dominio (DNS) a través de HTTPS envía a túa solicitude de nome de dominio a través dunha conexión cifrada, proporcionando un DNS seguro e dificultando que outros poidan ver a que sitio web estás a piques de acceder."
+          }
+        },
+        "gn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pe apopyvusu rendatee réra (DNS) HTTPS rupive omondo mba’ejerure tendatee réra jeike ipapapýva rupive, omoheñóiva peteĩ DNS hekorosãva ha ombohasyve ambuépe ohechávo mba’ete ñanduti rendápepa ojeikepota."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מערכת שמות מתחם (DNS) על גבי HTTPS שולחת את הבקשה שלך לשם מתחם דרך חיבור מוצפן, מספקת DNS מאובטח ומקשה על אחרים לראות לאיזה אתר הדפדפן עומד לגשת."
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domain Name System (DNS) preko HTTPS šalje tvoje zahtjeve s imenom domene putem šifrirane veze, stvarajući siguran DNS i otežava drugima da vide koje web stranice namjeravaš posjetiti."
+          }
+        },
+        "hsb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System domenowych mjenow (DNS) přez HTTPS waše naprašowanje za domenowym mjenom přez zaklučowane zwisk sćele, staja wěsty DNS k dispoziciji a poćežuje druhim wosobam widźeć, kotre websydła wopytujeće."
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A HTTPS feletti domainnév-rendszer (DNS) a domain nevek lekérését titkosított kapcsolaton keresztül küldi el, biztonságos DNS-t biztosítva, így nehezebbé téve mások számára, hogy lássak, hogy melyik weboldalakat éri el."
+          }
+        },
+        "hy-AM" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Տիրույթի անվան համակարգը (DNS) HTTPS-ի միջով ուղարկում է Ձեր հարցումները տիրույթի անվան համար գաղտնագրված կապով՝ ստեղծելով անվտանգ DNS և ուրիշների համար դժարացնելով տեսնել այն կայքը, որին հասանելիություն ունենալու շեմին եք:"
+          }
+        },
+        "ia" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le systemas de nomine de dominio (DNS) sur HTTPS invia tu requesta pro un nomine de dominio per un connexion cryptate, forniente un DNS secur e obstruente al alteres de vider que sito web tu va acceder."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domain Name System (DNS) melalui HTTPS mengirimkan permintaan Anda untuk mendapatkan nama domain melalui koneksi terenkripsi, sehingga menyediakan DNS yang aman dan mempersulit orang lain untuk melihat situs web mana yang akan diakses."
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS yfir HTTPS (Domain Name System) sendir beiðni þína um lén í gegnum dulritaða tengingu, veitir öruggt DNS og gerir erfiðara fyrir aðra að sjá hvaða vefsvæði þú ert að fara að fara á."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il meccanismo di risoluzione dei nomi di dominio tramite HTTPS (DNS su HTTPS) invia le richieste per i nomi di dominio tramite una connessione crittata, fornendo un sistema sicuro che rende più difficile scoprire quali siti stai per visitare."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domain Name System (DNS) over HTTPS は暗号化された接続を通してドメイン名の要求を送信します。この安全な DNS によって、あなたがアクセスしようとしているウェブサイトを他者に知られないようにします。"
+          }
+        },
+        "ka" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "საიტთა სახელების გადამყვანი (DNS) მომსახურების HTTPS-ით გატარებისას საიტის მისამართის მოთხოვნები იგზავნება დაშიფრული არხით, შედეგად იქმნება დაცული DNS და გარეშე პირებს უძნელდებათ გაარკვიონ, რომელ ვებსაიტებთან ცდილობთ წვდომას."
+          }
+        },
+        "kk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HTTPS арқылы домендік атаулар жүйесі (DNS) шифрленген байланыс арқылы домендік атқа сұрауыңызды жібереді, осылай ол қауіпсіз DNS ұсынады және басқаларға қай веб-сайтқа кіргіңіз келетінін көруді қиындатады."
+          }
+        },
+        "ku" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sîstema Navê Domainê (DNS) li ser HTTPS daxwaza te ya ji bo navekî domainê bi rêya girêdaneke şîfrekirî dişîne, DNS-ek ewle peyda dike û ji bo yên din zehmettir dike ku bibînin tu yê têkevî kîjan malperê."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS over HTTPS는 암호화된 연결을 통해 도메인 이름에 대한 요청을 전송하여 보안 DNS를 제공하고 다른 사람들이 사용자가 액세스하려는 웹 사이트를 보기 어렵게 만듭니다."
+          }
+        },
+        "lo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ລະບົບ Domain Name (DNS) ຜ່ານ HTTPS ສົ່ງຄໍາຮ້ອງຂໍຂອງທ່ານສໍາລັບຊື່ໂດເມນໂດຍຜ່ານການເຊື່ອມຕໍ່ທີ່ຖືກເຂົ້າລະຫັດ, ສະຫນອງ DNS ທີ່ປອດໄພແລະເຮັດໃຫ້ມັນຍາກສໍາລັບຜູ້ອື່ນທີ່ຈະເບິ່ງວ່າເວັບໄຊທ໌ໃດທີ່ທ່ານກໍາລັງຈະເຂົ້າຫາ."
+          }
+        },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domain Name System (DNS) over HTTPS sender forespørselen din om et domenenavn gjennom en kryptert tilkobling, og gir en sikker DNS og gjør det vanskeligere for andre å se hvilket nettsted du er i ferd med å besøke."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domain Name System (DNS) over HTTPS verzendt uw aanvraag voor een domeinnaam via een versleutelde verbinding, waardoor een veilige DNS wordt geboden en het voor anderen moeilijker wordt om te zien welke website u gaat bezoeken."
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domain Name System (DNs) over HTTPS sender førespurnaden din om eit domenenamn gjennom ei kryptert tilkopling, og gir ein sikker DNS og gjer det vanskelegare for andre å sjå kva nettstad du er i ferd med å besøkje."
+          }
+        },
+        "oc" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lo DNS (Domain Name Sistèma) sus HTTPS envia vòstras requèstas per un nom de domeni via una connexion chifrada, en fornissent un DNS segur e en fasent venir mai complicat per los autres de veire quines sites sètz a mand de visitar."
+          }
+        },
+        "pa-Guru-IN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HTTPS ਰਾਹੀਂ ਡੋਮੇਨ ਨੇਮ ਸਿਸਟਮ (DNS) ਤੁਹਾਡੇ ਵਲੋਂ ਮੰਗ ਕੀਤੀ ਡੋਮੇਨ ਦੀ ਬੇਨਤੀ ਨੂੰ ਇੰਕ੍ਰਿਪਟ ਕੀਤੇ ਕਨੈਕਸ਼ਨ ਰਾਹੀਂ ਭੇਜਦਾ ਹੈ, ਸੁਰੱਖਿਅਤ DNS ਦਿੰਦਾ ਹੈ ਅਤੇ ਇਸ ਨਾਲ ਤੁਹਾਡੇ ਵਲੋਂ ਖੋਲ੍ਹੀ ਜਾ ਰਹੀ ਵੈੱਬਸਾਈਟ ਨੂੰ ਹੋਰਾਂ ਵੱਲੋਂ ਵੇਖਣ ਨੂੰ ਵੱਧ ਔਖਾ ਬਣਾ ਦਿੰਦਾ ਹੈ।"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System nazw domen (DNS) poprzez HTTPS wysyła zapytanie o nazwę domeny przez zaszyfrowane połączenie, zapewniając zabezpieczony serwer DNS i utrudniając innym podejrzenie, jaką witrynę zaraz otworzysz."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O DNS (Domain Name System) sobre HTTPS envia suas requisições de nomes de domínio através de uma conexão criptografada, fornecendo um DNS seguro e dificultando que outras pessoas vejam quais sites você acessa."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Domain Name System (DNS) sobre HTTPS envia o seu pedido de nome de domínio através de uma ligação encriptada, fornecendo um DNS seguro e tornando mais difícil que terceiros possam ver qual o site que está prestes a aceder."
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il DNS (Domain Name System) via HTTPS trametta tia dumonda per in num da domena cun agid d’ina connexiun criptada che porscha in DNS segirà. Quai renda pli difficil per auters da vesair tge websites che ti visitas."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistemul de nume de domeniu (DNS) prin HTTPS trimite solicitarea ta pentru un nume de domeniu printr-o conexiune criptată, oferind un DNS securizat și îngreunând vizibilitatea site-ului web pe care urmează să îl accesezi de către alții."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Система доменных имён (DNS) через HTTPS отправляет ваш запрос доменного имени через зашифрованное соединение, обеспечивая безопасный DNS и мешая другим увидеть, к какому веб-сайту вы собираетесь получить доступ."
+          }
+        },
+        "sat" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HTTPS ᱛᱮ Domain Name System (DNS) ᱫᱚ ᱟᱢᱟᱜ ᱰᱚᱢᱮᱱ ᱧᱩᱛᱩᱢ ᱞᱟᱹᱜᱤᱫ ᱟᱢᱟᱜ ᱟᱨᱡᱟᱣ ᱫᱚ ᱮᱱᱠᱨᱤᱯᱴ ᱠᱚᱱᱮᱠᱥᱚᱱ ᱛᱮ ᱵᱷᱮᱡᱟᱭᱟ, ᱚᱱᱟ ᱛᱮ ᱨᱟᱠᱷᱟ DNS ᱮᱢ ᱫᱟᱲᱮᱭᱟᱜ-ᱟ ᱟᱨ ᱮᱴᱟᱜ ᱠᱚ ᱞᱟᱹᱜᱤᱫ ᱟᱢ ᱚᱠᱟ ᱣᱮᱵᱽᱥᱟᱭᱤᱴ ᱮᱢ ᱥᱮᱱᱚᱜ ᱠᱟᱱᱟ ᱚᱱᱟ ᱧᱮᱞ ᱫᱚ ᱟᱹᱰᱤ ᱜᱮ ᱢᱩᱥᱠᱤᱞ ᱠᱟᱱᱟ ᱾"
+          }
+        },
+        "sc" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS (Sistema de Nòmine de Domìniu) pro mèdiu de HTTPS imbiat is rechestas tuas pro unu nòmine de domìniu a traessu de una connessione tzifrada, frunende unu DNS seguru e faghende prus difìtzile pro àtere a bìdere in cales sitos ses intrende."
+          }
+        },
+        "scn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "U Sistema dî Nomi di Duminiu (DNS) ncapu a HTTPS manna a to dumanna p’un nomu di duminiu cu na cunnissioni crittata, facènnulu accussì di manera sicura pi fari cchiù diffìcili di scupriri quali sunnu i siti chi stai visitannu."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS (Systém názvov domén) cez HTTPS odošle vašu požiadavku na názov domény prostredníctvom šifrovaného pripojenia, čím poskytuje zabezpečené DNS a sťažuje ostatným, aby videli, na ktorú webovú stránku sa chystáte vstúpiť."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS (sistem domenskih imen) prek HTTPS pošilja vaše zahtevke za imena domen po šifrirani povezavi, kar ustvari zavarovan DNS in drugim otežuje vpogled v to, katera spletna mesta obiskujete."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domain Name System (DNS) përmes HTTPS e dërgon kërkesën tuaj për një emër përkatësie përmes një lidhjeje të fshehtëzuar, duke dhënë një DNS të siguruar dhe duke e bërë më të zorshme për të tjerët të shohin cilin sajt po shkoni të vizitoni."
+          }
+        },
+        "sr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Систем имена домена (DNS) преко HTTPS-а шаље ваш захтев за именом домена кроз шифровану везу, пружајући безбедан DNS и отежавајући другима да виде којој веб страници намеравате да приступите."
+          }
+        },
+        "sv-SE" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domain Name System (DNS) över HTTPS skickar din förfrågan om ett domännamn via en krypterad anslutning, vilket ger en säker DNS och gör det svårare för andra att se vilken webbplats du ska komma åt."
+          }
+        },
+        "tg" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Низоми номҳои домен (DNS) тавассути HTTPS дархостҳои шуморо барои номи домен тавассути пайвасти рамзгузоришуда ирсол карда, DNS-и бехатарро таъмин мекунад ва ба дигарон барои дидани сомонаҳое, ки шумо мехоҳед ба он дастрасӣ пайдо намоед, душворӣ мекунад."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domain Name System (DNS) over HTTPS จะส่งคำขอชื่อโดเมนของคุณผ่านการเชื่อมต่อที่มีการเข้ารหัส เพื่อเสริมความปลอดภัยให้กับ DNS และทำให้ผู้อื่นดูว่าคุณกำลังจะเข้าถึงเว็บไซต์ใดได้ยากขึ้น"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HTTPS Üzerinden Alan Adı Sistemi (DNS), alan adı isteklerinizi şifreli bir bağlantı üzerinden göndererek güvenli bir DNS sağlar. Böylece hangi web sitelerine eriştiğinizi başkalarının görmesi zorlaşır."
+          }
+        },
+        "ug" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تور دائىرە نامى سىستېمىسى (DNS) دائىرە نامى ئىلتىماسىڭىزنى HTTPS ئارقىلىق شىفىرلانغان ئولانما بىلەن يوللاپ، بىخەتەر DNS بىلەن تەمىنلەپ، سىزنىڭ قايسى تور بېكەتنى زىيارەت قىلىۋاتقانلىقىڭىزنى بىلىشىنى قىيىنلاشتۇرىدۇ."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Завдяки системі DNS через HTTPS ваші запити на доменне ім’я шифруються, ускладнюючи стороннім особам можливість перегляду, до якого вебсайту ви збираєтеся отримати доступ."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hệ thống phân giải tên miền (DNS) trên HTTPS gửi yêu cầu tên miền của bạn thông qua kết nối được mã hóa, cung cấp DNS an toàn và khiến người khác khó biết bạn sắp truy cập trang web nào."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "基于 HTTPS 的 DNS 会通过加密连接发送域名查询请求，保护 DNS 查询安全，让他人更难得知你要访问的网站。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS over HTTPS 會透過加密連線傳送網域名稱查詢請求，保護 DNS 查詢安全，讓他人更難得知你要造訪的網站。"
           }
         }
       }
@@ -6542,7 +8138,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "プライベートタブのみ有効にする"
+            "value" : "プライベートタブのみで有効化"
           }
         },
         "ka" : {
@@ -6632,7 +8228,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Włącz tylko w\\u00a0kartach prywatnych"
+            "value" : "Włącz tylko w kartach prywatnych"
           }
         },
         "pt-BR" : {
@@ -6800,13 +8396,551 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "仅在隐私标签页启用"
+            "value" : "仅在无痕标签页中启用"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "只對隱私瀏覽分頁開啟"
+            "value" : "僅在私密標籤頁中啟用"
+          }
+        }
+      }
+    },
+    "Enable in All Tabs" : {
+      "localizations" : {
+        "am" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "በሁሉም ትሮች ውስጥ አንቃ"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فعّله في كل التبويبات"
+          }
+        },
+        "ast" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activar en toles llingüetes"
+          }
+        },
+        "be" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Уключыць ва ўсіх картках"
+          }
+        },
+        "bg" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Активиране във всички раздели"
+          }
+        },
+        "br" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gweredekaat en holl ivinelloù"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omogući u svim tabovima"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activa’l en totes les pestanyes"
+          }
+        },
+        "co" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Attivà in tutte l’unghjette"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zapnout ve všech panelech"
+          }
+        },
+        "cy" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Galluogi ym mhob tab"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktiver i alle faneblade"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In allen Tabs aktivieren"
+          }
+        },
+        "dsb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We wšych rejtarikach zmóžniś"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ενεργοποίηση σε όλες τις καρτέλες"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable in All Tabs"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable in All Tabs"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable in All Tabs"
+          }
+        },
+        "eo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktivigi en ĉiuj langetoj"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activar en todas las pestañas"
+          }
+        },
+        "es-AR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Habilitar en todas las pestañas"
+          }
+        },
+        "es-CL" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Habilitar en todas las pestañas"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activar en todas las pestañas"
+          }
+        },
+        "es-MX" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Habilitar en todas las pestañas"
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lubatakse kõigil kaartidel"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gaitu fitxa guztietan"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "به کار انداختن در تمام زبانه‌ها"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Käytä kaikissa välilehdissä"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I-enable sa lahat ng mga tab"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activer dans tous les onglets"
+          }
+        },
+        "fur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ative in dutis lis schedis"
+          }
+        },
+        "fy-NL" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yn alle ljepblêden ynskeakelje"
+          }
+        },
+        "gd" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuir an comas air gach taba"
+          }
+        },
+        "gl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activar en todas as lapelas"
+          }
+        },
+        "gn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Embojuruja opaite tendayképe"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הפעלה בכל הלשוניות"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omogući u svim karticama"
+          }
+        },
+        "hsb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We wšěch rajtarkach zmóžnić"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Engedélyezés az összes lapon"
+          }
+        },
+        "hy-AM" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Միացնել բոլոր ներդիրներում"
+          }
+        },
+        "ia" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activar in tote le schedas"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktifkan di semua tab"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Virkja í öllum flipum"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Attiva in tutte le schede"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべてのタブで有効化"
+          }
+        },
+        "ka" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ჩართვა ყველა ჩანართში"
+          }
+        },
+        "kab" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rmed deg meṛṛa accaren"
+          }
+        },
+        "kk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Барлық беттерде іске қосу"
+          }
+        },
+        "km" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "បើក​ដំណើរការក្នុង​ផ្ទាំង​ទាំងអស់"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모든 탭에서 사용"
+          }
+        },
+        "ku" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Di hemû hilpekînan de çalak bike"
+          }
+        },
+        "lo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ເປີດໃຊ້ໃນທຸກແຖບ"
+          }
+        },
+        "ml" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "എല്ലാ ടാബുകളിലും സജ്ജമാക്കുക"
+          }
+        },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktiver i alle faner"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In alle tabbladen inschakelen"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktiver i alle faner"
+          }
+        },
+        "oc" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activar per totes los onglets"
+          }
+        },
+        "pa-Arab-PK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ساریاں ٹیباں وچ چالو کرو"
+          }
+        },
+        "pa-Guru-IN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਸਾਰੀਆਂ ਟੈਬਾਂ ਵਿੱਚ ਸਮਰੱਥ ਕਰੋ"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Włącz we wszystkich kartach"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ativar em todas as abas"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ativar em todos os separadores"
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activar en tut ils tabs"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activează în toate filele"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Включить во всех вкладках"
+          }
+        },
+        "sat" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ᱡᱷᱚᱛᱚ ᱴᱮᱵᱽ ᱠᱚᱨᱮ ᱮᱢ ᱪᱷᱚᱭ ᱢᱮ"
+          }
+        },
+        "sc" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permite in totu is ischedas"
+          }
+        },
+        "scn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abbìlita pi tutti i schedi"
+          }
+        },
+        "si" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "සියළු පටිති සඳහා යොදන්න"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povoliť na všetkých kartách"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omogoči v vseh zavihkih"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktivizoje në krejt skedat"
+          }
+        },
+        "sr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Омогући у свим језичцима"
+          }
+        },
+        "su" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktipkeun dina sadaya tab"
+          }
+        },
+        "sv-SE" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktivera i alla flikar"
+          }
+        },
+        "szl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Załōncz we wszyskich kartach"
+          }
+        },
+        "te" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "అన్ని ట్యాబులలోనూ చేతనించు"
+          }
+        },
+        "tg" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Фаъол кардан дар ҳамаи варақаҳо"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เปิดใช้งานในทุกแท็บ"
+          }
+        },
+        "tok" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "o ken"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tüm sekmelerde etkinleştir"
+          }
+        },
+        "tt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Барлык табларда да кабызу"
+          }
+        },
+        "ug" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بارلىق بەتكۈچتە قوزغات"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Увімкнути у всіх вкладках"
+          }
+        },
+        "uz" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barcha varaqlarda yoqish"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bật trong tất cả các thẻ"
+          }
+        },
+        "yo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gbàáláyè nínú gbogbo àwọn táàbù"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在所有标签页中启用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在所有標籤頁中啟用"
           }
         }
       }
@@ -7068,7 +9202,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "フィンガープリント防止を有効にすると、疑わしいフィンガープリント採取を阻止します。"
+            "value" : "フィンガープリント防止を有効にして、疑わしいフィンガープリント採取を阻止します。"
           }
         },
         "ka" : {
@@ -7134,7 +9268,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Włącza ochronę przed elementami śledzącymi podejrzewanymi o\\u00a0zbieranie informacji o\\u00a0konfiguracji."
+            "value" : "Włącza ochronę przed elementami śledzącymi podejrzewanymi o zbieranie informacji o konfiguracji."
           }
         },
         "pt-BR" : {
@@ -7260,13 +9394,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "启用数字指纹跟踪程序防护，有助于阻止可疑程序。"
+            "value" : "启用数字指纹跟踪防护，拦截疑似数字指纹跟踪程序。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "開啟數位指紋追蹤程式保護，阻擋疑似是數位指紋追蹤程式的內容。"
+            "value" : "啟用數位指紋追蹤防護，封鎖疑似數位指紋追蹤程式。"
           }
         }
       }
@@ -7803,6 +9937,818 @@
         }
       }
     },
+    "Fix Major Website Issues" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إصلاح المشاكل الرئيسية في الموقع"
+          }
+        },
+        "bg" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поправяне на големи проблеми със сайта"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corregeix els problemes més greus dels llocs"
+          }
+        },
+        "co" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Currege i prublemi impurtanti di i siti"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oprava velkých problémů se stránkami"
+          }
+        },
+        "cy" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datrys problemau mawr gwefan"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Løs store problemer med websted"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Größere Probleme mit Websites beheben"
+          }
+        },
+        "dsb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wjelike sedłowe problemy rozwězaś"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Διόρθωση σημαντικών ζητημάτων ιστοτόπου"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fix Major Website Issues"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fix Major Website Issues"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fix Major Website Issues"
+          }
+        },
+        "eo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solvi gravajn retejajn problemojn"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corregir problemas importantes del sitio"
+          }
+        },
+        "es-AR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corregir problemas importantes del sitio"
+          }
+        },
+        "es-CL" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solucionar problemas importantes del sitio"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corregir problemas importantes del sitio"
+          }
+        },
+        "es-MX" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solucionar problemas importantes del sitio"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konpondu guneen arazo larriak"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Korjaa merkittävät sivusto-ongelmat"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résoudre les problèmes majeurs des sites"
+          }
+        },
+        "fur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Risolf problemis plui grivis cui sîts"
+          }
+        },
+        "fy-NL" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grutte problemen mei de website oplosse"
+          }
+        },
+        "gd" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Càirich duilgheadasan mòra aig làraichean"
+          }
+        },
+        "gl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corrixir problemas principais do sitio"
+          }
+        },
+        "gn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emyatyrõ apañuái tendagua"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "תיקון בעיות משמעותיות באתרים"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ispravi velike probleme s web-stranicama"
+          }
+        },
+        "hsb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wulke sydłowe problemy rozrisać"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nagy oldalhibák javítása"
+          }
+        },
+        "hy-AM" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ուղղել կայքի հիմնական խնդիրները"
+          }
+        },
+        "ia" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resolver problemas major de sitos"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perbaiki masalah besar pada situs"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lagfæra helstu vandamál á vefnum"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Risolvi problemi gravi con i siti"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "主要なWebサイトの問題を修正"
+          }
+        },
+        "ka" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "საიტზე მნიშვნელოვანი ხარვეზების გამოსწორება"
+          }
+        },
+        "kk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сайттардың негізгі мәселелерін түзету"
+          }
+        },
+        "km" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ដោះស្រាយបញ្ហអាសយដ្ឋានវេបសំខាន់ៗ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "주요 사이트 문제 해결"
+          }
+        },
+        "ml" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "വലിയ വെബ്ബിട കുഴപ്പങ്ങൾ പരിഹരിക്കുക"
+          }
+        },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fiks større nettstedsproblemer"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grote problemen met de website verhelpen"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fiks større nettstadsproblem"
+          }
+        },
+        "oc" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reglar los problèmas màgers dels sites"
+          }
+        },
+        "pa-Guru-IN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਵੱਡੇ ਸਾਈਟ ਮਸਲੇ ਠੀਕ ਕਰੋ"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naprawianie poważnych problemów ze stronami"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corrigir principais problemas em sites"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corrigir os principais problemas dos sites"
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schliar ils problems ils pli gravants da websites"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remediază problemele majore ale site-urilor"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Устранение основных проблем с сайтами"
+          }
+        },
+        "sat" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ᱥᱟᱭᱤᱴ ᱨᱮᱱᱟᱜ ᱢᱟᱨᱟᱝ ᱮᱴᱠᱮᱴᱚᱬᱮ ᱠᱚ ᱡᱩᱛ ᱢᱮ"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opraviť závažné problémy so stránkami"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Popravljaj večje težave s stranmi"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ndreqni probleme të mëdha sajtesh"
+          }
+        },
+        "sr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поправи веће проблеме са страницом"
+          }
+        },
+        "sv-SE" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Åtgärda större webbplatsproblem"
+          }
+        },
+        "tg" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ислоҳ кардани нуқсонҳои асосии сомона"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แก้ไขปัญหาหลัก ๆ ของไซต์"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Önemli site sorunlarını düzelt"
+          }
+        },
+        "ug" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بېكەتنىڭ ئاساسلىق مەسىلىسىنى ئوڭشايدۇ"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Усувати значні проблеми з сайтами"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sửa các sự cố lớn của trang web"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "修复网站的严重问题"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "修正網站的重大問題"
+          }
+        }
+      }
+    },
+    "Fix Minor Website Issues" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إصلاح المشاكل البسيطة في الموقع"
+          }
+        },
+        "bg" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поправяне на незначителни проблеми със сайта"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corregeix els problemes menors dels llocs"
+          }
+        },
+        "co" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Currege i prublemi secundarii di i siti"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oprava menších problémů se stránkami"
+          }
+        },
+        "cy" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datrys problemau bach gwefan"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Løs mindre problemer med websted"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kleinere Probleme mit Websites beheben"
+          }
+        },
+        "dsb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Snadne sedłowe problemy rozwězaś"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Διόρθωση μικρών ζητημάτων ιστοτόπου"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fix Minor Website Issues"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fix Minor Website Issues"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fix Minor Website Issues"
+          }
+        },
+        "eo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solvi negravajn retejajn problemojn"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corregir problemas menores del sitio"
+          }
+        },
+        "es-AR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corregir problemas menores del sitio"
+          }
+        },
+        "es-CL" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solucionar problemas menores del sitio"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corregir problemas menores del sitio"
+          }
+        },
+        "es-MX" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solucionar problemas menores del sitio"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konpondu guneen arazo arinak"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Korjaa vähäiset sivusto-ongelmat"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résoudre les problèmes mineurs des sites"
+          }
+        },
+        "fur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Risolf problemis plui piçui cui sîts"
+          }
+        },
+        "fy-NL" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lytse problemen mei de website oplosse"
+          }
+        },
+        "gd" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Càirich duilgheadasan beaga aig làraichean"
+          }
+        },
+        "gl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corrixir problemas menores do sitio"
+          }
+        },
+        "gn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emyatyrõ apañuai’i tendagua"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "תיקון בעיות קלות באתרים"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ispravi manje problema s web-stranicama"
+          }
+        },
+        "hsb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Snadne sydłowe problemy rozrisać"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kisebb oldalhibák javítása"
+          }
+        },
+        "hy-AM" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ուղղել կայքի մանր խնդիրները"
+          }
+        },
+        "ia" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resolver problemas minor de sitos"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perbaiki masalah kecil pada situs"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lagfæra minniháttar vandamál á vefnum"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Risolvi problemi minori con i siti"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "軽微なWebサイトの問題を修正"
+          }
+        },
+        "ka" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "საიტზე მცირე ხარვეზების გამოსწორება"
+          }
+        },
+        "kk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сайттардың шамалы мәселелерін түзету"
+          }
+        },
+        "km" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ដោះស្រាយបញ្ហាអាសយដ្ឋានវេបតូចតាច"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사소한 사이트 문제 해결"
+          }
+        },
+        "ml" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ചെറിയ വെബ്ബിട കുഴപ്പങ്ങൾ പരിഹരിക്കുക"
+          }
+        },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fiks mindre nettstedsproblemer"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kleine problemen met de website oplossen"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fiks mindre nettstadsproblem"
+          }
+        },
+        "oc" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reglar los problèmas menors dels sites"
+          }
+        },
+        "pa-Guru-IN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਛੋਟੇ ਸਾਈਟ ਮਸਲੇ ਠੀਕ ਕਰੋ"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naprawianie drobnych problemów ze stronami"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corrigir problemas menores em sites"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corrigir os pequenos problemas dos sites"
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schliar ils problems pli pitschens da websites"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remediază probleme minore ale site-urilor"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Устранение незначительных проблем с сайтами"
+          }
+        },
+        "sat" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ᱥᱟᱭᱤᱴ ᱨᱮᱱᱟᱜ ᱦᱩᱰᱤᱧ ᱮᱴᱠᱮᱴᱚᱬᱮ ᱠᱚ ᱡᱩᱛ ᱢᱮ"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opraviť menšie problémy so stránkami"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Popravljaj manjše težave s stranmi"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ndreq probleme të vockla sajti"
+          }
+        },
+        "sr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поправи мање проблеме са страницом"
+          }
+        },
+        "sv-SE" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Åtgärda mindre webbplatsproblem"
+          }
+        },
+        "tg" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ислоҳ кардани нуқсонҳои хурди сомона"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แก้ไขปัญหาเล็ก ๆ ของไซต์"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Küçük site sorunlarını düzelt"
+          }
+        },
+        "ug" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بېكەتنىڭ يېنىك مەسىلىسىنى ئوڭشايدۇ"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Усувати незначні проблеми з сайтами"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sửa các sự cố nhỏ của trang web"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "修复网站的轻微问题"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "修正網站的輕微問題"
+          }
+        }
+      }
+    },
     "HTTPS-Only Mode" : {
       "localizations" : {
         "am" : {
@@ -8324,7 +11270,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "HTTPS-Only 模式"
+            "value" : "仅 HTTPS 模式"
           }
         },
         "zh-Hant" : {
@@ -8502,7 +11448,7 @@
         "et" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "kõigil kaartidel"
+            "value" : "Kõigil kaartidel"
           }
         },
         "eu" : {
@@ -8640,7 +11586,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "すべてのタブに適用"
+            "value" : "すべてのタブ"
           }
         },
         "ka" : {
@@ -8940,13 +11886,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "所有标签页"
+            "value" : "在所有标签页中"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "所有分頁"
+            "value" : "在所有標籤頁中"
           }
         }
       }
@@ -9214,7 +12160,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "クロスサイト Cookie を分離する"
+            "value" : "クロスサイトCookieを分離"
           }
         },
         "ka" : {
@@ -9788,7 +12734,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Znane elementy śledzące przez zbieranie informacji o\\u00a0konfiguracji"
+            "value" : "Znane elementy śledzące przez zbieranie informacji o konfiguracji"
           }
         },
         "pt-BR" : {
@@ -10224,7 +13170,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ソーシャルネットワークによるウェブ上の行動追跡を制限します。"
+            "value" : "SNSによるWeb上の閲覧行動の追跡を制限します。"
           }
         },
         "ka" : {
@@ -10338,7 +13284,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ogranicza możliwość śledzenia Twoich działań w\\u00a0Internecie przez serwisy społecznościowe."
+            "value" : "Ogranicza możliwość śledzenia Twoich działań w Internecie przez serwisy społecznościowe."
           }
         },
         "pt-BR" : {
@@ -10506,13 +13452,605 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "限制社交网络在网上跟踪您浏览活动的能力。"
+            "value" : "限制社交网络跨网站跟踪你的浏览活动。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "限制社群網站能在網路上追蹤您上網行為的能力。"
+            "value" : "限制社群網站跨網站追蹤你的瀏覽活動。"
+          }
+        }
+      }
+    },
+    "May cause websites to break" : {
+      "localizations" : {
+        "am" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ድረ-ገፆች ባግባቡ እንዳይሰሩ ሊያደርግ ይችላል"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يمكن أن تتسبب في تعطيل المواقع"
+          }
+        },
+        "ast" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pue estropiar dalgunos sitios"
+          }
+        },
+        "az" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bəzi saytlar düz işləməyə bilər"
+          }
+        },
+        "be" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Можа парушыць працу вэб-сайтаў"
+          }
+        },
+        "bg" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Може наруши работата на страници"
+          }
+        },
+        "br" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gallout a ra mirout lec’hiennoù ’zo da vont en-dro en un doare dereat"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Može uzrokovati probleme s web stranicama"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pot fer que alguns llocs web no funcionin"
+          }
+        },
+        "ckb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لەوانەیە ببێتە هۆی وەستانی ماڵپەڕەکان"
+          }
+        },
+        "co" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pò impedisce certi siti web di funziunà"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Může omezit fungování některých stránek"
+          }
+        },
+        "cy" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gall achosi i wefannau dorri"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kan forhindre websteder i at fungere"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einige Websites funktionieren dann eventuell nicht mehr"
+          }
+        },
+        "dsb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Móžo zawinowaś, až websedła njefunkcioněruju"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Πιθανή δυσλειτουργία ιστοτόπων"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "May cause websites to break"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "May cause websites to break"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "May cause websites to break"
+          }
+        },
+        "eo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tio povus misfunkciigi retejojn"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puede causar errores en los sitios web"
+          }
+        },
+        "es-AR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puede causar errores en los sitios web"
+          }
+        },
+        "es-CL" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto puede causar errores en los sitios web"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puede causar errores en los sitios web"
+          }
+        },
+        "es-MX" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puede causar errores en los sitios web"
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Võib põhjustada mõnel veebisaidil probleeme"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Webguneak apur litzake"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ممکن است باعث از کار افتادن پایگاه‌ها شود"
+          }
+        },
+        "ff" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ina mbaawi saabaade taƴondiral e lowe geese"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voi aiheuttaa sivustovirheitä"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maaaring maging sanhi upang masira ang mga website"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peut empêcher certains sites de fonctionner"
+          }
+        },
+        "fur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al pues causâ malfunzionaments dai sîts web"
+          }
+        },
+        "fy-NL" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kin derfoar soargje dat websites net goed wurkje"
+          }
+        },
+        "gd" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dh’fhaoidte nach obraich cuid a làraichean ri linn"
+          }
+        },
+        "gl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pode causar erros nos sitios web"
+          }
+        },
+        "gn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ikatu ñanduti renda ombyai"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "עשוי לשבש פעילות של חלק מהאתרים"
+          }
+        },
+        "hi-IN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "वेबसाइटों को तोड़ने का कारण हो सकते हैं"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Može dovesti do kvara na stranicama"
+          }
+        },
+        "hsb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Móže zawinować, zo websydła njefunguja"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Egyes weboldalak eltörhetnek"
+          }
+        },
+        "hy-AM" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Կարող են վեբ կայքերի ընդհատման պատճառ լինել"
+          }
+        },
+        "ia" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pote causar que sitos web collabe"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mungkin menyebabkan situs tidak bekerja"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geta valdið því að vefsíður hrynji"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alcuni siti potrebbero non funzionare correttamente"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Webサイトが正常に動作しない可能性があります"
+          }
+        },
+        "ka" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "იწვევს ზოგი საიტის გაუმართაობას"
+          }
+        },
+        "kab" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zemren ad rẓen isaml web"
+          }
+        },
+        "kk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Веб-сайттар жұмысы бұзылуы мүмкін"
+          }
+        },
+        "kn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ವೆಬ್‌ಸೈಟ್‌ಗಳು ಮುರಿಯಲು ಕಾರಣವಾಗಬಹುದು"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "웹 사이트가 깨질 수 있음"
+          }
+        },
+        "ku" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dibe ku hin malper xera bibin"
+          }
+        },
+        "lij" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quarche scito o porieiva no fonçionâ ben"
+          }
+        },
+        "lo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ອາດເຮັດໃຫ້ເວັບໄຊມີບັນຫາ"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gali sutrikti svetainių veikimas"
+          }
+        },
+        "ml" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "വെബ്‌സൈറ്റുകൾ തകരാൻ കാരണമായേക്കാം"
+          }
+        },
+        "mr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "यामुळे संकेतस्थळे निकामी होतील"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ဆိုက်များကိုဖျက်ဆီးနိုင်သည်"
+          }
+        },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kan forårsake feil på nettsteder"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kan ervoor zorgen dat websites niet goed werken"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kan lage feil på nettstadar"
+          }
+        },
+        "oc" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D’unes sites pòdon quitar de foncionar"
+          }
+        },
+        "pa-Arab-PK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ویب‌سائیٹ دے کم نہ کرن دا کارن ہو سکدا"
+          }
+        },
+        "pa-Guru-IN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਵੈੱਬਸਾਈਟ ਦੇ ਕੰਮ ਨਾ ਕਰਨ ਦਾ ਕਾਰਨ ਹੋ ਸਕਦਾ"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Może powodować niepoprawne działanie stron"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pode atrapalhar alguns sites"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poderá resultar em falhas nos sites"
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tschertas websites na funcziunan lura forsa betg pli"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poate împiedica funcționarea corectă a site-urilor web"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Может нарушить работу сайтов"
+          }
+        },
+        "sat" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ᱱᱚᱶᱟ ᱫᱚ ᱣᱮᱵᱥᱟᱭᱤᱴ ᱠᱚ ᱨᱟᱹᱯᱩᱫ ᱫᱟᱲᱮᱭᱟᱜᱼᱟᱭ"
+          }
+        },
+        "sc" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diat pòdere causare chi unos cantos sitos non funtzionent"
+          }
+        },
+        "scn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Putìssiru rùmpiri certi siti"
+          }
+        },
+        "si" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "අඩවි කැඩීමට හේතු වේ"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Môže obmedziť fungovanie niektorých stránok"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lahko povzroči nedelovanje spletnih strani"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mund të shkaktojë mosfunksionim të disa sajteve"
+          }
+        },
+        "sr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Може проузроковати пад страница"
+          }
+        },
+        "su" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bisa ngabalukarkeun raramatloka jadi teu bener"
+          }
+        },
+        "sv-SE" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kan orsaka fel på webbplatser"
+          }
+        },
+        "szl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niykere strōny mogōm niy fungować dobrze"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "வலைத்தளங்களை உடைக்கக்கூடும்"
+          }
+        },
+        "te" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "కొన్ని వెబ్‌సైట్లు పనిచేయకపోవచ్చు"
+          }
+        },
+        "tg" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Метавонанд фаъолияти сомонаҳоро вайрон кунанд"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "อาจส่งผลให้เว็บไซต์ไม่สมบูรณ์"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bazı web siteleri bozulabilir"
+          }
+        },
+        "ug" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تور بېكەتلەرنىڭ بۇزۇلۇشىنى كەلتۈرۈپ چىقىرىشى مۇمكىن"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Може порушити роботу вебсайтів"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ویب سائٹس کے ٹوٹنے کا سبب بن سکتی ہے"
+          }
+        },
+        "uz" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saytlarning buzilishiga olib kelishi mumkin"
+          }
+        },
+        "vec" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cualche sito el poderìa no funsionare coretamente"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Có thể làm hỏng các trang web"
+          }
+        },
+        "yo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lè jẹ́kí àwọn ojú òpó wẹ́ẹ̀bù fọ́"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可能导致网站异常"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可能造成某些網站無法正常運作"
           }
         }
       }
@@ -10594,7 +14132,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "jen v anonymních panelech"
+            "value" : "Jen v anonymních panelech"
           }
         },
         "cy" : {
@@ -10684,7 +14222,7 @@
         "et" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ainult privaatsetel kaartidel"
+            "value" : "Ainult privaatsetel kaartidel"
           }
         },
         "eu" : {
@@ -10822,7 +14360,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "プライベートタブのみ適用"
+            "value" : "プライベートタブのみ"
           }
         },
         "ka" : {
@@ -10942,7 +14480,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tylko w\\u00a0prywatnych kartach"
+            "value" : "Tylko w prywatnych kartach"
           }
         },
         "pt-BR" : {
@@ -11122,13 +14660,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "仅在隐私标签页中"
+            "value" : "仅在无痕标签页中"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "僅在隱私瀏覽分頁"
+            "value" : "僅在私密標籤頁中"
           }
         }
       }
@@ -11396,7 +14934,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ページは正常に読み込まれますが、ブロックされるトラッカーが少なくなります。"
+            "value" : "ページは通常どおり読み込まれますが、ブロックされるトラッカーは少なくなります。"
           }
         },
         "ka" : {
@@ -11624,7 +15162,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "頁面可正常載入，但封鎖少一點追蹤器。"
+            "value" : "頁面會正常載入，但封鎖的追蹤器較少。"
           }
         }
       }
@@ -11808,7 +15346,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Empêche les scripts malveillants d’accéder à votre appareil pour «\\u00a0extraire\\u00a0» de l’argent numérique."
+            "value" : "Empêche les scripts malveillants d’accéder à votre appareil pour « extraire » de l’argent numérique."
           }
         },
         "fur" : {
@@ -11916,7 +15454,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "悪意のあるスクリプトによる暗号通貨マイニングを防止します。"
+            "value" : "悪意のあるスクリプトが端末のリソースを使って暗号通貨をマイニングするのを防止します。"
           }
         },
         "ka" : {
@@ -12192,13 +15730,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "防止恶意脚本利用您的设备来挖取数字货币。"
+            "value" : "防止恶意脚本利用你的设备挖矿。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "防止有害指令碼使用您的裝置來為數位貨幣「採礦」。"
+            "value" : "防止惡意指令碼利用你的裝置挖礦。"
           }
         }
       }
@@ -13034,7 +16572,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SNS メディアトラッカー"
+            "value" : "SNSトラッカー"
           }
         },
         "ka" : {
@@ -14134,7 +17672,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "追跡コードを含む外部の広告、動画、その他のコンテンツの読み込みを停止します。一部のウェブサイトの機能に影響する場合があります。"
+            "value" : "追跡コードを含む外部の広告、動画、その他のコンテンツの読み込みを阻止します。一部のWebサイトの機能に影響する場合があります。"
           }
         },
         "ka" : {
@@ -14248,7 +17786,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zatrzymuje wczytywanie zewnętrznych reklam, filmów i\\u00a0innych treści zawierających elementy śledzące. Może powodować niepoprawne działanie niektórych stron."
+            "value" : "Zatrzymuje wczytywanie zewnętrznych reklam, filmów i innych treści zawierających elementy śledzące. Może powodować niepoprawne działanie niektórych stron."
           }
         },
         "pt-BR" : {
@@ -14410,7 +17948,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "停止加载包含跟踪代码的广告、视频和其他内容。可能会影响某些网站功能。"
+            "value" : "阻止加载含有跟踪代码的外部广告、视频及其他内容。这可能会影响网站的部分功能。"
           }
         },
         "zh-Hant" : {
@@ -14672,7 +18210,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "端末を一意に識別できるデータがユーザーを追跡する目的で収集されるのを防止します。"
+            "value" : "追跡目的で使用される、端末を一意に識別可能なデータの収集を阻止します。"
           }
         },
         "ka" : {
@@ -14750,7 +18288,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zatrzymuje zbieranie jednoznacznie identyfikowalnych danych o\\u00a0Twoim urządzeniu, które mogą być wykorzystywane do śledzenia."
+            "value" : "Zatrzymuje zbieranie jednoznacznie identyfikowalnych danych o Twoim urządzeniu, które mogą być wykorzystywane do śledzenia."
           }
         },
         "pt-BR" : {
@@ -14870,13 +18408,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "阻止收集可用于跟踪目的的设备唯一标识数据。"
+            "value" : "阻止收集可唯一识别你的设备、并可用于跟踪的数据。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "防止他人收集可用來追蹤您的裝置識別資料。"
+            "value" : "防止收集可唯一識別你的裝置、並可用於追蹤的資料。"
           }
         }
       }
@@ -15772,7 +19310,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "トラッキング防止を強力にし、パフォーマンスを高速化します。ただし、一部のサイトが正常に機能しなくなる可能性があります。"
+            "value" : "トラッキング防止を強化し読み込みを高速化しますが、一部のWebサイトが正常に動作しない場合があります。"
           }
         },
         "ka" : {
@@ -15856,7 +19394,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Silniejsza ochrona przed śledzeniem i\\u00a0większa wydajność, ale niektóre strony mogą nie działać poprawnie."
+            "value" : "Silniejsza ochrona przed śledzeniem i większa wydajność, ale niektóre strony mogą nie działać poprawnie."
           }
         },
         "pt-BR" : {
@@ -15988,13 +19526,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "更强的跟踪保护与更快的性能，但可导致某些网站的运作不正常。"
+            "value" : "提供更强的跟踪保护和更快的浏览速度，但某些网站可能无法正常运行。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "更強大的追蹤保護功能與更快的效能，但某些網站會無法正常運作。"
+            "value" : "提供更強的追蹤保護及更快的瀏覽速度，但某些網站可能無法正常運作。"
           }
         }
       }
@@ -16328,7 +19866,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Podejrzewane elementy śledzące przez zbieranie informacji o\\u00a0konfiguracji"
+            "value" : "Podejrzewane elementy śledzące przez zbieranie informacji o konfiguracji"
           }
         },
         "pt-BR" : {
@@ -16466,13 +20004,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "存疑的数字指纹跟踪程序"
+            "value" : "疑似数字指纹跟踪程序"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "疑似是數位指紋追蹤程式"
+            "value" : "疑似數位指紋追蹤程式"
           }
         }
       }
@@ -16734,7 +20272,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ウェブサイトにユーザーデータの共有と販売の拒否を通知する"
+            "value" : "Webサイトにデータの共有・販売の拒否を通知"
           }
         },
         "ka" : {
@@ -16950,13 +20488,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "要求网站不共享和不出售我的数据"
+            "value" : "要求网站不要共享或出售我的数据"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "告訴網站不要銷售或分享我的資料"
+            "value" : "要求網站不要分享或出售我的資料"
           }
         }
       }
@@ -17224,7 +20762,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "包括的 Cookie 保護機能により、現在のサイトに対する Cookie を分離して、サイトを横断してあなたを追跡する Cookie を広告ネットワークなどのトラッカーが利用できないようにします。"
+            "value" : "包括的Cookie保護（Total Cookie Protection）により、Cookieをアクセス中のWebサイトごとに分離し、広告ネットワークなどのトラッカーがサイトを横断してあなたを追跡できないようにします。"
           }
         },
         "ka" : {
@@ -17308,7 +20846,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Całkowita ochrona ciasteczek izoluje ciasteczka w\\u00a0odwiedzanej witrynie, więc elementy śledzące, takie jak sieci reklamowe, nie mogą ich używać do śledzenia Cię między witrynami."
+            "value" : "Całkowita ochrona ciasteczek izoluje ciasteczka w odwiedzanej witrynie, więc elementy śledzące, takie jak sieci reklamowe, nie mogą ich używać do śledzenia Cię między witrynami."
           }
         },
         "pt-BR" : {
@@ -17452,13 +20990,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "“全方位 Cookie 保护”能够完全隔离每个网站的 Cookie，阻止像广告联盟等这类跟踪器借其跨站跟踪您。"
+            "value" : "“全方位 Cookie 保护”会将 Cookie 隔离在你当前访问的网站内，使广告网络等跟踪器无法利用这些 Cookie 跨站跟踪你。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "全方位 Cookie 保護功能會將 Cookie 隔離於您所在的網站當中，這樣廣告網所送出的追蹤器就無法透過 Cookie 在不同網站間追蹤您。"
+            "value" : "全方位 Cookie 保護會將 Cookie 隔離在你目前造訪的網站中，讓廣告網路等追蹤器無法利用這些 Cookie 跨網站追蹤你。"
           }
         }
       }
@@ -17888,7 +21426,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Treści z\\u00a0elementami śledzącymi"
+            "value" : "Treści z elementami śledzącymi"
           }
         },
         "pt-BR" : {
@@ -18075,6 +21613,604 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "追蹤用內容"
+          }
+        }
+      }
+    },
+    "Will cause websites to break" : {
+      "localizations" : {
+        "am" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ድረ-ገፆች ባግባቡ እንዳይሰሩ ያደርጋል"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يمكن أن تتسبب في تعطيل المواقع"
+          }
+        },
+        "ast" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Va causar que los sitios web s'estropien"
+          }
+        },
+        "az" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Əksər səhifələr səhv işləyəcəklər"
+          }
+        },
+        "be" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Будзе перашкаджаць працы сайтаў"
+          }
+        },
+        "bg" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ще наруши работата на страници"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ওয়েবসাইট ভাঙার কারণ হতে পারে"
+          }
+        },
+        "br" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gallout a ra terriñ lec’hiennoù"
+          }
+        },
+        "bs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Može uzrokovati probleme s web stranicama"
+          }
+        },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Farà que alguns llocs web no funcionin"
+          }
+        },
+        "ckb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لەوانەیە ببێتە هۆی وەستانی ماڵپەڕەکان"
+          }
+        },
+        "co" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impediscerà siti web di funziunà"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omezí fungování některých stránek"
+          }
+        },
+        "cy" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bydd yn achosi i wefannau dorri"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vil forhindre websteder i at fungere"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einige Websites funktionieren dann nicht mehr"
+          }
+        },
+        "dsb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buźo zawinowaś, až websedła njefunkcioněruju"
+          }
+        },
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Προκαλεί δυσλειτουργία ιστοτόπων"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Will cause websites to break"
+          }
+        },
+        "en-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Will cause websites to break"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Will cause websites to break"
+          }
+        },
+        "eo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tio misfunkciigos retejojn"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algunos sitios no funcionarán correctamente"
+          }
+        },
+        "es-AR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Va a causar errores en los sitios web"
+          }
+        },
+        "es-CL" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hará que los sitios fallen"
+          }
+        },
+        "es-ES" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algunos sitios no funcionarán correctamente"
+          }
+        },
+        "es-MX" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algunos sitios no funcionarán correctamente"
+          }
+        },
+        "et" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mõned veebisaidid lähevad katki"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Webguneak apurtuko ditu"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "باعث خرابی وبگاه‌ها خواهد شد"
+          }
+        },
+        "ff" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ina mbaawi saabaade taƴondiral e lowe geese"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aiheuttaa sivustovirheitä"
+          }
+        },
+        "fil" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiyak na ikasisira ng mga website"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empêchera des sites de fonctionner"
+          }
+        },
+        "fur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al causarà malfunzionaments dai sîts web"
+          }
+        },
+        "fy-NL" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sil derfoar soargje dat websites net goed wurkje"
+          }
+        },
+        "gd" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chan obraich cuid a làraichean ri linn"
+          }
+        },
+        "gl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pode causar erros nos sitios web"
+          }
+        },
+        "gn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ikatu ñanduti renda ombyai"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ישבש פעילות של אתרים"
+          }
+        },
+        "hi-IN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "वेबसाइटों को तोड़ने के कारण होंगे"
+          }
+        },
+        "hr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Može dovesti do kvara na stranicama"
+          }
+        },
+        "hsb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Budźe zawinować, zo websydła njefunguja"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Egyes weboldalakon hibát fog okozni"
+          }
+        },
+        "hy-AM" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Վեբ կայքերի ընդհատման պատճառ կլինեն"
+          }
+        },
+        "ia" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Causara que sitos web collabe"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akan menyebabkan situs tidak bekerja"
+          }
+        },
+        "is" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Munu valda því að vefsíður hrynji"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alcuni siti non funzioneranno correttamente"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Webサイトが正常に動作しなくなる原因となります"
+          }
+        },
+        "ka" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "იწვევს საიტების გაუმართაობას"
+          }
+        },
+        "kab" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ad rẓen isaml web"
+          }
+        },
+        "kk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Веб-сайттар жұмысы бұзылады"
+          }
+        },
+        "kn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ವೆಬ್‌ಸೈಟ್‌ಗಳು ಮುರಿಯಲು ಕಾರಣವಾಗುತ್ತವೆ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "웹 사이트가 깨질 수 있음"
+          }
+        },
+        "ku" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dibe ku hin malper xera bibin"
+          }
+        },
+        "lij" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quarche scito o no fonçioniâ ben"
+          }
+        },
+        "lo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ຈະສົ່ງຜົນໃຫ້ເວັບໄຊທບໍ່ສົມບູນ"
+          }
+        },
+        "lt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sutriks svetainių veikimas"
+          }
+        },
+        "ml" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "വെബ്‌സൈറ്റുകൾ തകരാൻ ഇടയാക്കും"
+          }
+        },
+        "mr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "यामुळे संकेतस्थळे निकामी होतील"
+          }
+        },
+        "my" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ဝဘ်ဆိုက်များကိုဖျက်ဆီးစေနိုင်သည်"
+          }
+        },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vil føre til feil på nettsteder"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zal ervoor zorgen dat websites niet goed werken"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vil føre til feil på nettstadar"
+          }
+        },
+        "oc" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pòt arribar que d’unes sites quitan de foncionar"
+          }
+        },
+        "pa-Arab-PK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ویب‌سائیٹاں دے کم نہ کرن دا کارن ہووےگا"
+          }
+        },
+        "pa-Guru-IN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ਵੈੱਬਸਾਈਟਾਂ ਦੇ ਕੰਮ ਨਾ ਕਰਨ ਦਾ ਕਾਰਨ ਹੋਵੇਗਾ"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spowoduje niepoprawne działanie stron"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atrapalha vários sites"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Irá causar falhas nos sites"
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tschertas websites na funcziunan betg pli endretg"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Va împiedica funcționarea corectă a site-urilor web"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нарушит работу сайтов"
+          }
+        },
+        "sat" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ᱱᱚᱶᱟ ᱫᱚ ᱣᱮᱵᱥᱟᱭᱤᱴ ᱠᱚ ᱨᱟᱹᱯᱩᱫᱟᱭ"
+          }
+        },
+        "sc" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unos cantos sitos no ant a funtzionare"
+          }
+        },
+        "scn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rumpi i siti"
+          }
+        },
+        "si" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "අඩවි කැඩීමට හේතු වේ"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obmedzí fungovanie niektorých stránok"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Povzroči nedelovanje spletnih strani"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do të shkaktojë mosfunksionim sajtesh"
+          }
+        },
+        "sr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проузроковаће пад страница"
+          }
+        },
+        "su" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bakal ngabalukarkeun raramatloka jadi teu bener"
+          }
+        },
+        "sv-SE" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kommer att orsaka fel på webbplatser"
+          }
+        },
+        "szl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niykere strōny mogōm niy fungować dobrze"
+          }
+        },
+        "ta" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "வலைத்தளங்களை உடைக்கக்கூடும்"
+          }
+        },
+        "te" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "వెబ్‌సైట్లు పనిచేయకపోడానికి కారణమవుతుంది"
+          }
+        },
+        "tg" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Метавонанд фаъолияти сомонаҳоро вайрон кунанд"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "จะส่งผลให้เว็บไซต์ไม่สมบูรณ์"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bazı web siteleri bozulabilir"
+          }
+        },
+        "ug" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تور بېكەتلەرنىڭ بۇزۇلۇشىنى كەلتۈرۈپ چىقىرىدۇ"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Буде порушувати роботу вебсайтів"
+          }
+        },
+        "ur" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ویب سائٹس کے ٹوٹنے کا سبب بن سکتی ہے"
+          }
+        },
+        "uz" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saytlar ishlashini buzadi"
+          }
+        },
+        "vec" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cualche sito no el funsionerà coretamente"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Có thể làm hỏng các trang web"
+          }
+        },
+        "yo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yóò jẹ́kí àwọn ojú òpó wẹ́ẹ̀bù fọ́"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将会导致网站异常"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "會造成網站無法正常運作"
           }
         }
       }

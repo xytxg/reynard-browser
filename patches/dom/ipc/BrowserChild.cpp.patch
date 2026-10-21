@@ -1,0 +1,201 @@
+diff --git a/dom/ipc/BrowserChild.cpp b/dom/ipc/BrowserChild.cpp
+index ad297bb1d9e4..b853d59f8caa 100644
+--- a/dom/ipc/BrowserChild.cpp
++++ b/dom/ipc/BrowserChild.cpp
+@@ -11,6 +11,7 @@
+ 
+ #include "BrowserParent.h"
+ #include "ContentChild.h"
++#include "ContentEventHandler.h"
+ #include "EventStateManager.h"
+ #include "MMPrinter.h"
+ #include "PuppetWidget.h"
+@@ -227,6 +228,13 @@ PresShell* BrowserChild::GetTopLevelPresShell() const {
+   return nullptr;
+ }
+ 
++void BrowserChild::UpdateBackgroundColor(const nscolor& aColor) {
++  if (!IPCOpen() || mDestroyed) {
++    return;
++  }
++  SendUpdateBackgroundColor(aColor);
++}
++
+ bool BrowserChild::UpdateFrame(const RepaintRequest& aRequest) {
+   MOZ_ASSERT(aRequest.GetScrollId() != ScrollableLayerGuid::NULL_SCROLL_ID);
+ 
+@@ -343,6 +351,7 @@ BrowserChild::BrowserChild(ContentChild* aManager, const TabId& aTabId,
+       mLayersId{0},
+       mEffectsInfo{EffectsInfo::FullyHidden()},
+       mDynamicToolbarMaxHeight(0),
++      mDynamicToolbarMinHeight(0),
+       mKeyboardHeight(0),
+       mUniqueId(aTabId),
+       mDidFakeShow(false),
+@@ -1239,8 +1248,9 @@ mozilla::ipc::IPCResult BrowserChild::RecvUpdateRemoteStyle(
+ }
+ 
+ mozilla::ipc::IPCResult BrowserChild::RecvDynamicToolbarMaxHeightChanged(
+-    const ScreenIntCoord& aHeight) {
++    const ScreenIntCoord& aHeight, const ScreenIntCoord& aMinHeight) {
+   mDynamicToolbarMaxHeight = aHeight;
++  mDynamicToolbarMinHeight = aMinHeight;
+ 
+   RefPtr<Document> document = GetTopLevelDocument();
+   if (!document) {
+@@ -1248,7 +1258,7 @@ mozilla::ipc::IPCResult BrowserChild::RecvDynamicToolbarMaxHeightChanged(
+   }
+ 
+   if (RefPtr<nsPresContext> presContext = document->GetPresContext()) {
+-    presContext->SetDynamicToolbarMaxHeight(aHeight);
++    presContext->SetDynamicToolbarMaxHeight(aHeight, aMinHeight);
+   }
+   return IPC_OK();
+ }
+@@ -2448,6 +2458,12 @@ void BrowserChild::UpdateRepeatedKeyEventEndTime(
+ 
+ mozilla::ipc::IPCResult BrowserChild::RecvRealKeyEvent(
+     const WidgetKeyboardEvent& aEvent, const nsID& aUUID) {
++  return HandleRealKeyEvent(aEvent, aUUID);
++}
++
++mozilla::ipc::IPCResult BrowserChild::HandleRealKeyEvent(
++    const WidgetKeyboardEvent& aEvent, const nsID& aUUID,
++    bool* aDefaultPrevented, bool* aDefaultPreventedByContent) {
+   MOZ_ASSERT_IF(aEvent.mMessage == eKeyPress,
+                 aEvent.AreAllEditCommandsInitialized());
+ 
+@@ -2589,6 +2605,11 @@ mozilla::ipc::IPCResult BrowserChild::RecvRealKeyEvent(
+     localEvent.StopPropagation();
+   }
+ 
++  if (aDefaultPrevented) {
++    *aDefaultPrevented = localEvent.DefaultPrevented();
++    *aDefaultPreventedByContent = localEvent.DefaultPreventedByContent();
++  }
++
+   // If we don't need to send a rely for the given keyboard event, we do nothing
+   // anymore here.
+   if (!aEvent.WantReplyFromContentProcess()) {
+@@ -2617,6 +2638,13 @@ mozilla::ipc::IPCResult BrowserChild::RecvNormalPriorityRealKeyEvent(
+   return RecvRealKeyEvent(aEvent, aUUID);
+ }
+ 
++mozilla::ipc::IPCResult BrowserChild::RecvNativeKeyEvent(
++    const WidgetKeyboardEvent& aEvent, const nsID& aUUID,
++    bool* aDefaultPrevented, bool* aDefaultPreventedByContent) {
++  return HandleRealKeyEvent(aEvent, aUUID, aDefaultPrevented,
++                            aDefaultPreventedByContent);
++}
++
+ mozilla::ipc::IPCResult BrowserChild::RecvCompositionEvent(
+     const WidgetCompositionEvent& aEvent) {
+   WidgetCompositionEvent localEvent(aEvent);
+@@ -2632,11 +2660,23 @@ mozilla::ipc::IPCResult BrowserChild::RecvNormalPriorityCompositionEvent(
+   return RecvCompositionEvent(aEvent);
+ }
+ 
++mozilla::ipc::IPCResult BrowserChild::RecvNativeCompositionEvent(
++    const WidgetCompositionEvent& aEvent) {
++  return RecvCompositionEvent(aEvent);
++}
++
+ mozilla::ipc::IPCResult BrowserChild::RecvSelectionEvent(
+     const WidgetSelectionEvent& aEvent) {
++  bool succeeded;
++  return RecvNativeSelectionEvent(aEvent, &succeeded);
++}
++
++mozilla::ipc::IPCResult BrowserChild::RecvNativeSelectionEvent(
++    const WidgetSelectionEvent& aEvent, bool* aSucceeded) {
+   WidgetSelectionEvent localEvent(aEvent);
+   localEvent.mWidget = mPuppetWidget;
+   DispatchWidgetEventViaAPZ(localEvent);
++  *aSucceeded = localEvent.mSucceeded;
+   (void)SendOnEventNeedingAckHandled(aEvent.mMessage, 0u);
+   return IPC_OK();
+ }
+@@ -2646,6 +2686,59 @@ mozilla::ipc::IPCResult BrowserChild::RecvNormalPrioritySelectionEvent(
+   return RecvSelectionEvent(aEvent);
+ }
+ 
++void mozilla::dom::NotifyNativeTextInputPositionChanged(Document& aDocument) {
++#ifdef MOZ_WIDGET_UIKIT
++  if (BrowserChild* browser = BrowserChild::GetFrom(aDocument.GetDocShell())) {
++    browser->NotifyNativeTextInputPositionChanged();
++  }
++#endif
++}
++
++void BrowserChild::NotifyNativeTextInputPositionChanged() {
++#ifdef MOZ_WIDGET_UIKIT
++  if (IPCOpen() && mPuppetWidget &&
++      !mPuppetWidget->GetInputContext().mIMEState.IsEditable()) {
++    SendNativeTextInputPositionChanged();
++  }
++#endif
++}
++
++mozilla::ipc::IPCResult BrowserChild::RecvQueryNativeTextInput(
++    const NativeTextInputRequest& aRequest, NativeTextInputReply* aReply) {
++  RefPtr<Document> document = GetTopLevelDocument();
++  nsCOMPtr<nsPIDOMWindowOuter> focusedWindow;
++  if (document) {
++    nsFocusManager::GetFocusedDescendant(document->GetWindow(),
++                                         nsFocusManager::eIncludeAllDescendants,
++                                         getter_AddRefs(focusedWindow));
++    if (focusedWindow && focusedWindow->GetDoc()) {
++      document = focusedWindow->GetDoc();
++    }
++  }
++
++  RefPtr<PresShell> shell = document ? document->GetPresShell() : nullptr;
++  if (shell && shell->GetPresContext()) {
++    ContentEventHandler handler(shell->GetPresContext());
++    if (NS_FAILED(handler.QueryNativeTextInput(aRequest, *aReply))) {
++      *aReply = NativeTextInputReply();
++    }
++  }
++
++  return IPC_OK();
++}
++
++mozilla::ipc::IPCResult BrowserChild::RecvStartNativeTextDrag(
++    const LayoutDeviceIntPoint& aPoint,
++    StartNativeTextDragResolver&& aResolve) {
++  NativeTextInputRequest request;
++  request.mQuery = NativeTextInputQuery::StartTextDrag;
++  request.mPoint = aPoint;
++  NativeTextInputReply reply;
++  RecvQueryNativeTextInput(request, &reply);
++  aResolve(reply.mSucceeded);
++  return IPC_OK();
++}
++
+ mozilla::ipc::IPCResult BrowserChild::RecvSimpleContentCommandEvent(
+     const EventMessage& aMessage) {
+   WidgetContentCommandEvent localEvent(true, aMessage, mPuppetWidget);
+@@ -2661,6 +2754,11 @@ BrowserChild::RecvNormalPrioritySimpleContentCommandEvent(
+   return RecvSimpleContentCommandEvent(aMessage);
+ }
+ 
++mozilla::ipc::IPCResult BrowserChild::RecvNativeSimpleContentCommandEvent(
++    const EventMessage& aMessage) {
++  return RecvSimpleContentCommandEvent(aMessage);
++}
++
+ mozilla::ipc::IPCResult BrowserChild::RecvInsertText(
+     const nsAString& aStringToInsert) {
+   // Use normal event path to reach focused document.
+@@ -2678,6 +2776,11 @@ mozilla::ipc::IPCResult BrowserChild::RecvNormalPriorityInsertText(
+   return RecvInsertText(aStringToInsert);
+ }
+ 
++mozilla::ipc::IPCResult BrowserChild::RecvNativeInsertText(
++    const nsAString& aStringToInsert) {
++  return RecvInsertText(aStringToInsert);
++}
++
+ mozilla::ipc::IPCResult BrowserChild::RecvReplaceText(
+     const nsString& aReplaceSrcString, const nsString& aStringToInsert,
+     uint32_t aOffset, PreventSetSelection aPreventSetSelection) {

@@ -17,13 +17,20 @@ protocol PromptPresenting {
 @MainActor
 final class PromptCoordinator: PromptDelegate {
     private let presenter: PromptPresenting
+    private let onPromptFinished: ((GeckoSession) -> Void)?
     
-    init(presenter: PromptPresenting) {
+    init(
+        presenter: PromptPresenting,
+        onPromptFinished: ((GeckoSession) -> Void)? = nil
+    ) {
         self.presenter = presenter
+        self.onPromptFinished = onPromptFinished
     }
     
     func onPrompt(session: GeckoSession, request: PromptRequest) async -> PromptResponse? {
-        await presenter.present(request, for: session)
+        let response = await presenter.present(request, for: session)
+        onPromptFinished?(session)
+        return response
     }
     
     func onPromptUpdate(session: GeckoSession, request: PromptRequest) {
